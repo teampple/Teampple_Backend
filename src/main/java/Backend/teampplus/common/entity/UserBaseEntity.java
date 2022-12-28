@@ -11,7 +11,7 @@ import javax.persistence.*;
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
 @Getter
-public class BaseEntity {
+public class UserBaseEntity extends TimeBaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "Text default 'N'")
     private DeleteStatus delStatus=DeleteStatus.NO;
