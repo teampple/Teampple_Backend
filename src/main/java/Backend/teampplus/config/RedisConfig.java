@@ -1,4 +1,4 @@
-package Backend.teampplus.common.redis;
+package Backend.teampplus.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

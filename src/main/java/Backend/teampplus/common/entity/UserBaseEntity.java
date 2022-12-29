@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 public class UserBaseEntity extends TimeBaseEntity{
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "Text default 'N'")
+    @Column(columnDefinition = "Text default 'NO'")
     private DeleteStatus delStatus=DeleteStatus.NO;
 
     public void changeDeleteStatus(){
