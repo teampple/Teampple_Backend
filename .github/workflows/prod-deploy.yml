@@ -38,27 +38,28 @@ jobs:
 
 #      파일 수정 예정
       - name: Make application-prod.yml
-          run: |
-            touch ./src/main/resources/application.yml
-            echo "ENV_PROD" > ./src/main/resources/application.yml
-          # Make env file
-          env:
-            PROPERTIES_PROD: ${{ secrets.ENV_PROD }}
+        run: |
+          touch ./src/main/resources/application.yml
+          echo "ENV_PROD" > ./src/main/resources/application.yml
+        # Make env file
+        env:
+          PROPERTIES_PROD: ${{ secrets.ENV_PROD }}
 
-#      추가 세팅 설정
+#      추가 세팅 설정 Build 전
+
       # Gradle Build
       - name: Build with Gradle
-          run: ./gradlew build -x test
+        run: ./gradlew build -x test
 
       # Image Tagging
       - name: Docker meta
-          id: docker_meta
-          uses: crazy-max/ghaction-docker-meta@v1
-          with:
-            images: squirmm/teampple-server:0.0.1
-            tag-semver: |
-              {{version}}
-              {{major}}.{{minor}}
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: squirmm/teampple-server:0.0.1
+          tag-semver: |
+            {{version}}
+            {{major}}.{{minor}}
 
       # Docker Buildx Setup
       - name: Set up Docker Buildx
