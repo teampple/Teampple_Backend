@@ -69,11 +69,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.prod
+          file: ./Dockerfile
           platforms: linux/amd64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: create remote directory
         uses: appleboy/ssh-action@master
