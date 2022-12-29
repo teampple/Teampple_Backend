@@ -54,7 +54,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: squirmm/teampple-server:dev
+          images: squirmm/teampple-server-dev
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
