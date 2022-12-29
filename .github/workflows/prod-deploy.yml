@@ -56,7 +56,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: squirmm/teampple-server:0.0.1
+          images: squirmm/teampple-server
           tag-semver: |
             {{version}}
             {{major}}.{{minor}}
