@@ -47,7 +47,7 @@ jobs:
       - name: Make application-prod.yml
         run: |
           touch ./src/main/resources/application.yml
-          echo "ENV_PROD" > ./src/main/resources/application.yml
+          echo "$ENV_PROD" > ./src/main/resources/application.yml
         # Make env file
         env:
           ENV_PROD: ${{ secrets.ENV_PROD }}
