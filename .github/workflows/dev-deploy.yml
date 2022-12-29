@@ -45,7 +45,7 @@ jobs:
           echo "ENV_PROD" > ./src/main/resources/application.yml
         # Make env file
         env:
-          PROPERTIES_PROD: ${{ secrets.ENV_PROD }}
+          ENV_PROD: ${{ secrets.ENV_PROD }}
         
       - name: Build with Gradle
         run: ./gradlew build -x test

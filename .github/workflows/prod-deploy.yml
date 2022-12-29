@@ -50,7 +50,7 @@ jobs:
           echo "ENV_PROD" > ./src/main/resources/application.yml
         # Make env file
         env:
-          PROPERTIES_PROD: ${{ secrets.ENV_PROD }}
+          ENV_PROD: ${{ secrets.ENV_PROD }}
 
 #      추가 세팅 설정 Build 전
 
