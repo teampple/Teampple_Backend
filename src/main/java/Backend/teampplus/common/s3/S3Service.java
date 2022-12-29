@@ -13,11 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,15 +28,17 @@ public class S3Service {
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
         validateFileExists(multipartFile);
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
-        return upload(uploadFile, dirName);
+        //TODO: 파일 네이밍 재정의 필요
+        String originalName = dirName + "/" + multipartFile.getOriginalFilename();
+
+        return putS3(multipartFile, originalName, putMetadata(multipartFile));
     }
 
     public byte[] download(String resourcePath) throws IOException {
         S3Object s3Object = amazonS3Client.getObject(bucket, resourcePath);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         log.info("파일 다운로드 성공");
+
         return IOUtils.toByteArray(inputStream);
     }
 
@@ -47,57 +46,38 @@ public class S3Service {
         amazonS3Client.deleteObject(bucket, filePath);
     }
 
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
-        String uploadImageUrl = putS3(uploadFile, fileName);
-        log.info(fileName);
+    private ObjectMetadata putMetadata(MultipartFile multipartFile) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(multipartFile.getContentType());
+        objectMetadata.setContentLength(multipartFile.getSize());
 
-        removeNewFile(uploadFile);
-
-        return uploadImageUrl;
+        return objectMetadata;
     }
 
-    private String putS3(File uploadFile, String fileName) {
+    private String putS3(MultipartFile uploadFile, String fileName, ObjectMetadata objectMetadata) throws IOException {
         amazonS3Client.putObject(
-                new PutObjectRequest(bucket, fileName, uploadFile)
+                new PutObjectRequest(bucket, fileName, uploadFile.getInputStream(), objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead)    // PublicRead 권한으로 업로드 됨
         );
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("파일 삭제 성공");
-        } else {
-            log.info("파일 삭제 실패");
-        }
-    }
-
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
-        return Optional.empty();
-    }
-
     protected HttpHeaders buildHeaders(String resourcePath, String fileName, byte[] bytes) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(bytes.length);
+        //TODO: 파일 네이밍 재정의 필요
         String type = resourcePath.split("\\.")[1];
         headers.setContentType(contentType(type));
+
         headers.setContentDisposition(ContentDisposition.builder("attachment")
-                .filename(fileName+"."+type, StandardCharsets.UTF_8)
+                .filename(fileName + "." + type, StandardCharsets.UTF_8)
                 .build());
         return headers;
     }
 
     /*확장자 명시용*/
-    private MediaType contentType(String type){
-        switch (type){
+    private MediaType contentType(String type) {
+        switch (type) {
             case "zip":
                 return MediaType.valueOf("application/x-zip");
             case "docx":
@@ -122,6 +102,7 @@ public class S3Service {
         }
     }
 
+    //TODO: 재정의 필요
     private void validateFileExists(MultipartFile multipartFile) {
 //        custom error 필요
     }
