@@ -9,7 +9,7 @@ name: Deploy to Dev
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
