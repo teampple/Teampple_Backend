@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend-dev:
-    image: squirmm/teampple-server-dev:main
+    image: squirmm/teampple-server-dev:dev
     container_name: backend-dev
     hostname: backend-dev
     expose:
