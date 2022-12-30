@@ -14,8 +14,8 @@ cloud:
       auto: false
 
 spring:
-  config:
-    import: optional:file:.env[.properties]
+#  config:
+#    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -40,7 +40,6 @@ spring:
 #        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
-
 
 
 logging.level:

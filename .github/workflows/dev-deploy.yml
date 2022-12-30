@@ -39,21 +39,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      #Create dotenv file
-      - name: Make env file
+      - name: Make application-dev.yml
         run: |
-          touch ./.env
-          echo "$ENV_PROD" > ./.env
+          touch ./src/main/resources/application-dev.yml
+          echo "$ENV_DEV" > ./src/main/resources/application-dev.yml
+        # Make env file
         env:
-          ENV_PROD: ${{ secrets.ENV_PROD }}
-
-#      - name: Make application-dev.yml
-#        run: |
-#          touch ./src/main/resources/application.yml
-#          echo "$ENV_PROD" > ./src/main/resources/application.yml
-#        # Make env file
-#        env:
-#          ENV_PROD: ${{ secrets.ENV_PROD }}
+          ENV_PROD: ${{ secrets.ENV_DEV }}
         
       - name: Build with Gradle
         run: ./gradlew build -x test
