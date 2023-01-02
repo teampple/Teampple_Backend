@@ -1,11 +1,9 @@
 package Backend.teampplus.config;
 
-import Backend.teampplus.common.exception.ErrorCode;
+import Backend.teampplus.common.error.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
 
 import java.util.Arrays;
 import java.util.List;
