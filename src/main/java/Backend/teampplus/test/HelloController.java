@@ -1,4 +1,4 @@
-package Backend.teampplus.deploy;
+package Backend.teampplus.test;
 
 import Backend.teampplus.global.error.ErrorCode;
 import Backend.teampplus.global.error.exception.UnauthorizedException;
@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 public class HelloController {
+
+    @GetMapping("/test")
+    public String test(){
+        return "Hello";
+    }
 
     @GetMapping("/")
     public CommonResponse<String> aa(@RequestBody Test test) {
