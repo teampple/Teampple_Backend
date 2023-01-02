@@ -1,6 +1,6 @@
-package Backend.teampplus.common.error.exception;
+package Backend.teampplus.global.error.exception;
 
-import Backend.teampplus.common.error.ErrorCode;
+import Backend.teampplus.global.error.ErrorCode;
 import lombok.Getter;
 
 /**

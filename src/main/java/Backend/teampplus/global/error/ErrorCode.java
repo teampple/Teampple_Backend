@@ -1,4 +1,4 @@
-package Backend.teampplus.common.error;
+package Backend.teampplus.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

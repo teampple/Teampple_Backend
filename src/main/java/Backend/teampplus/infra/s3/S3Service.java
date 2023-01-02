@@ -1,4 +1,4 @@
-package Backend.teampplus.common.s3;
+package Backend.teampplus.infra.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;

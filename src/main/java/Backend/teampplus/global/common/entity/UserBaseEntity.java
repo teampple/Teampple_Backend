@@ -1,4 +1,4 @@
-package Backend.teampplus.common.entity;
+package Backend.teampplus.global.common.entity;
 
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

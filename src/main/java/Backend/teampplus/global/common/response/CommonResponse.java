@@ -1,6 +1,6 @@
-package Backend.teampplus.common.response;
+package Backend.teampplus.global.common.response;
 
-import Backend.teampplus.common.error.ErrorCode;
+import Backend.teampplus.global.error.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
