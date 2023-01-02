@@ -1,10 +1,8 @@
-package Backend.teampplus.common.error.exception;
+package Backend.teampplus.global.error.exception;
 
-import Backend.teampplus.common.error.ErrorCode;
-import lombok.AllArgsConstructor;
+import Backend.teampplus.global.error.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpStatus;
 
 /**
  * 비즈니스 로직 예외 처리용 부모 객체입니다.

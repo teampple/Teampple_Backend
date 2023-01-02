@@ -1,11 +1,10 @@
 package Backend.teampplus.deploy;
 
-import Backend.teampplus.common.error.ErrorCode;
-import Backend.teampplus.common.error.exception.*;
-import Backend.teampplus.common.response.CommonResponse;
+import Backend.teampplus.global.error.ErrorCode;
+import Backend.teampplus.global.error.exception.UnauthorizedException;
+import Backend.teampplus.global.common.response.CommonResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

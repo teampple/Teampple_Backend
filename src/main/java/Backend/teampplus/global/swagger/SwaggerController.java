@@ -1,4 +1,4 @@
-package Backend.teampplus.common.swagger;
+package Backend.teampplus.global.swagger;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

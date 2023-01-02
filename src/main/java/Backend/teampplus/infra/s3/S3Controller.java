@@ -1,4 +1,4 @@
-package Backend.teampplus.common.s3;
+package Backend.teampplus.infra.s3;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
