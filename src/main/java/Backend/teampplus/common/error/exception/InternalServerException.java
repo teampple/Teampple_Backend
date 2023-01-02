@@ -8,19 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class InternalServerException extends BaseException {
-    private String message;
-
+    public InternalServerException() {
+        super(ErrorCode._INTERNAL_SERVER_ERROR, ErrorCode._INTERNAL_SERVER_ERROR.getMessage());
+    }
     public InternalServerException(String message) {
-        super(ErrorCode._INTERNAL_SERVER_ERROR);
-        this.message = message;
-    }
-
-    public InternalServerException(ErrorCode errorCode, String message) {
-        super(errorCode);
-        this.message = message;
-    }
-
-    public InternalServerException(ErrorCode errorCode) {
-        super(errorCode);
+        super(ErrorCode._INTERNAL_SERVER_ERROR, message);
     }
 }

@@ -1,8 +1,10 @@
 package Backend.teampplus.common.response;
 
+import Backend.teampplus.common.error.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -10,6 +12,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@Builder
 public class CommonResponse <T> {
     @JsonProperty("status")
     private int code;
@@ -25,10 +28,20 @@ public class CommonResponse <T> {
     private T data;
 
     public static <T> CommonResponse<T> onSuccess(int code, T data) {
-        return new CommonResponse<>(code, true, "요청에 성공하였습니다.", data);
+        return CommonResponse.<T>builder()
+                .code(code)
+                .success(true)
+                .message("요청에 성공하였습니다.")
+                .data(data)
+                .build();
     }
 
-    public static <T> CommonResponse<T> onFailure(int code, String message, T data) {
-        return new CommonResponse<>(code, false, message, data);
+    public static <T> CommonResponse<T> onFailure(ErrorCode errorCode, String message) {
+        return CommonResponse.<T>builder()
+                .code(errorCode.getHttpStatus().value())
+                .success(false)
+                .message(message)
+                .data(null)
+                .build();
     }
 }

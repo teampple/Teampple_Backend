@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorCode {
 
     // common
+    INVALID_INPUT_VALUE(BAD_REQUEST, "C001", " Invalid Input Value"),
     _INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "C000", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(BAD_REQUEST, "C001", "잘못된 요청입니다."),
     _UNAUTHORIZED(UNAUTHORIZED, "C002", "권한이 없습니다."),

@@ -9,19 +9,10 @@ import lombok.Getter;
  */
 @Getter
 public class BadRequestException extends BaseException {
-    private String message;
-
+    public BadRequestException() {
+        super(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage());
+    }
     public BadRequestException(String message) {
-        super(ErrorCode._BAD_REQUEST);
-        this.message = message;
-    }
-
-    public BadRequestException(ErrorCode errorCode, String message) {
-        super(errorCode);
-        this.message = message;
-    }
-
-    public BadRequestException(ErrorCode errorCode) {
-        super(errorCode);
+        super(ErrorCode._BAD_REQUEST, message);
     }
 }

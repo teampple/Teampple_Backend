@@ -8,19 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class NotFoundException extends BaseException {
-    private String message;
-
+    public NotFoundException() {
+        super(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage());
+    }
     public NotFoundException(String message) {
-        super(ErrorCode._BAD_REQUEST);
-        this.message = message;
-    }
-
-    public NotFoundException(ErrorCode errorCode, String message) {
-        super(errorCode);
-        this.message = message;
-    }
-
-    public NotFoundException(ErrorCode errorCode) {
-        super(errorCode);
+        super(ErrorCode._BAD_REQUEST, message);
     }
 }

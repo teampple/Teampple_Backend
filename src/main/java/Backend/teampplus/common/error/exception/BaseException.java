@@ -13,4 +13,5 @@ import org.apache.http.HttpStatus;
 @RequiredArgsConstructor
 public class BaseException extends RuntimeException {
     private final ErrorCode errorCode;
+    private final String message;
 }
