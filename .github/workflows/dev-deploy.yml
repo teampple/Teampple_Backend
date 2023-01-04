@@ -81,13 +81,13 @@ jobs:
           host: ${{ secrets.HOST_DEV }}
           username: ubuntu
           key: ${{ secrets.KEY_DEV }}
-          script: mkdir -p ~/srv/ubuntu/teampple_dev
+          script: mkdir -p ~/srv/ubuntu
 
       - name: copy source via ssh key
         uses: burnett01/rsync-deployments@4.1
         with:
           switches: -avzr --delete
-          remote_path: ~/srv/ubuntu/
+          remote_path: ~/srv/ubuntu
           remote_host: ${{ secrets.HOST_DEV }}
           remote_user: ubuntu
           remote_key: ${{ secrets.KEY_DEV }}

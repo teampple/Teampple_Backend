@@ -2,7 +2,7 @@ package Backend.teampple.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -12,20 +12,18 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Configuration
 @EnableWebMvc
+@Profile(value = "!prod")
 public class SwaggerConfig {
 
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder()
-                .title("Teampplus Api Docs")
+                .title("Teampple Api Docs")
                 .version("0.0.1")
-                .description("Teampplus Api 문서입니다")
+                .description("Teampple Api 문서입니다")
                 .build();
     }
 
@@ -34,12 +32,12 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
-//                .ignoredParameterTypes(AuthenticationPrincipal.class)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
-                .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("Backend.teampple"))
-                .paths(PathSelectors.ant("/api/**"))
+                .apiInfo(swaggerInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("Backend.teampple")) /**하위 패키지 -> API*/
+                .paths(PathSelectors.ant("/api/**")) /** "/api/**"인 url 들만 필터링*/
                 .build();
     }
 
@@ -72,5 +70,7 @@ public class SwaggerConfig {
         produces.add("application/json;charset=UTF-8");
         return produces;
     }
+
 }
-//swagger: http://localhost:8000/swagger-ui/index.html
+//swagger: http://localhost:8080/api/swagger-ui/index.html
+//swagger: https://www.teampple.site/api/swagger-ui/index.html
