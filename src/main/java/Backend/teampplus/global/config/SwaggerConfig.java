@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -23,9 +24,9 @@ public class SwaggerConfig {
 
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder()
-                .title("Teampplus Api Docs")
+                .title("Teampple Api Docs")
                 .version("0.0.1")
-                .description("Teampplus Api 문서입니다")
+                .description("Teampple Api 문서입니다")
                 .build();
     }
 
@@ -38,8 +39,8 @@ public class SwaggerConfig {
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("Backend.Teampplus"))
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("Backend.Teampple"))
+                .paths(PathSelectors.ant("/api/**"))
                 .build();
     }
 
@@ -72,5 +73,7 @@ public class SwaggerConfig {
         produces.add("application/json;charset=UTF-8");
         return produces;
     }
+
 }
-//swagger: http://localhost:8000/swagger-ui/index.html
+//swagger: http://localhost:8080/api/swagger-ui/index.html
+//swagger: http://www.teampple.site/api/swagger-ui/index.html
