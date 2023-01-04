@@ -2,9 +2,7 @@ package Backend.teampplus.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -13,10 +11,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Configuration
 @EnableWebMvc
@@ -32,7 +27,10 @@ public class SwaggerConfig {
 
     @Bean
     public Docket swaggerApi() {
+        Server testServer = new Server("test", "https://teampple.site/api", "for testing", Collections.emptyList(), Collections.emptyList());
+
         return new Docket(DocumentationType.SWAGGER_2)
+                .servers(testServer)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
 //                .ignoredParameterTypes(AuthenticationPrincipal.class)
@@ -76,4 +74,4 @@ public class SwaggerConfig {
 
 }
 //swagger: http://localhost:8080/api/swagger-ui/index.html
-//swagger: http://www.teampple.site/api/swagger-ui/index.html
+//swagger: https://www.teampple.site/api/swagger-ui/index.html
