@@ -34,9 +34,10 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(apiKey()))
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
-                .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("Backend.teampplus"))
-                .paths(PathSelectors.ant("/api/**")) // "/api/**"인 url 들만 필터링
+                .apiInfo(swaggerInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("Backend.teampplus")) /**하위 패키지 -> API*/
+                .paths(PathSelectors.ant("/api/**")) /** "/api/**"인 url 들만 필터링*/
                 .build();
     }
 

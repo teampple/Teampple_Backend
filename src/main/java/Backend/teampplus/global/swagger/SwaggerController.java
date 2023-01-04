@@ -7,6 +7,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller
 @ApiIgnore
 public class SwaggerController {
-    @GetMapping("/api-docs")
+//     TODO : redirect 문제점 찾아보기
+    @GetMapping("/api/docs")
     public String redirectSwagger(){return "redirect:/swagger-ui/index.html";}
 }
