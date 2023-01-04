@@ -16,8 +16,6 @@ cloud:
       auto: false
 
 spring:
-#  config:
-#    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -33,7 +31,6 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
-
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -41,15 +38,9 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
-#        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
 
-#springfox:
-#  documentation:
-#    swagger-ui:
-#      base-url: ${BASE_URL}
 
 logging.level:
   org.hibernate.SQL: debug
