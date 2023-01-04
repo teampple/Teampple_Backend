@@ -16,7 +16,6 @@ import java.util.*;
 
 @Configuration
 @EnableWebMvc
-@Profile(value = "!prod")
 public class SwaggerConfig {
 
     private ApiInfo swaggerInfo() {
