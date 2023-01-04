@@ -27,18 +27,14 @@ public class SwaggerConfig {
 
     @Bean
     public Docket swaggerApi() {
-        Server testServer = new Server("test", "https://teampple.site/api", "for testing", Collections.emptyList(), Collections.emptyList());
-
         return new Docket(DocumentationType.SWAGGER_2)
-                .servers(testServer)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
-//                .ignoredParameterTypes(AuthenticationPrincipal.class)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("Backend.Teampple"))
-                .paths(PathSelectors.ant("/api/**"))
+                .apis(RequestHandlerSelectors.basePackage("Backend.teampplus"))
+                .paths(PathSelectors.ant("/api/**")) // "/api/**"인 url 들만 필터링
                 .build();
     }
 
