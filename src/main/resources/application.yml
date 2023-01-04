@@ -1,5 +1,7 @@
 server:
   port: ${PORT:8080}
+  servlet:
+    context-path: ${BASE_URL}
 
 cloud:
   aws:
@@ -23,13 +25,14 @@ spring:
     password: ${DB_PASSWORD}
   profiles:
     active: dev
-#  redis:
+  #  redis:
 #    host: ${REDIS_HOST}
 #    port: ${REDIS_PORT}
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+
 
   jpa:
     database: mysql
@@ -43,10 +46,10 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
 
-springfox:
-  documentation:
-    swagger-ui:
-      base-url: ${BASE_URL}
+#springfox:
+#  documentation:
+#    swagger-ui:
+#      base-url: ${BASE_URL}
 
 logging.level:
   org.hibernate.SQL: debug
