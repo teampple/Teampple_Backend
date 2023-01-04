@@ -1,29 +1,24 @@
 server:
-  port: ${PORT:8080}
-
+#  port: ${PORT:8080}
+  port: 8080
 cloud:
   aws:
     credentials:
-      access-key: ${S3_ACCESSKEY}
-      secret-key: ${S3_SECRETKEY}
+      access-key: AKIA256YOGV5R4VQN7XR
+      secret-key: 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
     s3:
-      bucket: ${S3_NAME}
+      bucket: s3-teampple
     region:
       static: ap-northeast-2
     stack:
       auto: false
 
 spring:
-#  config:
-#    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-#  redis:
-#    host: ${REDIS_HOST}
-#    port: ${REDIS_PORT}
+    url: jdbc:mysql://teampple.cwsxloozvnco.ap-northeast-2.rds.amazonaws.com:3306/teampple_test
+    username: root
+    password: teamppleteam
   servlet:
     multipart:
       max-file-size: 100MB
@@ -33,11 +28,11 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
-#        show_sql: true
-#        format_sql: true
+        #        show_sql: true
+        #        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
 
