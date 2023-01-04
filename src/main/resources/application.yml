@@ -21,6 +21,8 @@ spring:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+  profiles:
+    active: dev
 #  redis:
 #    host: ${REDIS_HOST}
 #    port: ${REDIS_PORT}
@@ -41,6 +43,10 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
 
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: ${BASE_URL}
 
 logging.level:
   org.hibernate.SQL: debug
