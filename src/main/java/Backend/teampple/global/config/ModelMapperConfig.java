@@ -1,4 +1,4 @@
-package Backend.teampplus.config;
+package Backend.teampple.global.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

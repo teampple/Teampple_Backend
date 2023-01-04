@@ -1,5 +1,7 @@
 server:
   port: ${PORT:8080}
+  servlet:
+    context-path: ${BASE_URL}
 
 cloud:
   aws:
@@ -14,14 +16,14 @@ cloud:
       auto: false
 
 spring:
-#  config:
-#    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-#  redis:
+  profiles:
+    active: dev
+  #  redis:
 #    host: ${REDIS_HOST}
 #    port: ${REDIS_PORT}
   servlet:
@@ -36,8 +38,6 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
-#        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
 

@@ -1,13 +1,13 @@
-package Backend.teampplus;
+package Backend.teampple;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TeampplusApplication {
+public class TeamppleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TeampplusApplication.class, args);
+		SpringApplication.run(TeamppleApplication.class, args);
 	}
 
 }
