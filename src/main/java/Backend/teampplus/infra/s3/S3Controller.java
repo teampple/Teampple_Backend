@@ -9,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +19,12 @@ import java.util.List;
 @Controller
 @ResponseBody
 @RequiredArgsConstructor
+@ApiIgnore
 @RequestMapping(value = "/file", produces = "application/json; charset=utf-8")
 public class S3Controller {
     private final S3Service s3Service;
 
-    @ApiOperation(value = "Amazon S3 파일 업로드", notes = "Amazon S3 파일 업로드")
+    @ApiOperation(value = "Amazon S3 파일 업로드")
     @PostMapping("/upload")
     public String uploadFile(
             @RequestPart(value = "file") MultipartFile multipartFile,
@@ -31,7 +33,7 @@ public class S3Controller {
         return s3Service.upload(multipartFile, dir);
     }
 
-    @ApiOperation(value = "Amazon S3 파일리스트 업로드", notes = "Amazon S3 파일리스트 업로드")
+    @ApiOperation(value = "Amazon S3 파일리스트 업로드")
     @PostMapping("/uploads")
     public ResponseEntity<Object> uploadFiles(
             @RequestPart(value = "file") MultipartFile[] multipartFiles,
