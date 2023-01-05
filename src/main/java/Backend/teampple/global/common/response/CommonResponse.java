@@ -27,6 +27,15 @@ public class CommonResponse <T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
+    public static <T> CommonResponse<T> onSuccess(int code) {
+        return CommonResponse.<T>builder()
+                .code(code)
+                .success(true)
+                .message("요청에 성공하였습니다.")
+                .data(null)
+                .build();
+    }
+
     public static <T> CommonResponse<T> onSuccess(int code, T data) {
         return CommonResponse.<T>builder()
                 .code(code)
