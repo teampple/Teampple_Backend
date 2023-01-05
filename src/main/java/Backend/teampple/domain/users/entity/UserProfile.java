@@ -20,13 +20,13 @@ public class UserProfile extends UserBaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 25)
-    private String nickname;
+    private String name;
 
     @Column(nullable = false, length = 100)
     private String email;
 
     @Column(nullable = false)
-    private String image;
+    private String profileImage;
 
     @Column(nullable = false, length = 50)
     private String schoolName;
@@ -37,7 +37,8 @@ public class UserProfile extends UserBaseEntity {
     @Column(length = 25)
     private String entranceYear;
 
-    @Column(length = 25) // 이거 이넘으로 처리해야함 아직 이넘 종료 몰라서 그냥 이렇게 둠
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(50) default 'FreePlan'")
     private String subscribePlan;
 
 
