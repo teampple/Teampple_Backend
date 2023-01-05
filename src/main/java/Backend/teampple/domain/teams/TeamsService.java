@@ -13,6 +13,7 @@ import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class TeamsService{
     private final StagesRepository stagesRepository;
     private final TeammateRepository teammateRepository;
 
+    @Transactional
     public void createTeam(PostTeamDto postTeamDto) {
 
         // 1. 팀 생성
@@ -59,6 +61,7 @@ public class TeamsService{
         );
     }
 
+    @Transactional
     public GetTeamDetailDto getTeamDetail(Long teamId) {
         // 1. team 정보 불러오기
         Team team = teamsRepository.findById(teamId)
