@@ -1,6 +1,7 @@
 package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
+import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,16 @@ public class TeamsController {
 
         teamsService.createTeam(postTeamDto);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
+    }
+
+    @GetMapping(value = "/{teamId}")
+    public CommonResponse<GetTeamDetailDto> getTeamDetail(@PathVariable Long teamId) {
+        log.info("[api-get] 팀 상세 정보 가져오기");
+
+        // 유저 validation 추가해야함
+
+        GetTeamDetailDto teamDetail = teamsService.getTeamDetail(teamId);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), teamDetail);
     }
 
 }

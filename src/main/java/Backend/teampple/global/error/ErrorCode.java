@@ -17,8 +17,11 @@ public enum ErrorCode {
     _UNAUTHORIZED(UNAUTHORIZED, "C002", "권한이 없습니다."),
     _METHOD_NOT_ALLOWED(METHOD_NOT_ALLOWED, "C003", "지원하지 않는 Http Method 입니다."),
 
+    // Team
+    TEAM_NOT_FOUND(BAD_REQUEST, "T001", "해당 팀플이 존재하지 않습니다."),
+
     // test
-    TEST(BAD_REQUEST, "T001", "test");
+    TEST(BAD_REQUEST, "TEST001", "test");
 
     private final HttpStatus httpStatus;
     private final String code;
