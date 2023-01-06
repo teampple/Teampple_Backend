@@ -40,5 +40,5 @@ public class Feedback extends TimeBaseEntity {
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private Boolean isChecked;
+    private boolean isChecked;
 }
