@@ -20,10 +20,6 @@ public class User extends UserBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_id")
-    private UserProfile userProfile;
-
     @Column(nullable = false)
     private String refreshToken;
 
@@ -32,5 +28,4 @@ public class User extends UserBaseEntity {
 
     @Column(nullable = false)
     private String kakaoId;
-
 }
