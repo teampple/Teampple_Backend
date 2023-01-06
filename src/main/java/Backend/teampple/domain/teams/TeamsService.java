@@ -4,7 +4,9 @@ import Backend.teampple.domain.stages.StagesRepository;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
+import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
+import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
@@ -15,7 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +61,7 @@ public class TeamsService{
                             .sequenceNum(postStageDto.getSequenceNum())
                             .startDate(postStageDto.getStartDate())
                             .dueDate(postTeamDto.getDueDate())
+                            .isDone(false) // 이 부분 분명히 디폴트로 해놨는데 이거 없으면
                             .build();
                     stagesRepository.save(stage);
                 }
@@ -81,5 +88,29 @@ public class TeamsService{
                 .dueDate(team.getDueDate())
                 .teammates(teammates)
                 .build();
+    }
+
+    @Transactional
+    public List<GetTeamTasksDto> getTeamTasks(Long teamId) {
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. stage 조회하며 fetch 조인으로 tasks 까지
+        List<Stage> stages = stagesRepository.findAllByTeam(team);
+        List<GetTeamTasksDto> results = stages.stream()
+                .map(obj -> new GetTeamTasksDto(obj))
+                .collect(toList());
+
+        return results;
+    }
+
+    @Transactional
+    public void putTeam(PutTeamDto putTeamDto, Long teamId) {
+        // 1. team 찾기
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 수정 후 저장
+        team.update(putTeamDto);
+        teamsRepository.save(team);
     }
 }

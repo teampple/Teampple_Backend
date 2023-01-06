@@ -1,5 +1,6 @@
 package Backend.teampple.domain.teams.entity;
 
+import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -31,5 +32,11 @@ public class Team extends PeriodBaseEntity {
         this.id = id;
         this.name = name;
         this.goal = goal;
+    }
+
+    public void update(PutTeamDto putTeamDto) {
+        this.name = putTeamDto.getName();
+        this.goal = putTeamDto.getGoal();
+        init(putTeamDto.getStartDate(), putTeamDto.getDueDate());
     }
 }

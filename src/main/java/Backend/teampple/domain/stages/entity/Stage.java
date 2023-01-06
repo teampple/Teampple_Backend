@@ -3,6 +3,7 @@ package Backend.teampple.domain.stages.entity;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
@@ -30,16 +31,17 @@ public class Stage extends PeriodBaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "stage")
     private List<Task> tasks = new ArrayList<>();
 
     @Column(nullable = false, length = 100)
     private String taskName;
 
-    @Column(columnDefinition = "varchar(50) default '")
+    @Column(columnDefinition = "varchar(50) default ''")
     private String lectureName;
 
-    @Column(columnDefinition = "varchar(255) default '")
+    @Column(columnDefinition = "varchar(255) default ''")
     private String goal;
 
     @Column(nullable = false)
@@ -50,9 +52,8 @@ public class Stage extends PeriodBaseEntity {
     @ColumnDefault("0")
     private int totalTask;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Boolean isDone;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isDone = false;
 
     @Column(nullable = false)
     private int sequenceNum;
