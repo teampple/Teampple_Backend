@@ -1,8 +1,10 @@
 package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.teams.dto.request.PostScheduleDto;
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
 import Backend.teampple.domain.teams.dto.request.PutTeamDto;
+import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -48,7 +50,6 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), teamDetail);
     }
 
-
     @GetMapping(value = "tasks/{teamId}")
     @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.\n"
             + "팀플 화면에 쓰일 정보를 조회합니다.")
@@ -66,12 +67,39 @@ public class TeamsController {
     @Operation(summary = "팀플 정보 수정", description = "팀플 정보 수정 API 입니다.\n"
             + "팀플 정보를 수정합니다.")
     public CommonResponse<String> putTeam(@Valid @RequestBody PutTeamDto putTeamDto, @PathVariable Long teamId) {
-        log.info("[api-get] 팀 할 일 정보 조회");
+        log.info("[api-put] 팀 정보 수정");
 
         // 유저 validation 추가해야함
 
         teamsService.putTeam(putTeamDto, teamId);
 
         return CommonResponse.onSuccess(HttpStatus.OK.value());
+    }
+
+    @PostMapping(value = "schedules/{teamId}")
+    @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.\n"
+            + "팀플 일정을 생성합니다.")
+    public CommonResponse<String> postSchedule(@Valid @RequestBody PostScheduleDto postScheduleDto
+            , @PathVariable Long teamId) {
+        log.info("[api-post] 팀플 일정 생성");
+
+        // 유저 validation 추가해야함
+
+        teamsService.postSchedule(postScheduleDto, teamId);
+
+        return CommonResponse.onSuccess(HttpStatus.OK.value());
+    }
+
+    @GetMapping(value = "schedules/{teamId}")
+    @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다.\n"
+            + "팀플 일정을 조회합니다.")
+    public CommonResponse<GetScheduleDto> getSchedule(@PathVariable Long teamId) {
+        log.info("[api-post] 팀플 일정 생성");
+
+        // 유저 validation 추가해야함
+
+        GetScheduleDto schedules = teamsService.getSchedule(teamId);
+
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
 }
