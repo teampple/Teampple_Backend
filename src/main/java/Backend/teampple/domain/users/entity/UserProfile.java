@@ -19,10 +19,6 @@ public class UserProfile extends UserBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserProfile userProfile;
-
     @Column(nullable = false, length = 25)
     private String name;
 
