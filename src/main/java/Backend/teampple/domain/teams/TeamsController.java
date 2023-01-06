@@ -2,6 +2,7 @@ package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
+import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -61,4 +62,16 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), teamTasks);
     }
 
+    @PutMapping(value = "/{teamId}")
+    @Operation(summary = "팀플 정보 수정", description = "팀플 정보 수정 API 입니다.\n"
+            + "팀플 정보를 수정합니다.")
+    public CommonResponse<String> putTeam(@Valid @RequestBody PutTeamDto putTeamDto, @PathVariable Long teamId) {
+        log.info("[api-get] 팀 할 일 정보 조회");
+
+        // 유저 validation 추가해야함
+
+        teamsService.putTeam(putTeamDto, teamId);
+
+        return CommonResponse.onSuccess(HttpStatus.OK.value());
+    }
 }

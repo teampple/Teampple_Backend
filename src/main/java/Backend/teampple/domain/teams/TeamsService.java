@@ -4,6 +4,7 @@ import Backend.teampple.domain.stages.StagesRepository;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
+import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.teams.entity.Team;
@@ -100,5 +101,16 @@ public class TeamsService{
                 .collect(toList());
 
         return results;
+    }
+
+    @Transactional
+    public void putTeam(PutTeamDto putTeamDto, Long teamId) {
+        // 1. team 찾기
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 수정 후 저장
+        team.update(putTeamDto);
+        teamsRepository.save(team);
     }
 }
