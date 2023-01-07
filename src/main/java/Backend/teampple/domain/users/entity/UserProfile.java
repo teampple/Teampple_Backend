@@ -39,7 +39,7 @@ public class UserProfile extends UserBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(50) default 'FreePlan'")
-    private String subscribePlan;
+    private SubscriptionType subscribePlan;
 
 
 }
