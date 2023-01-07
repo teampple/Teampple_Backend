@@ -6,13 +6,11 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "UserProfile")
-@Getter
+@Getter @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
-@ToString
+@NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
+@Table(name = "UserProfile")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")
@@ -22,7 +20,7 @@ public class UserProfile extends UserBaseEntity {
     @Column(nullable = false, length = 25)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String email;
 
     @Column(nullable = false)
