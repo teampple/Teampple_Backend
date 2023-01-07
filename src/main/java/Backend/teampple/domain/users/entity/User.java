@@ -7,13 +7,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Users")
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
-@ToString
+@NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
+@Table(name = "Users")
 public class User extends UserBaseEntity {
     @Id
     @Column(name = "user_id")
