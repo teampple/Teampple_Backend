@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
@@ -27,10 +27,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileDto updateUserProfile(Long userId){
+    public UserProfileDto updateUserProfile(Long userId, UserProfileDto dto) {
         UserProfile userProfile = userProfileRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-//      update 쿼리 생성
+        mapper.updateFromDto(dto, userProfile);
         return mapper.toDto(userProfile);
     }
 
