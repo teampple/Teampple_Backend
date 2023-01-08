@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @Builder
 public class PostScheduleDto {
     @NotNull
-    @ApiModelProperty(value = "팀플 이름", dataType = "string", required = true)
+    @ApiModelProperty(value = "팀플 이름", example = "teampple", required = true)
     private String name;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @ApiModelProperty(notes = "일정 마감일", dataType = "string(yyyy-MM-dd'T'HH:mm:ss)", required = true)
+    @ApiModelProperty(notes = "일정 마감일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime dueDate;
 }

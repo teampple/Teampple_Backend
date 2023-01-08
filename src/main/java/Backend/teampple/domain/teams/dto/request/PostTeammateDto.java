@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class PostTeammateDto {
     @NotNull
-    @ApiModelProperty(notes = "팀 id", dataType = "int", required = true)
+    @ApiModelProperty(notes = "팀 id", example = "1", required = true)
     private Long teamId;
 }

@@ -1,15 +1,17 @@
 package Backend.teampple.domain.teams;
 
-import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
-import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

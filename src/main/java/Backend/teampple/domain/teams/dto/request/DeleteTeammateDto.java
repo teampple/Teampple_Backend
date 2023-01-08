@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class DeleteTeammateDto {
     @NotNull
-    @ApiModelProperty(notes = "삭제할 팀원 id", dataType = "int", required = true)
+    @ApiModelProperty(notes = "삭제할 팀원 id", example = "1", required = true)
     private Long teammateId;
 }
