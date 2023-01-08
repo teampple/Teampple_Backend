@@ -23,14 +23,19 @@ public class GetTeamDetailDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDateTime dueDate;
 
-    private List<Teammate> teammates;
+    private int teammatesNum;
+
+    private List<String> teammatesImages;
 
     @Builder
-    public GetTeamDetailDto(String name, String goal, LocalDateTime startDate, LocalDateTime dueDate, List<Teammate> teammates) {
+
+    public GetTeamDetailDto(String name, String goal, LocalDateTime startDate, LocalDateTime dueDate,
+                            int teammatesNum, List<String> teammatesImages) {
         this.name = name;
         this.goal = goal;
         this.startDate = startDate;
         this.dueDate = dueDate;
-        this.teammates = teammates;
+        this.teammatesNum = teammatesNum;
+        this.teammatesImages = teammatesImages;
     }
 }

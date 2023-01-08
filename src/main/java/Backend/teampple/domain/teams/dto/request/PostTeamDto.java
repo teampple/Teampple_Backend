@@ -24,28 +24,26 @@ import java.util.List;
 public class PostTeamDto {
 
     @NotNull
-    @ApiModelProperty(value = "팀플 이름", dataType = "string", required = true)
+    @ApiModelProperty(value = "팀플 이름", example = "teampple", required = true)
     private String name;
 
     @NotNull
-    @ApiModelProperty(notes = "팀플 목표", dataType = "string", required = true)
+    @ApiModelProperty(notes = "팀플 목표", example = "neck table", required = true)
     private String goal;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @ApiModelProperty(notes = "팀플 시작일", dataType = "string(yyyy-MM-dd'T'HH:mm:ss)", required = true)
+    @ApiModelProperty(notes = "팀플 시작일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime startDate;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @ApiModelProperty(notes = "팀플 마감일", dataType = "string(yyyy-MM-dd'T'HH:mm:ss)", required = true)
+    @ApiModelProperty(notes = "팀플 마감일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime dueDate;
+
 
     @Valid
     @Nullable
-    @ApiModelProperty(value = "팀플 이름", dataType = "String name;\n" +
-            "int sequenceNum;\n" +
-            "string(yyyy-MM-dd'T'HH:mm:ss) startDate;\n" +
-            "string(yyyy-MM-dd'T'HH:mm:ss) dueDate;", required = true)
+    @ApiModelProperty(value = "팀플 이름", required = true)
     private List<PostStageDto> stages;
 }

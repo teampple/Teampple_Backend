@@ -3,12 +3,18 @@ package Backend.teampple.domain.teams;
 import Backend.teampple.domain.stages.StagesRepository;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
-import Backend.teampple.domain.teams.dto.request.PostTeamDto;
-import Backend.teampple.domain.teams.dto.request.PutTeamDto;
+import Backend.teampple.domain.teams.dto.ScheduleDto;
+import Backend.teampple.domain.teams.dto.TeammateDto;
+import Backend.teampple.domain.teams.dto.request.*;
+import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
+import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
+import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
+import Backend.teampple.domain.users.entity.UserProfile;
+import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
@@ -16,7 +22,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +35,16 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Slf4j
 public class TeamsService{
+
     private final TeamsRepository teamsRepository;
+
     private final StagesRepository stagesRepository;
+
     private final TeammateRepository teammateRepository;
+
+    private final ScheduleRepository scheduleRepository;
+
+    private final UserRepository userRepository;
 
     @Transactional
     public void createTeam(PostTeamDto postTeamDto) {
@@ -50,7 +65,7 @@ public class TeamsService{
 //                .build();
 //        teammateRepository.save(teammate);
 
-        // 3. 단계 생성
+        // 3. 단계 생성 및 저장
         List<PostStageDto> stages = postTeamDto.getStages();
 
         stages.forEach(postStageDto ->
@@ -80,27 +95,22 @@ public class TeamsService{
         // 3. 유저가 해당 팀에 속한지 확인
 
 
-        // 4. DTO 생성
+        // 4. 팀원 관련 정보 변환
+        teammates.size();
+        List<String> teammatesImages = new ArrayList<>();
+        teammates.forEach(teammate -> {
+            teammatesImages.add(teammate.getUserProfile().getProfileImage());
+        });
+
+        // 5. DTO 생성
         return GetTeamDetailDto.builder()
                 .name(team.getName())
                 .goal(team.getGoal())
                 .startDate(team.getStartDate())
                 .dueDate(team.getDueDate())
-                .teammates(teammates)
+                .teammatesNum(teammates.size())
+                .teammatesImages(teammatesImages)
                 .build();
-    }
-
-    @Transactional
-    public List<GetTeamTasksDto> getTeamTasks(Long teamId) {
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
-        // 1. stage 조회하며 fetch 조인으로 tasks 까지
-        List<Stage> stages = stagesRepository.findAllByTeam(team);
-        List<GetTeamTasksDto> results = stages.stream()
-                .map(obj -> new GetTeamTasksDto(obj))
-                .collect(toList());
-
-        return results;
     }
 
     @Transactional
@@ -112,5 +122,123 @@ public class TeamsService{
         // 2. 수정 후 저장
         team.update(putTeamDto);
         teamsRepository.save(team);
+    }
+
+    @Transactional
+    public List<GetTeamTasksDto> getTeamTasks(Long teamId) {
+        // 1. 팀 조회
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 단계 불러오기
+        List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
+
+        // 3. 할 일 불러오기
+        List<GetTeamTasksDto> results = stages.stream()
+                .map(obj -> new GetTeamTasksDto(obj))
+                .collect(toList());
+
+        return results;
+    }
+
+    @Transactional
+    public GetScheduleDto getSchedule(Long teamId) {
+        // 1. 팀 조회
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 스케줄 조회
+        List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
+
+        // 3. 스케줄 dto 생성
+        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
+        schedules.forEach(schedule -> {
+            ScheduleDto converted = ScheduleDto.builder()
+                    .name(schedule.getName())
+                    .dueDate(schedule.getDueDate())
+                    .build();
+            scheduleDtoList.add(converted);
+        });
+
+        // 3. DTO 생성
+        return GetScheduleDto.builder()
+                .name(team.getName())
+                .dueDate(team.getDueDate())
+                .schedules(scheduleDtoList)
+                .build();
+    }
+
+    @Transactional
+    public void postSchedule(PostScheduleDto postScheduleDto, Long teamId) {
+        // 1. team 찾기
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 일정 생성
+        Schedule schedule = Schedule.builder()
+                .name(postScheduleDto.getName())
+                .dueDate(postScheduleDto.getDueDate())
+                .team(team)
+                .build();
+
+        // 3. 일정 저장
+        scheduleRepository.save(schedule);
+    }
+
+    @Transactional
+    public void postTeammate(PostTeammateDto postTeammateDto) {
+        // 1. 팀 조회
+        Team team = teamsRepository.findById(postTeammateDto.getTeamId())
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 유저 조회
+//        userRepository.findById()
+
+        // 3. 유저 정보 조회
+
+        // 4. 팀원 추가
+//        Teammate teammate = Teammate.builder()
+//                .user()
+//                .team(team)
+//                .userProfile()
+//                .build();
+//        teammateRepository.save(teammate);
+    }
+
+    @Transactional
+    public GetTeammateDto getTeammate(Long teamId) {
+        // 1. 팀 조회
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 팀메이트 조회
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
+        List<TeammateDto> teammateDtoList = new ArrayList<>();
+        teammates.forEach(teammate -> {
+            // 유저 아니면 추가하도록 로직 추가해야함
+//            if(teammate.getId()!=user.id)
+            TeammateDto converted = TeammateDto.builder()
+                    .name(teammate.getUserProfile().getName())
+                    .schoolName(teammate.getUserProfile().getSchoolName())
+                    .major(teammate.getUserProfile().getMajor())
+                    .build();
+            teammateDtoList.add(converted);
+        });
+
+
+        // 3. 베치 이용해서 프로파일 가져오기
+        // 유저 따로 입력하도록 해야함
+        return GetTeammateDto.builder()
+                .name("temp")
+                .schoolName("temp")
+                .major("temp")
+                .teammates(teammateDtoList)
+                .build();
+    }
+
+    @Transactional
+    public void deleteTeammate(DeleteTeammateDto deleteTeammateDto, Long teamId) {
+        // 1. Teammate 삭제
+        teammateRepository.deleteById(deleteTeammateDto.getTeammateId());
     }
 }

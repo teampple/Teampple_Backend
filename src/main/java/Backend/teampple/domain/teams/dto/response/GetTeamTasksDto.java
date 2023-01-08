@@ -51,7 +51,7 @@ public class GetTeamTasksDto {
         taskname = stage.getTaskName();
         startDate = stage.getStartDate();
         dueDate = stage.getDueDate();
-        sequenceNum = getSequenceNum();
+        sequenceNum = stage.getSequenceNum();
         totaltask = stage.getTotalTask();
         achievement = stage.getAchievement();
         tasks = stage.getTasks().stream()
