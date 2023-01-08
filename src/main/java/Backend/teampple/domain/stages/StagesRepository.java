@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StagesRepository extends JpaRepository<Stage, Long> {
 
-    List<Stage> findAllByTeam(Team team);
+    List<Stage> findAllByTeamOrderBySequenceNum(Team team);
 
     @Query("select s from Stage s join fetch s.tasks where s.team = :team")
     List<Stage> findAllAndTaskByTeam(Team team);

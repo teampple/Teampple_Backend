@@ -95,27 +95,22 @@ public class TeamsService{
         // 3. 유저가 해당 팀에 속한지 확인
 
 
-        // 4. DTO 생성
+        // 4. 팀원 관련 정보 변환
+        teammates.size();
+        List<String> teammatesImages = new ArrayList<>();
+        teammates.forEach(teammate -> {
+            teammatesImages.add(teammate.getUserProfile().getProfileImage());
+        });
+
+        // 5. DTO 생성
         return GetTeamDetailDto.builder()
                 .name(team.getName())
                 .goal(team.getGoal())
                 .startDate(team.getStartDate())
                 .dueDate(team.getDueDate())
-                .teammates(teammates)
+                .teammatesNum(teammates.size())
+                .teammatesImages(teammatesImages)
                 .build();
-    }
-
-    @Transactional
-    public List<GetTeamTasksDto> getTeamTasks(Long teamId) {
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
-        // 1. stage 조회하며 fetch 조인으로 tasks 까지
-        List<Stage> stages = stagesRepository.findAllByTeam(team);
-        List<GetTeamTasksDto> results = stages.stream()
-                .map(obj -> new GetTeamTasksDto(obj))
-                .collect(toList());
-
-        return results;
     }
 
     @Transactional
@@ -130,20 +125,20 @@ public class TeamsService{
     }
 
     @Transactional
-    public void postSchedule(PostScheduleDto postScheduleDto, Long teamId) {
-        // 1. team 찾기
+    public List<GetTeamTasksDto> getTeamTasks(Long teamId) {
+        // 1. 팀 조회
         Team team = teamsRepository.findById(teamId)
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
-        // 2. 일정 생성
-        Schedule schedule = Schedule.builder()
-                .name(postScheduleDto.getName())
-                .dueDate(postScheduleDto.getDueDate())
-                .team(team)
-                .build();
+        // 2. 단계 불러오기
+        List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
 
-        // 3. 일정 저장
-        scheduleRepository.save(schedule);
+        // 3. 할 일 불러오기
+        List<GetTeamTasksDto> results = stages.stream()
+                .map(obj -> new GetTeamTasksDto(obj))
+                .collect(toList());
+
+        return results;
     }
 
     @Transactional
@@ -171,6 +166,23 @@ public class TeamsService{
                 .dueDate(team.getDueDate())
                 .schedules(scheduleDtoList)
                 .build();
+    }
+
+    @Transactional
+    public void postSchedule(PostScheduleDto postScheduleDto, Long teamId) {
+        // 1. team 찾기
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+
+        // 2. 일정 생성
+        Schedule schedule = Schedule.builder()
+                .name(postScheduleDto.getName())
+                .dueDate(postScheduleDto.getDueDate())
+                .team(team)
+                .build();
+
+        // 3. 일정 저장
+        scheduleRepository.save(schedule);
     }
 
     @Transactional
@@ -215,6 +227,7 @@ public class TeamsService{
 
 
         // 3. 베치 이용해서 프로파일 가져오기
+        // 유저 따로 입력하도록 해야함
         return GetTeammateDto.builder()
                 .name("temp")
                 .schoolName("temp")
