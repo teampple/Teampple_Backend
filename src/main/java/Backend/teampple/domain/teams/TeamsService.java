@@ -10,6 +10,7 @@ import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
+import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
 import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
@@ -167,5 +168,10 @@ public class TeamsService{
                 .dueDate(team.getDueDate())
                 .schedules(scheduleDtoList)
                 .build();
+    }
+
+    public GetTeammateDto getTeammate(Long teamId) {
+        // 1. 팀메이트 조회
+        // 2. 베치 이용해서 프로파일 가져오기
     }
 }

@@ -7,6 +7,7 @@ import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
+import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,6 +100,20 @@ public class TeamsController {
         // 유저 validation 추가해야함
 
         GetScheduleDto schedules = teamsService.getSchedule(teamId);
+
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
+    }
+
+
+    @GetMapping(value = "teammates/{teamId}")
+    @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다.\n"
+            + "팀원 정보를 조회합니다.")
+    public CommonResponse<GetTeammateDto> getTeammate(@PathVariable Long teamId) {
+        log.info("[api-get] 팀원 정보 조회");
+
+        // 유저 validation 추가해야함
+
+        GetTeammateDto schedules = teamsService.getTeammate(teamId);
 
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
