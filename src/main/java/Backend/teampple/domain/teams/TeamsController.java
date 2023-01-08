@@ -1,13 +1,12 @@
 package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.stages.entity.Stage;
-import Backend.teampple.domain.teams.dto.request.PostScheduleDto;
-import Backend.teampple.domain.teams.dto.request.PostTeamDto;
-import Backend.teampple.domain.teams.dto.request.PutTeamDto;
+import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
+import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,6 +103,18 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
 
+    @PostMapping(value = "teammates")
+    @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.\n"
+            + "팀원을 삭제합니다.")
+    public CommonResponse<String> postTeammate(@Valid @RequestBody PostTeammateDto postTeammateDto) {
+        log.info("[api-post] 팀원 추가");
+
+        // 유저 validation 추가해야함
+
+        teamsService.postTeammate(postTeammateDto);
+
+        return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
+    }
 
     @GetMapping(value = "teammates/{teamId}")
     @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다.\n"
@@ -117,4 +128,19 @@ public class TeamsController {
 
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
+
+    @DeleteMapping(value = "teammates/{teamId}")
+    @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.\n"
+            + "팀원을 삭제합니다.")
+    public CommonResponse<String> deleteTeammate(@Valid @RequestBody DeleteTeammateDto deleteTeammateDto
+            , @PathVariable Long teamId) {
+        log.info("[api-delete] 팀원 삭제");
+
+        // 유저 validation 추가해야함
+
+        teamsService.deleteTeammate(deleteTeammateDto, teamId);
+
+        return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
+    }
+
 }
