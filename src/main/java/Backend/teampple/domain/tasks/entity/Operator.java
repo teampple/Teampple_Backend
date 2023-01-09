@@ -10,9 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Operator")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
 @EqualsAndHashCode
 public class Operator extends TimeBaseEntity {
@@ -32,4 +30,12 @@ public class Operator extends TimeBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @Builder
+    public Operator(Long id, User user, UserProfile userProfile, Task task) {
+        this.id = id;
+        this.user = user;
+        this.userProfile = userProfile;
+        this.task = task;
+    }
 }

@@ -1,4 +1,4 @@
-package Backend.teampple.domain.feedbacks;
+package Backend.teampple.domain.feedbacks.repository;
 
 import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.tasks.entity.Task;

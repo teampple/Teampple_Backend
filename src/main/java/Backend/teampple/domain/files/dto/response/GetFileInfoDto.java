@@ -1,4 +1,4 @@
-package Backend.teampple.domain.files.dto;
+package Backend.teampple.domain.files.dto.response;
 
 import Backend.teampple.domain.files.entity.File;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class FileInfoDto {
+public class GetFileInfoDto {
 
     @NotNull
     @ApiModelProperty(notes = "이름", example = "teampple", required = true)
@@ -32,14 +32,14 @@ public class FileInfoDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public FileInfoDto(String filename, String url, Long size, LocalDateTime updatedAt) {
+    public GetFileInfoDto(String filename, String url, Long size, LocalDateTime updatedAt) {
         this.filename = filename;
         this.url = url;
         this.size = size;
         this.updatedAt = updatedAt;
     }
 
-    public FileInfoDto(File file) {
+    public GetFileInfoDto(File file) {
         this.filename = file.getFilename();
         this.url = file.getUrl();
         this.size = file.getSize();

@@ -1,4 +1,4 @@
-package Backend.teampple.domain.tasks;
+package Backend.teampple.domain.tasks.repository;
 
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
@@ -12,4 +12,7 @@ public interface OperatorRepository extends JpaRepository<Operator, Long> {
 
     @Query("select distinct o from Operator o join fetch o.userProfile where o.task = :task")
     List<Operator> findAllByTask(Task task);
+
+    @Query("select distinct o from Operator o join fetch o.user where o.task = :task order by o.user.id")
+    List<Operator> findAllByTaskWithUserOrderByUserId(Task task);
 }

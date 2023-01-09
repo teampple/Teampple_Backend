@@ -1,4 +1,4 @@
-package Backend.teampple.domain.files;
+package Backend.teampple.domain.files.repository;
 
 import Backend.teampple.domain.files.entity.File;
 import Backend.teampple.domain.tasks.entity.Task;

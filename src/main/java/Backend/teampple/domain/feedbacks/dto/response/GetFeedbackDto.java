@@ -1,4 +1,4 @@
-package Backend.teampple.domain.feedbacks.dto;
+package Backend.teampple.domain.feedbacks.dto.response;
 
 import Backend.teampple.domain.feedbacks.entity.Feedback;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class FeedbackDto {
+public class GetFeedbackDto {
 
     @NotNull
     @ApiModelProperty(notes = "피드백 한 사람", example = "2023-01-01T11:22:33", required = true)
@@ -32,14 +32,14 @@ public class FeedbackDto {
     private String adviserImage;
 
     @Builder
-    public FeedbackDto(String adviser, String comment, LocalDateTime createdAt, String adviserImage) {
+    public GetFeedbackDto(String adviser, String comment, LocalDateTime createdAt, String adviserImage) {
         this.adviser = adviser;
         this.comment = comment;
         this.createdAt = createdAt;
         this.adviserImage = adviserImage;
     }
 
-    public FeedbackDto(Feedback feedback) {
+    public GetFeedbackDto(Feedback feedback) {
         this.adviser = feedback.getAdviser().getUserProfile().getName();
         this.comment = feedback.getComment();
         this.createdAt = feedback.getCreatedAt();
