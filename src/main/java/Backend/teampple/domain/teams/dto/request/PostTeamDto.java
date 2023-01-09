@@ -1,6 +1,6 @@
 package Backend.teampple.domain.teams.dto.request;
 
-import Backend.teampple.domain.stages.dto.request.PostStageDto;
+import Backend.teampple.domain.stages.dto.StageDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,5 +45,5 @@ public class PostTeamDto {
     @Valid
     @Nullable
     @ApiModelProperty(value = "팀플 이름", required = true)
-    private List<PostStageDto> stages;
+    private List<StageDto> stages;
 }

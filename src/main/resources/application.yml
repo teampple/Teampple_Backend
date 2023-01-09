@@ -1,7 +1,7 @@
-server:
-  port: ${PORT:8080}
-  servlet:
-    context-path: ${BASE_URL}
+#server:
+#  port: ${PORT:8080}
+#  servlet:
+#    context-path: ${BASE_URL}
 
 cloud:
   aws:
@@ -38,11 +38,12 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
 
 
 logging.level:

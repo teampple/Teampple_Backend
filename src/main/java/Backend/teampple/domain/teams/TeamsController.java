@@ -1,5 +1,6 @@
 package Backend.teampple.domain.teams;
 
+import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
@@ -81,20 +82,21 @@ public class TeamsController {
     @PostMapping(value = "schedules/{teamId}")
     @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.\n"
             + "팀플 일정을 생성합니다.")
-    public CommonResponse<String> postSchedule(@Valid @RequestBody PostScheduleDto postScheduleDto
+    public CommonResponse<String> postSchedule(@Valid @RequestBody ScheduleDto scheduleDto
             , @PathVariable Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
 
         // 유저 validation 추가해야함
 
-        teamsService.postSchedule(postScheduleDto, teamId);
+        teamsService.postSchedule(scheduleDto, teamId);
 
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
     @GetMapping(value = "schedules/{teamId}")
     @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다.\n"
-            + "팀플 일정을 조회합니다.")
+            + "팀플 일정을 조회합니다."
+            + "name 과 duedate는 팀의 이름과 마감일이고, schedule은 팀의 일정입니다.")
     public CommonResponse<GetScheduleDto> getSchedule(@PathVariable Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
 
@@ -120,7 +122,8 @@ public class TeamsController {
 
     @GetMapping(value = "teammates/{teamId}")
     @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다.\n"
-            + "팀원 정보를 조회합니다.")
+            + "팀원 정보를 조회합니다."
+            + "리스트가 아닌 값들은 '나'의 정보이고, 리스트는 '나'를 제외한 팀원입니다.")
     public CommonResponse<GetTeammateDto> getTeammate(@PathVariable Long teamId) {
         log.info("[api-get] 팀원 정보 조회");
 

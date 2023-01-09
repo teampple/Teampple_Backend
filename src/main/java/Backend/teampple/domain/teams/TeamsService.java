@@ -1,7 +1,7 @@
 package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.stages.StagesRepository;
-import Backend.teampple.domain.stages.dto.request.PostStageDto;
+import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.TeammateDto;
@@ -13,21 +13,17 @@ import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
 import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
-import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -66,15 +62,15 @@ public class TeamsService{
 //        teammateRepository.save(teammate);
 
         // 3. 단계 생성 및 저장
-        List<PostStageDto> stages = postTeamDto.getStages();
+        List<StageDto> stages = postTeamDto.getStages();
 
-        stages.forEach(postStageDto ->
+        stages.forEach(StageDto ->
                 {
                     Stage stage = Stage.builder()
                             .team(team)
-                            .taskName(postStageDto.getName())
-                            .sequenceNum(postStageDto.getSequenceNum())
-                            .startDate(postStageDto.getStartDate())
+                            .taskName(StageDto.getName())
+                            .sequenceNum(StageDto.getSequenceNum())
+                            .startDate(StageDto.getStartDate())
                             .dueDate(postTeamDto.getDueDate())
                             .isDone(false) // 이 부분 분명히 디폴트로 해놨는데 이거 없으면
                             .build();
@@ -169,15 +165,15 @@ public class TeamsService{
     }
 
     @Transactional
-    public void postSchedule(PostScheduleDto postScheduleDto, Long teamId) {
+    public void postSchedule(ScheduleDto scheduleDto, Long teamId) {
         // 1. team 찾기
         Team team = teamsRepository.findById(teamId)
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 일정 생성
         Schedule schedule = Schedule.builder()
-                .name(postScheduleDto.getName())
-                .dueDate(postScheduleDto.getDueDate())
+                .name(scheduleDto.getName())
+                .dueDate(scheduleDto.getDueDate())
                 .team(team)
                 .build();
 

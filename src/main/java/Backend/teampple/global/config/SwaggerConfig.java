@@ -36,7 +36,7 @@ public class SwaggerConfig {
                 .apiInfo(swaggerInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("Backend.teampple")) /**하위 패키지 -> API*/
-                .paths(PathSelectors.ant("/api/**")) /** "/api/**"인 url 들만 필터링*/
+//                .paths(PathSelectors.ant("/api/**")) /** "/api/**"인 url 들만 필터링*/
                 .build();
     }
 
