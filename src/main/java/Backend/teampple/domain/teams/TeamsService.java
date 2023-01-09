@@ -1,6 +1,6 @@
 package Backend.teampple.domain.teams;
 
-import Backend.teampple.domain.stages.StagesRepository;
+import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
@@ -13,6 +13,9 @@ import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
 import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
+import Backend.teampple.domain.teams.repository.ScheduleRepository;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
+import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;

@@ -1,4 +1,4 @@
-package Backend.teampple.domain.teams;
+package Backend.teampple.domain.teams.repository;
 
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;

@@ -28,7 +28,6 @@ public class GetTeamDetailDto {
     private List<String> teammatesImages;
 
     @Builder
-
     public GetTeamDetailDto(String name, String goal, LocalDateTime startDate, LocalDateTime dueDate,
                             int teammatesNum, List<String> teammatesImages) {
         this.name = name;

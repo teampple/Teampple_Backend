@@ -1,7 +1,7 @@
-#server:
-#  port: ${PORT:8080}
-#  servlet:
-#    context-path: ${BASE_URL}
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: ${BASE_URL}
 
 cloud:
   aws:
@@ -43,7 +43,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
+#        format_sql: true
+        default_batch_fetch_size: 1000
 
 
 logging.level:
