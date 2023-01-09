@@ -40,8 +40,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-//modelMapperv
-	implementation 'org.modelmapper:modelmapper:3.1.1'
 }
 
 tasks.named('test') {
