@@ -2,6 +2,8 @@ package Backend.teampple.domain.users.entity;
 
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "Users")
+@SQLDelete(sql = "UPDATE Users SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class User extends UserBaseEntity {
     @Id
     @Column(name = "user_id")

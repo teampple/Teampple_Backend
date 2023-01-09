@@ -2,6 +2,7 @@ package Backend.teampple.domain.tasks.entity;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,6 +24,7 @@ public class Task extends PeriodBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stage_id")
     private Stage stage;
@@ -32,5 +34,5 @@ public class Task extends PeriodBaseEntity {
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private Boolean isDone;
+    private boolean isDone;
 }

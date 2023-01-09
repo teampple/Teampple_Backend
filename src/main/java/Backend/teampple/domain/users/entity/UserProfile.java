@@ -2,6 +2,8 @@ package Backend.teampple.domain.users.entity;
 
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "UserProfile")
+@SQLDelete(sql = "UPDATE UserProfile SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")
@@ -49,5 +53,4 @@ public class UserProfile extends UserBaseEntity {
         this.entranceYear = entranceYear;
         this.subscribePlan = subscribePlan;
     }
-
 }

@@ -1,25 +1,27 @@
 package Backend.teampple.domain.stages.entity;
 
+import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Stage")
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
-@ToString
+@ToString(exclude = "tasks")
 @EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
 public class Stage extends PeriodBaseEntity {
     @Id
     @Column(name = "stage_id")
@@ -30,17 +32,17 @@ public class Stage extends PeriodBaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "stage")
     private List<Task> tasks = new ArrayList<>();
 
     @Column(nullable = false, length = 100)
     private String taskName;
 
-    @Column(length = 50)
-    @ColumnDefault("")
+    @Column(columnDefinition = "varchar(50) default ''")
     private String lectureName;
 
-    @ColumnDefault("")
+    @Column(columnDefinition = "varchar(255) default ''")
     private String goal;
 
     @Column(nullable = false)
@@ -51,11 +53,32 @@ public class Stage extends PeriodBaseEntity {
     @ColumnDefault("0")
     private int totalTask;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Boolean isDone;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isDone = false;
 
     @Column(nullable = false)
     private int sequenceNum;
 
+    @Builder
+    public Stage(Long id, Team team, List<Task> tasks, String taskName,
+                 String lectureName, String goal, int achievement, int totalTask,
+                 Boolean isDone, int sequenceNum, LocalDateTime startDate, LocalDateTime dueDate) {
+        init(startDate, dueDate);
+        this.id = id;
+        this.team = team;
+        this.tasks = tasks;
+        this.taskName = taskName;
+        this.lectureName = lectureName;
+        this.goal = goal;
+        this.achievement = achievement;
+        this.totalTask = totalTask;
+        this.isDone = isDone;
+        this.sequenceNum = sequenceNum;
+    }
+
+    public void update(StageDto stageDto) {
+        this.sequenceNum = stageDto.getSequenceNum();
+        this.taskName = stageDto.getName();
+        init(stageDto.getStartDate(), stageDto.getDueDate());
+    }
 }
