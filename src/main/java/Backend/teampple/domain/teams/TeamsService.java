@@ -165,15 +165,15 @@ public class TeamsService{
     }
 
     @Transactional
-    public void postSchedule(PostScheduleDto postScheduleDto, Long teamId) {
+    public void postSchedule(ScheduleDto scheduleDto, Long teamId) {
         // 1. team 찾기
         Team team = teamsRepository.findById(teamId)
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 일정 생성
         Schedule schedule = Schedule.builder()
-                .name(postScheduleDto.getName())
-                .dueDate(postScheduleDto.getDueDate())
+                .name(scheduleDto.getName())
+                .dueDate(scheduleDto.getDueDate())
                 .team(team)
                 .build();
 

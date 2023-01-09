@@ -1,6 +1,7 @@
 package Backend.teampple.domain.stages;
 
 import Backend.teampple.domain.stages.dto.StageDto;
+import Backend.teampple.domain.stages.dto.request.PutStageDto;
 import Backend.teampple.domain.teams.dto.request.PostTeamDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
@@ -50,13 +51,13 @@ public class StagesController {
     @PutMapping(value = "/{teamId}")
     @Operation(summary = "단계 수정", description = "단계 수정 API 입니다.\n"
             + "단계를 수정합니다.")
-    public CommonResponse<String> putStage(@Valid @RequestBody List<StageDto> stagesDto,
-                                            @PathVariable Long teamId) {
+    public CommonResponse<String> putStage(@Valid @RequestBody PutStageDto putStageDto,
+                                           @PathVariable Long teamId) {
         log.info("[api-post] 단계 추가");
 
         // 유저 validation 추가해야함
 
-        stagesService.putStage(stagesDto, teamId);
+        stagesService.putStage(putStageDto.getStages(), teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 }
