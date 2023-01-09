@@ -32,8 +32,9 @@ public class Feedback extends TimeBaseEntity {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @Column(nullable = false, length = 25)
-    private String adviser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adviser_id")
+    private User adviser;
 
     @Column(nullable = false)
     private String comment;

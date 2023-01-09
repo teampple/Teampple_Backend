@@ -26,6 +26,9 @@ public enum ErrorCode {
     // Stage
     STAGE_SEQUENCE_DUPLICATE(BAD_REQUEST, "S001", "단계 순서가 중복되었습니다."),
 
+    // Task
+    TASK_NOT_FOUND(BAD_REQUEST, "TK001", "해당 할 일이 존재하지 않습니다."),
+
     // test
     TEST(BAD_REQUEST, "TEST001", "test");
 
