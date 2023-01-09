@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Table(name = "Users")
 @SQLDelete(sql = "UPDATE Users SET isDeleted = true WHERE id = ?")
@@ -34,4 +33,13 @@ public class User extends UserBaseEntity {
 
     @Column(nullable = false)
     private String kakaoId;
+
+    @Builder
+    public User(Long id, UserProfile userProfile, String refreshToken, LocalDateTime expRT, String kakaoId) {
+        this.id = id;
+        this.userProfile = userProfile;
+        this.refreshToken = refreshToken;
+        this.expRT = expRT;
+        this.kakaoId = kakaoId;
+    }
 }

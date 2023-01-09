@@ -8,8 +8,9 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Table(name = "UserProfile")
 @SQLDelete(sql = "UPDATE UserProfile SET isDeleted = true WHERE id = ?")
