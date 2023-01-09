@@ -2,7 +2,6 @@ package Backend.teampple.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -36,7 +35,7 @@ public class SwaggerConfig {
                 .apiInfo(swaggerInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("Backend.teampple")) /**하위 패키지 -> API*/
-                .paths(PathSelectors.ant("/api/**")) /** "/api/**"인 url 들만 필터링*/
+                .paths(PathSelectors.any()) /** "/api/**"인 url 들만 필터링*/
                 .build();
     }
 

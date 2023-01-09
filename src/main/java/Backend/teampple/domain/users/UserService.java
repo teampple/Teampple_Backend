@@ -3,6 +3,8 @@ package Backend.teampple.domain.users;
 import Backend.teampple.domain.users.dto.UserProfileDto;
 
 public interface UserService {
+    UserProfileDto signUp(UserProfileDto userProfileDto);
+
     UserProfileDto getUserProfile(Long userId);
 
     UserProfileDto updateUserProfile(Long userId, UserProfileDto dto);

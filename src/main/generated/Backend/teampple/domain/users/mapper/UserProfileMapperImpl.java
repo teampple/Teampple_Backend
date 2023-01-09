@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-07T20:04:26+0900",
+    date = "2023-01-10T00:29:40+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.15 (OpenLogic)"
 )
 @Component
@@ -57,31 +57,31 @@ public class UserProfileMapperImpl implements UserProfileMapper {
     }
 
     @Override
-    public void updateFromDto(UserProfileDto d, UserProfile entity) {
+    public void updateFromDto(UserProfileDto d, UserProfile e) {
         if ( d == null ) {
             return;
         }
 
         if ( d.getName() != null ) {
-            entity.setName( d.getName() );
+            e.setName( d.getName() );
         }
         if ( d.getEmail() != null ) {
-            entity.setEmail( d.getEmail() );
+            e.setEmail( d.getEmail() );
         }
         if ( d.getProfileImage() != null ) {
-            entity.setProfileImage( d.getProfileImage() );
+            e.setProfileImage( d.getProfileImage() );
         }
         if ( d.getSchoolName() != null ) {
-            entity.setSchoolName( d.getSchoolName() );
+            e.setSchoolName( d.getSchoolName() );
         }
         if ( d.getMajor() != null ) {
-            entity.setMajor( d.getMajor() );
+            e.setMajor( d.getMajor() );
         }
         if ( d.getEntranceYear() != null ) {
-            entity.setEntranceYear( d.getEntranceYear() );
+            e.setEntranceYear( d.getEntranceYear() );
         }
         if ( d.getSubscribePlan() != null ) {
-            entity.setSubscribePlan( Enum.valueOf( SubscriptionType.class, d.getSubscribePlan() ) );
+            e.setSubscribePlan( Enum.valueOf( SubscriptionType.class, d.getSubscribePlan() ) );
         }
     }
 }

@@ -7,8 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-@Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "UserProfile")
 public class UserProfile extends UserBaseEntity {
@@ -39,5 +38,16 @@ public class UserProfile extends UserBaseEntity {
     @Column(columnDefinition = "varchar(50) default 'FreePlan'")
     private SubscriptionType subscribePlan;
 
+    @Builder
+    public UserProfile(Long id, String name, String email, String profileImage, String schoolName, String major, String entranceYear, SubscriptionType subscribePlan) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.profileImage = profileImage;
+        this.schoolName = schoolName;
+        this.major = major;
+        this.entranceYear = entranceYear;
+        this.subscribePlan = subscribePlan;
+    }
 
 }
