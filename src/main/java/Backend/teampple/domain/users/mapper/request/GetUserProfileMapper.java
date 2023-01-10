@@ -1,4 +1,4 @@
-package com.company.users.mapper.request;
+package Backend.teampple.domain.users.mapper.request;
 
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.entity.UserProfile;
