@@ -1,4 +1,4 @@
-package Backend.teampple.domain.users;
+package Backend.teampple.domain.users.service;
 
 import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
@@ -10,15 +10,15 @@ import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
 import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
+import Backend.teampple.domain.users.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
+public class UserProfileServiceImpl implements UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
@@ -27,33 +27,24 @@ public class UserServiceImpl implements UserService {
     private final PutUserProfileMapper putUserProfileMapper;
 
     @Transactional
-    public GetUserProfileDto signUp(PostUserProfileDto postUserProfileDto){
+    public UserProfile createProfile(PostUserProfileDto postUserProfileDto){
         UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
-        UserProfile save = userProfileRepository.save(userProfile);
-        return getUserProfileMapper.toDto(save);
+        return userProfileRepository.save(userProfile);
     }
 
-    public GetUserProfileDto getUserProfile(Long userId) {
-        User user = userRepository.findById(userId)
+    public GetUserProfileDto getUserProfile(String refreshToken) {
+        User user = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
     @Transactional
-    public GetUserProfileDto updateUserProfile(Long userId, PutUserProfileDto putUserProfileDto) {
-        User user = userRepository.findById(userId)
+    public GetUserProfileDto updateUserProfile(String refreshToken, PutUserProfileDto putUserProfileDto) {
+        User user = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
         UserProfile userProfile = user.getUserProfile();
         putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);
         UserProfile save = userProfileRepository.save(userProfile);
         return getUserProfileMapper.toDto(save);
-    }
-
-    public String getTasks(Long userId) {
-        return "";
-    }
-
-    public String getFeedbacks(Long userId) {
-        return "";
     }
 }

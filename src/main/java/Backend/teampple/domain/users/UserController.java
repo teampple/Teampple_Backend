@@ -1,34 +1,26 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
+import Backend.teampple.domain.users.service.UserProfileService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/users")
 @Api(tags = "사용자")
 public class UserController {
-    private final UserService userService;
-
-    @PostMapping(value = "")
-    public GetUserProfileDto signUp(@Valid @RequestBody PostUserProfileDto postUserProfileDto) {
-        return userService.signUp(postUserProfileDto);
-    }
+    private final UserProfileService userProfileService;
 
     @GetMapping("userprofiles")
-    public GetUserProfileDto getProfiles(Long id) {
-        return userService.getUserProfile(id);
+    public GetUserProfileDto getProfiles(String refreshToken) {
+        return userProfileService.getUserProfile(refreshToken);
     }
 
     @PutMapping("userprofiles")
-    public GetUserProfileDto updateProfile(Long id, @RequestBody PutUserProfileDto putUserProfileDto) {
-        return userService.updateUserProfile(id, putUserProfileDto);
+    public GetUserProfileDto updateProfile(String refreshToken, @RequestBody PutUserProfileDto putUserProfileDto) {
+        return userProfileService.updateUserProfile(refreshToken, putUserProfileDto);
     }
-
 }
