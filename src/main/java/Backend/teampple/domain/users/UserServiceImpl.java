@@ -1,10 +1,13 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.users.dto.UserProfileDto;
-import Backend.teampple.domain.users.entity.SubscriptionType;
+import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
+import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
+import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
-import Backend.teampple.domain.users.mapper.UserProfileMapper;
+import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
+import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
+import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,38 +22,31 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
-    private final UserProfileMapper mapper;
+    private final GetUserProfileMapper getUserProfileMapper;
+    private final PostUserProfileMapper postUserProfileMapper;
+    private final PutUserProfileMapper putUserProfileMapper;
 
     @Transactional
-    public UserProfileDto signUp(UserProfileDto userProfileDto){
-//        UserProfile userProfile = UserProfile.builder()
-//                .name(userProfileDto.getName())
-//                .profileImage(userProfileDto.getProfileImage())
-//                .schoolName(userProfileDto.getSchoolName())
-//                .major(userProfileDto.getMajor())
-//                .entranceYear(userProfileDto.getEntranceYear())
-//                .subscribePlan(SubscriptionType.FreePlan)
-//                .build();
-        UserProfile userProfile = mapper.toEntity(userProfileDto);
+    public GetUserProfileDto signUp(PostUserProfileDto postUserProfileDto){
+        UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
         UserProfile save = userProfileRepository.save(userProfile);
-        System.out.println(save.getCreatedAt());
-        return userProfileDto;
+        return getUserProfileMapper.toDto(save);
     }
 
-    public UserProfileDto getUserProfile(Long userId) {
+    public GetUserProfileDto getUserProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-        return mapper.toDto(user.getUserProfile());
+        return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
     @Transactional
-    public UserProfileDto updateUserProfile(Long userId, UserProfileDto dto) {
+    public GetUserProfileDto updateUserProfile(Long userId, PutUserProfileDto putUserProfileDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
         UserProfile userProfile = user.getUserProfile();
-        mapper.updateFromDto(dto, userProfile);
-        userProfileRepository.save(userProfile);
-        return mapper.toDto(userProfile);
+        putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);
+        UserProfile save = userProfileRepository.save(userProfile);
+        return getUserProfileMapper.toDto(save);
     }
 
     public String getTasks(Long userId) {

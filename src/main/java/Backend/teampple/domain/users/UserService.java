@@ -1,13 +1,15 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.users.dto.UserProfileDto;
+import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
+import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
+import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 
 public interface UserService {
-    UserProfileDto signUp(UserProfileDto userProfileDto);
+    GetUserProfileDto signUp(PostUserProfileDto postUserProfileDto);
 
-    UserProfileDto getUserProfile(Long userId);
+    GetUserProfileDto getUserProfile(Long userId);
 
-    UserProfileDto updateUserProfile(Long userId, UserProfileDto dto);
+    GetUserProfileDto updateUserProfile(Long userId, PutUserProfileDto putUserProfileDto);
 
     String getTasks(Long userId);
 
