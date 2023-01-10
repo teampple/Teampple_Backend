@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-10T23:30:45+0900",
+    date = "2023-01-10T23:44:26+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.15 (OpenLogic)"
 )
 @Component
@@ -22,6 +22,7 @@ public class PostUserProfileMapperImpl implements PostUserProfileMapper {
         PostUserProfileDto.PostUserProfileDtoBuilder postUserProfileDto = PostUserProfileDto.builder();
 
         postUserProfileDto.name( e.getName() );
+        postUserProfileDto.profileImage( e.getProfileImage() );
         postUserProfileDto.schoolName( e.getSchoolName() );
         postUserProfileDto.major( e.getMajor() );
 
@@ -37,6 +38,7 @@ public class PostUserProfileMapperImpl implements PostUserProfileMapper {
         UserProfile.UserProfileBuilder userProfile = UserProfile.builder();
 
         userProfile.name( d.getName() );
+        userProfile.profileImage( d.getProfileImage() );
         userProfile.schoolName( d.getSchoolName() );
         userProfile.major( d.getMajor() );
 

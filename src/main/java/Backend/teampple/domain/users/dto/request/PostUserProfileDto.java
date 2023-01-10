@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostUserProfileDto {
     private String name;
+    private String profileImage;
     private String schoolName;
     private String major;
 }
