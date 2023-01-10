@@ -1,9 +1,10 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.users.dto.UserProfileDto;
+import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
+import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
+import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,18 +17,18 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "")
-    public UserProfileDto signUp(@Valid @RequestBody UserProfileDto userProfileDto){
-        return userService.signUp(userProfileDto);
+    public GetUserProfileDto signUp(@Valid @RequestBody PostUserProfileDto postUserProfileDto) {
+        return userService.signUp(postUserProfileDto);
     }
 
     @GetMapping("userprofiles")
-    public UserProfileDto getProfiles(Long id) {
+    public GetUserProfileDto getProfiles(Long id) {
         return userService.getUserProfile(id);
     }
 
     @PutMapping("userprofiles")
-    public UserProfileDto updateProfile(Long id, @RequestBody UserProfileDto userProfileDto) {
-        return userService.updateUserProfile(id, userProfileDto);
+    public GetUserProfileDto updateProfile(Long id, @RequestBody PutUserProfileDto putUserProfileDto) {
+        return userService.updateUserProfile(id, putUserProfileDto);
     }
 
 }
