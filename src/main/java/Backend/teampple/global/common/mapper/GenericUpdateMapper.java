@@ -1,4 +1,4 @@
-package com.company.mapper;
+package Backend.teampple.global.common.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
