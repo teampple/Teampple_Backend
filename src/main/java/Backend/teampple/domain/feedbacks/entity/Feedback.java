@@ -12,9 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Feedback")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
 @EqualsAndHashCode
 @DynamicInsert
@@ -23,10 +21,6 @@ public class Feedback extends TimeBaseEntity {
     @Column(name = "feedback_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
@@ -39,7 +33,12 @@ public class Feedback extends TimeBaseEntity {
     @Column(nullable = false)
     private String comment;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private boolean isChecked;
+
+    @Builder
+    public Feedback(Long id, Task task, User adviser, String comment) {
+        this.id = id;
+        this.task = task;
+        this.adviser = adviser;
+        this.comment = comment;
+    }
 }
