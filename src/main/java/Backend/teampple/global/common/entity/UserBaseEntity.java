@@ -11,6 +11,6 @@ import javax.persistence.*;
 @MappedSuperclass
 @Getter
 public class UserBaseEntity extends TimeBaseEntity{
-    @Column(columnDefinition = "false")
+    @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 }
