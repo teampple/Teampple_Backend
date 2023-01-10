@@ -1,4 +1,4 @@
-package Backend.teampple.domain.stages;
+package Backend.teampple.domain.stages.repository;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.entity.Team;

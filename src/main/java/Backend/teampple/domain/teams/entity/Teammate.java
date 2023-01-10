@@ -11,9 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Teammate")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
 @EqualsAndHashCode
 public class Teammate extends TimeBaseEntity {
@@ -34,4 +32,11 @@ public class Teammate extends TimeBaseEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
+    @Builder
+    public Teammate(Long id, User user, Team team, UserProfile userProfile) {
+        this.id = id;
+        this.user = user;
+        this.team = team;
+        this.userProfile = userProfile;
+    }
 }

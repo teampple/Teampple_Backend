@@ -2,7 +2,8 @@ package Backend.teampple.domain.stages;
 
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
-import Backend.teampple.domain.teams.TeamsRepository;
+import Backend.teampple.domain.stages.repository.StagesRepository;
+import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
