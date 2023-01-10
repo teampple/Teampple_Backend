@@ -1,21 +1,24 @@
-package Backend.teampple.domain.tasks.entity;
+package Backend.teampple.domain.feedbacks.entity;
 
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.global.common.entity.TimeBaseEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Operator")
 @Getter
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Operator extends TimeBaseEntity {
+@DynamicInsert
+@Table(name = "FeedbackOwner")
+public class FeedbackOwner extends TimeBaseEntity {
     @Id
-    @Column(name = "operator_id")
+    @Column(name = "feedback_owner_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,18 +27,24 @@ public class Operator extends TimeBaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userprofile_id") // user_profile_id 오류남
+    @JoinColumn(name = "userprofile_id")
     private UserProfile userProfile;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
-    private Task task;
+    @JoinColumn(name = "feedback_id")
+    private Feedback feedback;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private boolean isChecked;
 
     @Builder
-    public Operator(Long id, User user, UserProfile userProfile, Task task) {
+    public FeedbackOwner(Long id, User user, UserProfile userProfile, Feedback feedback, boolean isChecked) {
         this.id = id;
         this.user = user;
         this.userProfile = userProfile;
-        this.task = task;
+        this.feedback = feedback;
+        this.isChecked = isChecked;
     }
 }
