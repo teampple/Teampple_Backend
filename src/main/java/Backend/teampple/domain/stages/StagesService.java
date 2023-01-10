@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StagesService {
 
     private final TeamsRepository teamsRepository;

@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-@Api(tags = "파일")
 @RequestMapping("/files")
+@Api(tags = "파일")
 public class FilesController {
 
     private final FilesService filesService;

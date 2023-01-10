@@ -30,9 +30,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class TeamsService{
 
     private final TeamsRepository teamsRepository;
@@ -193,9 +193,11 @@ public class TeamsService{
         // 2. 유저 조회
 //        userRepository.findById()
 
-        // 3. 유저 정보 조회
+        // 3. 이미 존재하는 유저면 에러
 
-        // 4. 팀원 추가
+        // 4. 유저 정보 조회
+
+        // 5. 팀원 추가
 //        Teammate teammate = Teammate.builder()
 //                .user()
 //                .team(team)

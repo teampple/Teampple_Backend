@@ -42,8 +42,8 @@ public class GetTeamTasksDto {
         private boolean isDone;
 
         public getTaskDto(Task task) {
-            this.name = name;
-            this.isDone = isDone;
+            this.name = task.getName();
+            this.isDone = task.isDone();
         }
     }
 
