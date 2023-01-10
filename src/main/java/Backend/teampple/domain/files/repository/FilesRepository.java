@@ -20,4 +20,6 @@ public interface FilesRepository extends JpaRepository<File, Long> {
             " where f.team = :team" +
             " order by f.updatedAt desc")
     List<File> findAllWithTeamAndUserByTeam(@Param("team")Team team);
+
+    List<File> findAllByTeam(Team team);
 }
