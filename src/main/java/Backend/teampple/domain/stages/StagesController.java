@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-@Api(tags = "단계")
 @RequestMapping("/stages")
+@Api(tags = "단계")
 public class StagesController {
 
     private final StagesService stagesService;
 
-    @GetMapping(value = "/{teamId}")
+    @GetMapping(value = "")
     @Operation(summary = "단계 조회", description = "단계 조회 API 입니다.\n"
             + "단계를 조회합니다.")
-    public CommonResponse<List<StageDto>> getStage(@PathVariable Long teamId) {
+    public CommonResponse<List<StageDto>> getStage(@RequestParam("teamId") Long teamId) {
         log.info("[api-get] 단계 조회");
 
         // 유저 validation 추가해야함
@@ -35,11 +35,11 @@ public class StagesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), stageDtos);
     }
 
-    @PostMapping(value = "/{teamId}")
+    @PostMapping(value = "")
     @Operation(summary = "단계 추가", description = "단계 추가 API 입니다.\n"
             + "단계를 추가합니다.")
     public CommonResponse<String> postStage(@Valid @RequestBody StageDto stageDto,
-                                            @PathVariable Long teamId) {
+                                            @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
 
         // 유저 validation 추가해야함
@@ -48,11 +48,11 @@ public class StagesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
-    @PutMapping(value = "/{teamId}")
+    @PutMapping(value = "")
     @Operation(summary = "단계 수정", description = "단계 수정 API 입니다.\n"
             + "단계를 수정합니다.")
     public CommonResponse<String> putStage(@Valid @RequestBody PutStageDto putStageDto,
-                                           @PathVariable Long teamId) {
+                                           @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
 
         // 유저 validation 추가해야함
