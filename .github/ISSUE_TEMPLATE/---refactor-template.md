@@ -1,8 +1,8 @@
 ---
 name: "\U0001F528 Refactor Template"
 about: 리팩토링 관련 작업 사항을 적습니다
-title: "\U0001F528 Refactor - "
-labels: ''
+title: "\U0001F528[Refactor] - "
+labels: '🔨 Refactor'
 assignees: ''
 
 ---
