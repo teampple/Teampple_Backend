@@ -1,7 +1,7 @@
-server:
-  port: ${PORT:8080}
-  servlet:
-    context-path: ${BASE_URL}
+#server:
+#  port: ${PORT:8080}
+#  servlet:
+#    context-path: ${BASE_URL}
 
 cloud:
   aws:
