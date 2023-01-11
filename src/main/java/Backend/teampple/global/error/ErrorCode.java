@@ -33,6 +33,9 @@ public enum ErrorCode {
     // User
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
 
+    // Feedback
+    FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
+
     // test
     TEST(BAD_REQUEST, "TEST001", "test");
 
