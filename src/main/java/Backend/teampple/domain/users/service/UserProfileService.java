@@ -13,4 +13,6 @@ public interface UserProfileService {
     GetUserProfileDto getUserProfile(String refreshToken);
 
     GetUserProfileDto updateUserProfile(String refreshToken, PutUserProfileDto putUserProfileDto);
+
+    void deleteUserProfile(UserProfile userProfile);
 }

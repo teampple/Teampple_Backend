@@ -10,7 +10,6 @@ import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
 import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.domain.users.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final PutUserProfileMapper putUserProfileMapper;
 
     @Transactional
-    public UserProfile createProfile(PostUserProfileDto postUserProfileDto){
+    public UserProfile createProfile(PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
         return userProfileRepository.save(userProfile);
     }
@@ -47,4 +46,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         UserProfile save = userProfileRepository.save(userProfile);
         return getUserProfileMapper.toDto(save);
     }
+
+    @Transactional
+    public void deleteUserProfile(UserProfile userProfile){
+        userProfile.updateIsDeleted();
+        userProfileRepository.save(userProfile);
+    }
+
 }

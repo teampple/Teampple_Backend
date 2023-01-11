@@ -25,10 +25,10 @@ public class User extends UserBaseEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
-    @Column(nullable = false)
+    @Column()
     private String refreshToken;
 
-    @Column(nullable = false)
+    @Column()
     private LocalDateTime expRT;
 
     @Column(nullable = false)
@@ -41,5 +41,10 @@ public class User extends UserBaseEntity {
         this.refreshToken = refreshToken;
         this.expRT = expRT;
         this.kakaoId = kakaoId;
+    }
+
+    public void deleteRefreshToken(){
+        this.refreshToken=null;
+        this.expRT=null;
     }
 }

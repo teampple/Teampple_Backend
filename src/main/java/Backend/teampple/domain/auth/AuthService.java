@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthService {
+    void logout(String refreshToken);
     void signUp(PostUserProfileDto postUserProfileDto);
     void withdrawal(String refreshToken);
 }

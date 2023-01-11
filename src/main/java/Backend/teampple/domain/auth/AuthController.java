@@ -20,8 +20,8 @@ public class AuthController {
 //    }
 
     @PostMapping("/logout")
-    public CommonResponse<String> logout(){
-        //
+    public CommonResponse<String> logout(String refreshToken){
+        authService.logout(refreshToken);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 

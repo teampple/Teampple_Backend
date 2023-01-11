@@ -15,6 +15,11 @@ public class AuthServiceImpl implements AuthService{
     private final UserService userService;
     private final UserProfileService userProfileService;
 
+    @Override
+    public void logout(String refreshToken) {
+        userService.deleteUserRefreshToken(refreshToken);
+    }
+
     public void signUp(PostUserProfileDto postUserProfileDto){
         UserProfile profile = userProfileService.createProfile(postUserProfileDto);
         userService.createUser(profile);
