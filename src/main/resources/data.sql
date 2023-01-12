@@ -19,19 +19,19 @@ VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "2024-01-01 00:00:00", "20
        ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "2024-01-01 00:00:00", "2024-01-01 00:00:01", 0, "goalS31", false,
         "lectureS11", 1, "S31", 0, 3);
 
-INSERT INTO user_profile (created_at, updated_at, del_status, email, entrance_year, major, name, profile_image,
+INSERT INTO user_profile (created_at, updated_at, is_deleted, email, entrance_year, major, name, profile_image,
                           school_name, subscribe_plan)
-VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "U1@U1.com", "entYearU1", "majorU1", "U1", "proImageU1",
+VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "U1@U1.com", "entYearU1", "majorU1", "U1", "proImageU1",
         "schoolU1", "FreePlan"),
-       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "U2@U2.com", "entYearU2", "majorU2", "U2", "proImageU2",
+       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "U2@U2.com", "entYearU2", "majorU2", "U2", "proImageU2",
         "schoolU2", "FreePlan"),
-       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "U3@U3.com", "entYearU3", "majorU3", "U3", "proImageU3",
+       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "U3@U3.com", "entYearU3", "majorU3", "U3", "proImageU3",
         "schoolU3", "FreePlan");
 
-INSERT INTO users (created_at, updated_at, del_status, exprt, kakao_id, refresh_token, user_profile_id)
-VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "2024-01-01 00:00:00", "kakaoU1", "rtU1", 1),
-       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "2024-01-01 00:00:00", "kakaoU2", "rtU2", 2),
-       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", "NO", "2024-01-01 00:00:00", "kakaoU3", "rtU3", 3);
+INSERT INTO users (created_at, updated_at, is_deleted, exprt, kakao_id, refresh_token, user_profile_id)
+VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "2024-01-01 00:00:00", "kakaoU1", "rtU1", 1),
+       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "2024-01-01 00:00:00", "kakaoU2", "rtU2", 2),
+       ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 0, "2024-01-01 00:00:00", "kakaoU3", "rtU3", 3);
 
 INSERT INTO teammate (created_at, updated_at, team_id, user_id, user_profile_id)
 VALUES ("2024-01-01 00:00:00", "2024-01-01 00:00:00", 1, 1, 1),

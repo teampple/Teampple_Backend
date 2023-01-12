@@ -2,15 +2,19 @@ package Backend.teampple.domain.users.entity;
 
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
-@Builder
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Table(name = "UserProfile")
+@SQLDelete(sql = "UPDATE UserProfile SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")
@@ -39,5 +43,15 @@ public class UserProfile extends UserBaseEntity {
     @Column(columnDefinition = "varchar(50) default 'FreePlan'")
     private SubscriptionType subscribePlan;
 
-
+    @Builder
+    public UserProfile(Long id, String name, String email, String profileImage, String schoolName, String major, String entranceYear, SubscriptionType subscribePlan) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.profileImage = profileImage;
+        this.schoolName = schoolName;
+        this.major = major;
+        this.entranceYear = entranceYear;
+        this.subscribePlan = subscribePlan;
+    }
 }

@@ -1,4 +1,4 @@
-package Backend.teampple.domain.users.dto;
+package Backend.teampple.domain.users.dto.request;
 
 import lombok.*;
 
@@ -6,12 +6,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserProfileDto {
+public class PostUserProfileDto {
     private String name;
-    private String email;
     private String profileImage;
     private String schoolName;
     private String major;
-    private String entranceYear;
-    private String subscribePlan;
 }

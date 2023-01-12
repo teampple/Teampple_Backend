@@ -1,15 +1,26 @@
 package Backend.teampple.domain.users;
 
+import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
+import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
+import Backend.teampple.domain.users.service.UserProfileService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/users", produces = "application/json; charset=utf-8")
+@RequestMapping(value = "/users")
+@Api(tags = "사용자")
 public class UserController {
-    private final UserService userService;
+    private final UserProfileService userProfileService;
 
+    @GetMapping("userprofiles")
+    public GetUserProfileDto getProfiles(String refreshToken) {
+        return userProfileService.getUserProfile(refreshToken);
+    }
 
+    @PutMapping("userprofiles")
+    public GetUserProfileDto updateProfile(String refreshToken, @RequestBody PutUserProfileDto putUserProfileDto) {
+        return userProfileService.updateUserProfile(refreshToken, putUserProfileDto);
+    }
 }
