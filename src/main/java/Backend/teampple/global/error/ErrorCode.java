@@ -36,8 +36,8 @@ public enum ErrorCode {
     // Feedback
     FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
 
-    // test
-    TEST(BAD_REQUEST, "TEST001", "test");
+    // Template
+    TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

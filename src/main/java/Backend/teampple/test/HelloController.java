@@ -24,7 +24,7 @@ public class HelloController {
 
     @GetMapping("/")
     public CommonResponse<String> aa(@RequestBody Test test) {
-        log.info("{}", ErrorCode.TEST.getCode());
+//        log.info("{}", ErrorCode.TEST.getCode());
         if(test.getNum() == 1L)
             throw new UnauthorizedException();
         return new CommonResponse<String>(1,Boolean.TRUE,"1","1");
