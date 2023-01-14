@@ -27,17 +27,23 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 //	Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	aws
+//	AWS
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
 
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-// mapstruct
+//  mapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+//  security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+//  JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
