@@ -25,18 +25,21 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final PostUserProfileMapper postUserProfileMapper;
     private final PutUserProfileMapper putUserProfileMapper;
 
+    @Override
     @Transactional
     public UserProfile createProfile(PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
         return userProfileRepository.save(userProfile);
     }
 
+    @Override
     public GetUserProfileDto getUserProfile(String refreshToken) {
         User user = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
+    @Override
     @Transactional
     public GetUserProfileDto updateUserProfile(String refreshToken, PutUserProfileDto putUserProfileDto) {
         User user = userRepository.findByRefreshToken(refreshToken)
@@ -47,6 +50,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         return getUserProfileMapper.toDto(save);
     }
 
+    @Override
     @Transactional
     public void deleteUserProfile(UserProfile userProfile){
         userProfile.updateIsDeleted();
