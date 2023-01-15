@@ -43,8 +43,12 @@ public class User extends UserBaseEntity {
         this.kakaoId = kakaoId;
     }
 
-    public void deleteRefreshToken(){
-        this.refreshToken=null;
-        this.expRT=null;
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void deleteRefreshToken() {
+        this.refreshToken = null;
+        this.expRT = null;
     }
 }

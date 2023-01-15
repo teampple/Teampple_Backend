@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByRefreshToken(String refreshToken);
 
+    Optional<User> findByKakaoId(String kakaoId);
+
     @Query("select u from User u join fetch u.userProfile where u.id = :id")
     Optional<User> getByIdWithUserProfile(Long id);
 
