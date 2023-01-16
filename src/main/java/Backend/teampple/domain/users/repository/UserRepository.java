@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findById(Long id);
 
-    Optional<User> findByRefreshToken(String refreshToken);
-
     Optional<User> findByKakaoId(String kakaoId);
 
     @Query("select u from User u join fetch u.userProfile where u.id = :id")
