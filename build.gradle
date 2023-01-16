@@ -40,6 +40,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+//	redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

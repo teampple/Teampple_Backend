@@ -23,9 +23,9 @@ spring:
     password: ${DB_PASSWORD}
   profiles:
     active: prod
-  #  redis:
-  #    host: ${REDIS_HOST}
-  #    port: ${REDIS_PORT}
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
   servlet:
     multipart:
       max-file-size: 100MB
@@ -39,13 +39,13 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
-
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         database-platform: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         default_batch_fetch_size: 1000
+
   sql:
     init:
 #      mode: always
@@ -54,7 +54,6 @@ spring:
       location: classpath:teampple.png
       width: 125
       height: 10
-
 
 logging.level:
   org.hibernate.SQL: debug
