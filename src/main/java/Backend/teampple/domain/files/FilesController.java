@@ -38,7 +38,7 @@ public class FilesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), fileDtos);
     }
 
-    @GetMapping(value = "/info")
+    @GetMapping(value = "info")
     @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.\n"
             + "파일 갯수를 조회합니다.")
     public CommonResponse<GetFileBriefDto> getFileBrief(@RequestParam("teamId") Long teamId) {

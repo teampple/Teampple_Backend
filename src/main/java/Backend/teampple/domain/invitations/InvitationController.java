@@ -32,7 +32,7 @@ public class InvitationController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getInvitationDto);
     }
 
-    @GetMapping(value = "/validation")
+    @GetMapping(value = "validation")
     @Operation(summary = "초대 코드 검증", description = "초대 코드 검증 API 입니다.\n"
             + "초대 코드를 검증합니다.")
     public CommonResponse<GetInvitationValidationDto> getInvitationValidation(@RequestParam("code") String code) {
