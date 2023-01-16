@@ -34,7 +34,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
 
     // Feedback
-    FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 피드백이 존재하지 않습니다."),
+    FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");

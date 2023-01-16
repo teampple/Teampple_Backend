@@ -31,11 +31,10 @@ public class TeamsController {
 
     @PostMapping(value = "")
     @Operation(summary = "팀플 생성", description = "팀플 생성 API 입니다.\n"
-            + "팀과 팀의 단계를 생성합니다. stage가 없어도 []를 보내줘야 합니다.")
+            + "팀과 팀의 단계를 생성합니다. 팀 생성시 팀을 생성한 유저가 팀의 팀원으로 추가됩니다. stage가 없어도 []를 보내줘야 합니다.")
     public CommonResponse<String> postTeam(@Valid @RequestBody PostTeamDto postTeamDto) {
         log.info("[api-post] 팀 생성");
 
-        // 팀 생성시 팀을 생성한 유저가 팀의 팀원으로 추가되도록 수정
         // 유저 validation 추가해야함
 
         teamsService.createTeam(postTeamDto);

@@ -14,7 +14,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @Table(name = "UserProfile")
 @SQLDelete(sql = "UPDATE UserProfile SET isDeleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")

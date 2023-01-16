@@ -3,7 +3,6 @@ package Backend.teampple.global.error;
 import Backend.teampple.global.error.exception.BaseException;
 import Backend.teampple.global.common.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -57,14 +56,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<CommonResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.error("MethodArgumentTypeMismatchException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
-                null, ErrorCode._BAD_REQUEST.getHttpStatus());
-    }
-
-    // 변수 타입이 맞지 않을 때 발생하는 에러입니다.
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    protected ResponseEntity<CommonResponse> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
-        log.error("EmptyResultDataAccessException", e);
         return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
