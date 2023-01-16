@@ -4,12 +4,13 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,17 +42,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUserRefreshToken(String refreshToken) {
-        User user = userRepository.findByRefreshToken(refreshToken)
+    public void deleteUserRefreshToken(String kakaoId) {
+        User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
         user.deleteRefreshToken();
-        userRepository.save(user);
+        User save = userRepository.save(user);
+        log.info(save.getRefreshToken()+save.getExpRT());
     }
 
     @Override
     @Transactional
-    public void deleteUser(String refreshToken){
-        User user = userRepository.findByRefreshToken(refreshToken)
+    public void deleteUser(String kakaoId){
+        User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
         userProfileService.deleteUserProfile(user.getUserProfile());
         user.updateIsDeleted();

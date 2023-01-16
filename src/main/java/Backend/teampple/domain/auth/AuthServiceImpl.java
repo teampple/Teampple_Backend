@@ -49,8 +49,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout(String refreshToken) {
-        userService.deleteUserRefreshToken(refreshToken);
+    public void logout(Authentication authentication) {
+        userService.deleteUserRefreshToken(authentication.getName());
     }
 
     @Override
@@ -66,8 +66,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void withdrawal(String refreshToken) {
-        userService.deleteUser(refreshToken);
+    public void withdrawal(Authentication authentication) {
+        userService.deleteUser(authentication.getName());
     }
 
     @Override

@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,8 +28,8 @@ public class AuthController {
 
     @ApiOperation(value = "로그아웃 요청")
     @PostMapping("/logout")
-    public CommonResponse<String> logout(@RequestBody String refreshToken) {
-        authService.logout(refreshToken);
+    public CommonResponse<String> logout(Authentication authentication) {
+        authService.logout(authentication);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
@@ -41,8 +42,8 @@ public class AuthController {
 
     @ApiOperation(value = "회원탈퇴 요청")
     @DeleteMapping("/withdrawal")
-    public CommonResponse<String> withdrawal(@RequestBody String refreshToken) {
-        authService.withdrawal(refreshToken);
+    public CommonResponse<String> withdrawal(Authentication authentication) {
+        authService.withdrawal(authentication);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 

@@ -7,9 +7,9 @@ public interface UserService {
 
     void updateUserRefreshToken(String kakaoId, String refreshToken);
 
-    void deleteUserRefreshToken(String refreshToken);
+    void deleteUserRefreshToken(String kakaoId);
 
-    void deleteUser(String refreshToken);
+    void deleteUser(String kakaoId);
 
     String getTasks(String refreshToken);
 
