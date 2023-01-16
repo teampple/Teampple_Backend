@@ -4,6 +4,8 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.global.common.entity.TimeBaseEntity;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -20,14 +22,17 @@ public class Operator extends TimeBaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "userprofile_id") // user_profile_id 오류남
     private UserProfile userProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "task_id")
     private Task task;
 
