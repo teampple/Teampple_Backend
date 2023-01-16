@@ -25,10 +25,10 @@ public class User extends UserBaseEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
-    @Column()
+    @Column
     private String refreshToken;
 
-    @Column()
+    @Column
     private LocalDateTime expRT;
 
     @Column(nullable = false)
