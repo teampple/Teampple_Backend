@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @Table(name = "Users")
 @SQLDelete(sql = "UPDATE Users SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class User extends UserBaseEntity {
     @Id
     @Column(name = "user_id")
