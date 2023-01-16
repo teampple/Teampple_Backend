@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-//    @Value("${jwt.secret}")
+//    @Value("${token.secret}")
 //    private final String secretKey;
     private final String secretKey = "Teampple0Jwt0Super0Secret0Key2023abcdefghijklmn";
     private final CustomUserDetailServiceImpl customUserDetailService;
@@ -35,7 +36,7 @@ public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     public Key getSecretKey(){
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     /** 토큰 생성 */
@@ -99,7 +100,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJwt(token);
+            Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
