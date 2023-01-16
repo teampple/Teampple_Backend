@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+//TODO: refreshToken 유효성 확인
 public class UserProfileServiceImpl implements UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;

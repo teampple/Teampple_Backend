@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .userProfile(userProfile)
                 .refreshToken(refreshToken)
+                //TODO: 시간 주입 방식 변경 필요
                 .expRT(LocalDateTime.now().plusWeeks(2L))
                 .kakaoId(kakaoId)
                 .build();
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserRefreshToken(String kakaoId, String refreshToken) {
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-        user.updateRefreshToken(refreshToken);
+        user.updateRefreshToken(refreshToken,LocalDateTime.now().plusWeeks(2L));
         userRepository.save(user);
     }
 
