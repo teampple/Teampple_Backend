@@ -13,8 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Table(name = "UserProfile")
-@SQLDelete(sql = "UPDATE UserProfile SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@SQLDelete(sql = "UPDATE UserProfile SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")

@@ -11,13 +11,15 @@ import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-//TODO: refreshToken 유효성 확인
 public class UserProfileServiceImpl implements UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
@@ -34,26 +36,31 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public GetUserProfileDto getUserProfile(String refreshToken) {
-        User user = userRepository.findByRefreshToken(refreshToken)
+    public GetUserProfileDto getUserProfile(Authentication authentication) {
+        log.info(authentication.getName());
+        User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
     @Override
     @Transactional
-    public GetUserProfileDto updateUserProfile(String refreshToken, PutUserProfileDto putUserProfileDto) {
-        User user = userRepository.findByRefreshToken(refreshToken)
+    public GetUserProfileDto updateUserProfile(Authentication authentication, PutUserProfileDto putUserProfileDto) {
+        User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+
         UserProfile userProfile = user.getUserProfile();
+
         putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);
         UserProfile save = userProfileRepository.save(userProfile);
+
         return getUserProfileMapper.toDto(save);
     }
 
     @Override
     @Transactional
-    public void deleteUserProfile(UserProfile userProfile){
+    public void deleteUserProfile(UserProfile userProfile) {
         userProfile.updateIsDeleted();
         userProfileRepository.save(userProfile);
     }

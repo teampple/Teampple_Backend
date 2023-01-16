@@ -7,6 +7,7 @@ import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,14 +18,14 @@ public class UserController {
     private final UserProfileService userProfileService;
 
     @GetMapping("/userprofiles")
-    public CommonResponse<GetUserProfileDto> getProfiles(@RequestBody String refreshToken) {
-        GetUserProfileDto userProfile = userProfileService.getUserProfile(refreshToken);
+    public CommonResponse<GetUserProfileDto> getProfiles(Authentication authentication) {
+        GetUserProfileDto userProfile = userProfileService.getUserProfile(authentication);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }
 
     @PutMapping("/userprofiles")
-    public CommonResponse<GetUserProfileDto> updateProfile(@RequestBody String refreshToken, @RequestBody PutUserProfileDto putUserProfileDto) {
-        GetUserProfileDto userProfile = userProfileService.updateUserProfile(refreshToken, putUserProfileDto);
+    public CommonResponse<GetUserProfileDto> updateProfile(Authentication authentication, @RequestBody PutUserProfileDto putUserProfileDto) {
+        GetUserProfileDto userProfile = userProfileService.updateUserProfile(authentication, putUserProfileDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }
 }
