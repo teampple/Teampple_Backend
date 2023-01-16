@@ -14,6 +14,7 @@ import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ public class InvitationService {
 
     private final TeammateRepository teammateRepository;
 
+    @Transactional
     public GetInvitationDto getInvitation(Long teamId) {
         // 1. 팀 조회
         Team team = teamsRepository.findById(teamId)
@@ -56,6 +58,7 @@ public class InvitationService {
                 .build();
     }
 
+    @Transactional
     public GetInvitationValidationDto getInvitationValidation(String code) {
         // 1. 초대장 찾기
         Invitation invite = invitationRepository.findByCode(code);
