@@ -1,18 +1,20 @@
-package Backend.teampple.domain.auth.dto;
+package Backend.teampple.domain.auth.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter @ToString
+
+@Getter
+@ToString
 @NoArgsConstructor
-public class TokenDto {
+public class ResponseTokenDto {
     private String accessToken;
     private String refreshToken;
 
     @Builder
-    public TokenDto(String accessToken, String refreshToken) {
+    public ResponseTokenDto(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
