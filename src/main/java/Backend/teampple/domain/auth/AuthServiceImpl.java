@@ -84,7 +84,8 @@ public class AuthServiceImpl implements AuthService {
         Backend.teampple.domain.users.entity.User user = userRepository.findByKakaoId(authentication.getName())
                         .orElseThrow(() -> new NotFoundException());
 
-        if(user.getRefreshToken().equals(requestJwtTokenDto.getJwtRefreshToken()) || user.getExpRT().isBefore(LocalDateTime.now())){
+        log.info(String.valueOf(user.getExpRT().isAfter(LocalDateTime.now())));
+        if(!user.getRefreshToken().equals(requestJwtTokenDto.getJwtRefreshToken()) || user.getExpRT().isBefore(LocalDateTime.now())){
             throw new BadRequestException();
         }
 
