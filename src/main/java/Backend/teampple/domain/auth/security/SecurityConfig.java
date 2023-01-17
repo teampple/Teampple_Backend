@@ -20,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] SwaggerPatterns = {
+            "/swagger-resources/**",
+            "/swagger-ui.html",
             "/swagger-ui/**",
     };
 
@@ -27,13 +29,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Bean
-    public WebSecurityCustomizer configure() {
-        /**하위 요청 제외*/
-        return (web) -> web.ignoring().mvcMatchers(
-                "/swagger-ui/**"
-        );
-    }
+//    @Bean
+//    public WebSecurityCustomizer configure() {
+//        /**하위 요청 제외*/
+//        return (web) -> web.ignoring().mvcMatchers(
+//                "/swagger-ui/**"
+//        );
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -39,7 +39,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
-
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -50,8 +49,9 @@ spring:
     init:
 #      mode: always
 
-jwt:
-  secret: ${JWT_SECRET}
+token:
+#  secret: ${JWT_SECRET}
+  secret: Teampple0Jwt0Super0Secret0Key2023abcdefghijklmn
 
 logging.level:
   org.hibernate.SQL: debug
