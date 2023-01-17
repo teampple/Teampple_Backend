@@ -49,7 +49,7 @@ public class AuthController {
 
     @ApiOperation(value = "리프레시토큰 재발급 요청")
     @PostMapping("/reIssuance")
-    public CommonResponse<ResponseTokenDto> reIssuance(@RequestBody RequestJwtTokenDto requestJwtTokenDto){
+    public CommonResponse<ResponseTokenDto> reIssuance(Authentication authentication, @RequestBody RequestJwtTokenDto requestJwtTokenDto){
         ResponseTokenDto responseTokenDto = authService.reIssuance(requestJwtTokenDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), responseTokenDto);
     }
