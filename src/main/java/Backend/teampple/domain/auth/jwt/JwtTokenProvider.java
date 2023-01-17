@@ -24,9 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-//    @Value("${token.secret}")
-//    private final String secretKey;
-    private final String secretKey = "Teampple0Jwt0Super0Secret0Key2023abcdefghijklmn";
+    @Value("${token.secret}")
+    private String secretKey;
     private final CustomUserDetailServiceImpl customUserDetailService;
 
     /** 토큰 유효 시간 */

@@ -23,9 +23,9 @@ spring:
     password: ${DB_PASSWORD}
   profiles:
     active: prod
-  #  redis:
-  #    host: ${REDIS_HOST}
-  #    port: ${REDIS_PORT}
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
   servlet:
     multipart:
       max-file-size: 100MB
@@ -50,8 +50,7 @@ spring:
 #      mode: always
 
 token:
-#  secret: ${JWT_SECRET}
-  secret: Teampple0Jwt0Super0Secret0Key2023abcdefghijklmn
+  secret: ${JWT_SECRET}
 
 logging.level:
   org.hibernate.SQL: debug
