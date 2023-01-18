@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class RequestOAuthTokenDto {
     @NonNull
-    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU1", required = true)
+    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU3", required = true)
     private String idToken;
 
     @NonNull
