@@ -43,8 +43,8 @@ public class JwtTokenProvider {
             throws HttpServerErrorException.InternalServerError {
         final Date now = new Date();
         return ResponseTokenDto.builder()
-                .accessToken(generateAccessToken(authentication, now))
-                .refreshToken(generateRefreshToken(now))
+                .jwtAccessToken(generateAccessToken(authentication, now))
+                .jwtRefreshToken(generateRefreshToken(now))
                 .build();
     }
 

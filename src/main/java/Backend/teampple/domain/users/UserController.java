@@ -1,6 +1,5 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
@@ -18,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController

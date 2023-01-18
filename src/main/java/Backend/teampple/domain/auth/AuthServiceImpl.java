@@ -2,10 +2,12 @@ package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.request.RequestOAuthTokenDto;
+import Backend.teampple.domain.auth.dto.request.RequestSignUpDto;
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
+import Backend.teampple.domain.auth.mapper.RequestOAuthTokenMapper;
 import Backend.teampple.domain.users.entity.UserProfile;
+import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
@@ -37,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserProfileService userProfileService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final PostUserProfileMapper postUserProfileMapper;
+    private final RequestOAuthTokenMapper requestOAuthTokenMapper;
+
     @Override
     @Transactional
     public ResponseTokenDto login(RequestOAuthTokenDto requestOAuthTokenDto) {
@@ -44,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = forcedAuthentication(requestOAuthTokenDto);
         final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
 
-        userService.updateUserRefreshToken(requestOAuthTokenDto.getIdToken(), generateToken.getRefreshToken());
+        userService.updateUserRefreshToken(requestOAuthTokenDto.getIdToken(), generateToken.getJwtRefreshToken());
         return generateToken;
     }
 
@@ -55,13 +60,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseTokenDto join(RequestOAuthTokenDto requestOAuthTokenDto, PostUserProfileDto postUserProfileDto) {
+    public ResponseTokenDto join(RequestSignUpDto requestSignUpDto) {
         //TODO: 카카오 유효성 확인
-        Authentication authentication = forcedAuthentication(requestOAuthTokenDto);
+        UserProfile userProfile = postUserProfileMapper.toEntity(requestSignUpDto);
+        RequestOAuthTokenDto requestOAuthToken = requestOAuthTokenMapper.toEntity(requestSignUpDto);
+
+        Authentication authentication = forcedAuthentication(requestOAuthToken);
         final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
 
-        UserProfile profile = userProfileService.createProfile(postUserProfileDto);
-        userService.createUser(profile, requestOAuthTokenDto.getIdToken(), generateToken.getRefreshToken());
+        UserProfile profile = userProfileService.createProfile(userProfile);
+        userService.createUser(profile, requestOAuthToken.getIdToken(), generateToken.getJwtRefreshToken());
         return generateToken;
     }
 
@@ -90,8 +98,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         final ResponseTokenDto generateToken = ResponseTokenDto.builder()
-                .accessToken(jwtTokenProvider.generateAccessToken(authentication, new Date()))
-                .refreshToken(requestJwtTokenDto.getJwtRefreshToken())
+                .jwtAccessToken(jwtTokenProvider.generateAccessToken(authentication, new Date()))
+                .jwtRefreshToken(requestJwtTokenDto.getJwtRefreshToken())
                 .build();
 
         return generateToken;
@@ -100,6 +108,7 @@ public class AuthServiceImpl implements AuthService {
     private Authentication forcedAuthentication(RequestOAuthTokenDto requestOAuthTokenDto) {
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority("ROLE_USER"));
+        log.info(requestOAuthTokenDto.getIdToken());
         final User user = new User(requestOAuthTokenDto.getIdToken(), "", roles);
 
         final Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, roles);

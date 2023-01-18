@@ -5,7 +5,6 @@ import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.stages.dto.response.GetStageDto;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.teams.dto.UserTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
 import Backend.teampple.domain.teams.entity.Team;
