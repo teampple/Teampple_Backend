@@ -2,8 +2,8 @@ package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.request.RequestOAuthTokenDto;
+import Backend.teampple.domain.auth.dto.request.RequestSignUpDto;
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public interface AuthService {
 
     void logout(Authentication authentication);
 
-    ResponseTokenDto join(RequestOAuthTokenDto requestOAuthTokenDto, PostUserProfileDto postUserProfileDto);
+    ResponseTokenDto join(RequestSignUpDto requestSignUpDto);
 
     void withdrawal(Authentication authentication);
 
