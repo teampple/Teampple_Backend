@@ -42,6 +42,7 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
+    MISMATCH_TEAM(BAD_REQUEST, "U002", "해당 유저가 속한 팀이 아닙니다."),
 
     // Feedback
     FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 피드백이 존재하지 않습니다."),
