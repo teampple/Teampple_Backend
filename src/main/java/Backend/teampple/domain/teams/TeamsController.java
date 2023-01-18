@@ -54,7 +54,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), teamDetail);
     }
 
-    @GetMapping(value = "/tasks")
+    @GetMapping(value = "tasks")
     @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.\n"
             + "팀플 화면에 쓰일 정보를 조회합니다.")
     public CommonResponse<List<GetTeamTasksDto>> getTeamTasks(@RequestParam("teamId") Long teamId) {
@@ -81,7 +81,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
-    @PostMapping(value = "/schedules")
+    @PostMapping(value = "schedules")
     @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.\n"
             + "팀플 일정을 생성합니다.")
     public CommonResponse<String> postSchedule(@Valid @RequestBody ScheduleDto scheduleDto,
@@ -95,7 +95,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
-    @GetMapping(value = "/schedules")
+    @GetMapping(value = "schedules")
     @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다.\n"
             + "팀플 일정을 조회합니다."
             + "name 과 duedate는 팀의 이름과 마감일이고, schedule은 팀의 일정입니다.")
@@ -109,7 +109,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
 
-    @PostMapping(value = "/teammates")
+    @PostMapping(value = "teammates")
     @Operation(summary = "팀원 추가", description = "팀원 추가 API 입니다.\n"
             + "팀원을 추가합니다.")
     public CommonResponse<String> postTeammate(@Valid @RequestBody PostTeammateDto postTeammateDto) {
@@ -122,7 +122,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
     }
 
-    @GetMapping(value = "/teammates")
+    @GetMapping(value = "teammates")
     @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다.\n"
             + "팀원 정보를 조회합니다."
             + "리스트가 아닌 값들은 '나'의 정보이고, 리스트는 '나'를 제외한 팀원입니다.")
@@ -136,7 +136,7 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
     }
 
-    @DeleteMapping(value = "/teammates")
+    @DeleteMapping(value = "teammates")
     @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.\n"
             + "팀원을 삭제합니다.")
     public CommonResponse<String> deleteTeammate(@Valid @RequestBody DeleteTeammateDto deleteTeammateDto,

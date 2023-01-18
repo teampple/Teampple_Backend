@@ -38,7 +38,7 @@ public class TemplatesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getTemplateDtos);
     }
 
-    @PostMapping(value = "/bookmarks")
+    @PostMapping(value = "bookmarks")
     @Operation(summary = "탬플릿 북마크", description = "탬플릿 북마크 API 입니다.\n"
             + "탬플릿 즐겨찾기합니다. 작동x")
     public CommonResponse<String> postBookmark(@Valid @RequestBody PostBookmarkDto postBookmarkDto) {
