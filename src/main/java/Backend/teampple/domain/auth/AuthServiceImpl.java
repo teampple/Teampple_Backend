@@ -90,8 +90,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         final ResponseTokenDto generateToken = ResponseTokenDto.builder()
-                .accessToken(jwtTokenProvider.generateAccessToken(authentication, new Date()))
-                .refreshToken(requestJwtTokenDto.getJwtRefreshToken())
+                .jwtAccessToken(jwtTokenProvider.generateAccessToken(authentication, new Date()))
+                .jwtRefreshToken(requestJwtTokenDto.getJwtRefreshToken())
                 .build();
 
         return generateToken;
