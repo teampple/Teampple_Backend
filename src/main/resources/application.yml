@@ -49,11 +49,15 @@ spring:
   sql:
     init:
 #      mode: always
+
   banner:
     image:
       location: classpath:teampple.png
       width: 125
       height: 10
+      
+token:
+  secret: ${JWT_SECRET}
 
 logging.level:
   org.hibernate.SQL: debug

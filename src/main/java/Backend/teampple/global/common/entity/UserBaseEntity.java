@@ -6,11 +6,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-/** SAFE_DELETE!
- * 사용자 DELETE_STATUS 확인용*/
+/**
+ * SAFE_DELETE!
+ * 사용자 DELETE_STATUS 확인용
+ */
 @MappedSuperclass
 @Getter
-public class UserBaseEntity extends TimeBaseEntity{
+public class UserBaseEntity extends TimeBaseEntity {
     @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
+
+    public void updateIsDeleted() {
+        this.isDeleted = !this.isDeleted;
+    }
 }

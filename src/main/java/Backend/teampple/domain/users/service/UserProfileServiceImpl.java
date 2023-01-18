@@ -10,11 +10,13 @@ import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
 import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.domain.users.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,25 +28,41 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final PostUserProfileMapper postUserProfileMapper;
     private final PutUserProfileMapper putUserProfileMapper;
 
+    @Override
     @Transactional
-    public UserProfile createProfile(PostUserProfileDto postUserProfileDto){
+    public UserProfile createProfile(PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
         return userProfileRepository.save(userProfile);
     }
 
-    public GetUserProfileDto getUserProfile(String refreshToken) {
-        User user = userRepository.findByRefreshToken(refreshToken)
+    @Override
+    public GetUserProfileDto getUserProfile(Authentication authentication) {
+        log.info(authentication.getName());
+        User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
+    @Override
     @Transactional
-    public GetUserProfileDto updateUserProfile(String refreshToken, PutUserProfileDto putUserProfileDto) {
-        User user = userRepository.findByRefreshToken(refreshToken)
+    public GetUserProfileDto updateUserProfile(Authentication authentication, PutUserProfileDto putUserProfileDto) {
+        User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+
         UserProfile userProfile = user.getUserProfile();
+
         putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);
         UserProfile save = userProfileRepository.save(userProfile);
+
         return getUserProfileMapper.toDto(save);
     }
+
+    @Override
+    @Transactional
+    public void deleteUserProfile(UserProfile userProfile) {
+        userProfile.updateIsDeleted();
+        userProfileRepository.save(userProfile);
+    }
+
 }
