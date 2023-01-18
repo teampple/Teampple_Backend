@@ -1,6 +1,8 @@
 package Backend.teampple.domain.users.service;
 
+import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
+import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.UserProfile;
 
 
@@ -14,4 +16,8 @@ public interface UserService {
     void deleteUser(String kakaoId);
 
     GetUserTasksDto getUserTasks(String authUser, Long teamId);
+
+    GetUserTeamsDto getUserTeams(String authUser, boolean isActive);
+
+    GetUserFeedbacksDto getUserFeedbacks(String authUser);
 }

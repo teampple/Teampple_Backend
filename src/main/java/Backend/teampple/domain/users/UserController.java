@@ -2,8 +2,10 @@ package Backend.teampple.domain.users;
 
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
+import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
+import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -44,13 +46,35 @@ public class UserController {
     }
 
     @GetMapping(value = "tasks")
-    @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.\n"
-            + "팀플 화면에 쓰일 정보를 조회합니다.")
-    public CommonResponse<GetUserTasksDto> getTeamTasks(@AuthenticationPrincipal String authUser,
+    @Operation(summary = "유저 할 일 정보 조회", description = "유저 할 일 정보 조회 API 입니다.\n"
+            + "유저 화면에 쓰일 정보를 조회합니다.")
+    public CommonResponse<GetUserTasksDto> getUserTasks(@AuthenticationPrincipal String authUser,
                                                               @RequestParam("teamId") Long teamId) {
-        log.info("[api-get] 팀 할 일 정보 조회");
+        log.info("[api-get] 유저 할 일 정보 조회");
 
         GetUserTasksDto getUserTasksDto = userService.getUserTasks(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserTasksDto);
+    }
+
+    @GetMapping(value = "teams")
+    @Operation(summary = "유저 팀플 정보 조회", description = "유저 팀플 정보 조회 API 입니다.\n"
+            + "유저 화면에 쓰일 정보를 조회합니다.")
+    public CommonResponse<GetUserTeamsDto> getUserTeams(@AuthenticationPrincipal String authUser,
+                                                        @RequestParam("active") boolean isActive ) {
+        log.info("[api-get] 유저 팀플 정보 조회");
+
+        GetUserTeamsDto getUserTeamsDto = userService.getUserTeams(authUser, isActive);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserTeamsDto);
+    }
+
+    @GetMapping(value = "feedbacks")
+    @Operation(summary = "유저 피드백 정보 조회", description = "팀플 피드백 정보 조회 API 입니다.\n"
+            + "유저 화면에 쓰일 정보를 조회합니다.")
+    public CommonResponse<GetUserFeedbacksDto> getUserFeedbacks(@AuthenticationPrincipal String authUser) {
+        log.info("[api-get] 유저 피드백 정보 조회");
+
+
+        GetUserFeedbacksDto getUserFeedbacksDto = userService.getUserFeedbacks(authUser);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserFeedbacksDto);
     }
 }
