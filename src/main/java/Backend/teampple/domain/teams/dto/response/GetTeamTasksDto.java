@@ -1,8 +1,10 @@
 package Backend.teampple.domain.teams.dto.response;
 
 import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
 import Backend.teampple.domain.tasks.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,34 +20,29 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeamTasksDto {
+    @ApiModelProperty(value = "단계 이름", example = "계단", required = true)
     private String taskname;
 
+    @ApiModelProperty(value = "단계 시작일", example = "2023-01-01T11:22:33", required = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDateTime startDate;
 
+    @ApiModelProperty(value = "단계 마감일", example = "2023-01-01T11:22:33", required = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDateTime dueDate;
 
+    @ApiModelProperty(value = "단계 순서", example = "3", required = true)
     private int sequenceNum;
 
+    @ApiModelProperty(value = "할 일 수", example = "2", required = true)
     private int totaltask;
 
+    @ApiModelProperty(value = "끝난 할 일 수", example = "1", required = true)
     private int achievement;
 
-    private List<getTaskDto> tasks;
+    @ApiModelProperty(value = "할 일", required = true)
+    private List<GetTaskBriefDto> tasks;
 
-    @Getter
-    @Setter
-    private class getTaskDto {
-        private String name;
-
-        private boolean isDone;
-
-        public getTaskDto(Task task) {
-            this.name = name;
-            this.isDone = isDone;
-        }
-    }
 
     public GetTeamTasksDto(Stage stage) {
         taskname = stage.getTaskName();
@@ -55,7 +52,7 @@ public class GetTeamTasksDto {
         totaltask = stage.getTotalTask();
         achievement = stage.getAchievement();
         tasks = stage.getTasks().stream()
-                .map(task -> new getTaskDto(task))
+                .map(task -> new GetTaskBriefDto(task))
                 .collect(toList());
     }
 }

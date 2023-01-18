@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-@Api(tags = "파일")
 @RequestMapping("/files")
+@Api(tags = "파일")
 public class FilesController {
 
     private final FilesService filesService;
@@ -38,7 +38,7 @@ public class FilesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), fileDtos);
     }
 
-    @GetMapping(value = "/info")
+    @GetMapping(value = "info")
     @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.\n"
             + "파일 갯수를 조회합니다.")
     public CommonResponse<GetFileBriefDto> getFileBrief(@RequestParam("teamId") Long teamId) {
