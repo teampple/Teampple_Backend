@@ -3,10 +3,12 @@ package Backend.teampple.domain.auth.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 
 
 @Getter
+@Setter
 @ToString
 public class RequestOAuthTokenDto {
     @NonNull
