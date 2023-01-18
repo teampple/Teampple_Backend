@@ -15,7 +15,7 @@ public interface UserService {
 
     void deleteUser(String kakaoId);
 
-    GetUserTasksDto getUserTasks(String authUser, Long teamId);
+    GetUserTasksDto getUserTasks(String authUser);
 
     GetUserTeamsDto getUserTeams(String authUser, boolean isActive);
 

@@ -3,12 +3,8 @@ package Backend.teampple.domain.users.service;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackBriefDto;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
-import Backend.teampple.domain.stages.StagesService;
 import Backend.teampple.domain.stages.dto.response.GetStageDto;
-import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.tasks.repository.TasksRepository;
-import Backend.teampple.domain.teams.dto.UserTeammateDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
 import Backend.teampple.domain.teams.entity.Team;
@@ -98,24 +94,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserTasksDto getUserTasks(String authUser, Long teamId){
-        // 1. team 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+    public GetUserTasksDto getUserTasks(String authUser){
+        // 1. 팀원 조회 + 유저 + 팀
+        List<Teammate> teammates = teammateRepository.findAllByUserWithUserAndTeam(authUser);
 
-        // 2. 유저 체크
-        UserTeammateDto userTeammateDto = checkUser.checkIsUserInTeam(authUser, team);
-
-        // 3. team 조회
-        List<Team> teams = userTeammateDto.getTeammate().stream()
-                .map(teammate -> teammate.getTeam())
+        // 2. team 리스트로
+        List<Team> teams = teammates.stream()
+                .map(Teammate::getTeam)
                 .collect(Collectors.toList());
 
-        // 4. stage 조회
+        // 3. stage 조회
         List<GetTeamStageDto> getTeamStageDtos = teams.stream().map(t -> {
             List<GetStageDto> getStageDtos = stagesRepository.findAllByTeam(t)
                     .stream()
-                    .map(stage -> new GetStageDto(stage))
+                    .map(GetStageDto::new)
                     .collect(Collectors.toList());
             return GetTeamStageDto.builder()
                     .stages(getStageDtos)
@@ -124,7 +116,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
 
         return GetUserTasksDto.builder()
-                .username(userTeammateDto.getUser().getUserProfile().getName())
+                .username(teammates.get(0).getUser().getUserProfile().getName())
                 .teams(getTeamStageDtos)
                 .build();
     }
@@ -135,8 +127,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 2. teammate 조회하면서 team까지
-        List<Teammate> teammates = new ArrayList<Teammate>();
-
+        List<Teammate> teammates;
         if (isActive) {
             teammates = teammateRepository.findAllByUserWithTeamAfterNow(user);
         } else {
@@ -145,11 +136,10 @@ public class UserServiceImpl implements UserService {
 
         // 3. dto 생성
         List<GetTeamDto> getTeamDtos = teammates.stream()
-                .map(teammate -> {
-                    return GetTeamDto.builder()
-                            .name(teammate.getTeam().getName())
-                            .teamId(teammate.getTeam().getId())
-                            .build();})
+                .map(teammate -> GetTeamDto.builder()
+                        .name(teammate.getTeam().getName())
+                        .teamId(teammate.getTeam().getId())
+                        .build())
                 .collect(Collectors.toList());
 
         return GetUserTeamsDto.builder()
@@ -166,12 +156,12 @@ public class UserServiceImpl implements UserService {
         List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackWithTaskOrderByUpdatedAt(user);
 
         // 3. dto
-        List<GetFeedbackBriefDto> feedbacks = feedbackOwners.stream().map(feedbackOwner -> {
-            return GetFeedbackBriefDto.builder()
-                    .taskName(feedbackOwner.getFeedback().getTask().getName())
-                    .isChecked(feedbackOwner.isChecked())
-                    .modifiedAt(feedbackOwner.getFeedback().getUpdatedAt())
-                    .build();})
+        List<GetFeedbackBriefDto> feedbacks = feedbackOwners.stream()
+                .map(feedbackOwner -> GetFeedbackBriefDto.builder()
+                        .taskName(feedbackOwner.getFeedback().getTask().getName())
+                        .isChecked(feedbackOwner.isChecked())
+                        .modifiedAt(feedbackOwner.getFeedback().getUpdatedAt())
+                        .build())
                 .collect(Collectors.toList());
 
         return GetUserFeedbacksDto.builder()

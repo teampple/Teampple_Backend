@@ -7,10 +7,13 @@ import Backend.teampple.domain.files.entity.File;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.teams.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
-import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.ForbiddenException;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,65 +34,77 @@ public class FilesService {
 
     private final TasksRepository tasksRepository;
 
+    private final TeammateRepository teammateRepository;
+
+    private final CheckUser checkUser;
+
     @Transactional
-    public List<GetFileDto> getFile(Long teamId) {
-        // 1. team 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+    public List<GetFileDto> getFile(String authUser, Long teamId) {
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
         // 2. file 조회
         List<File> files = filesRepository.findAllWithTeamAndUserByTeam(team);
 
         return files.stream()
-                .map(o -> new GetFileDto(o))
+                .map(GetFileDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public GetFileBriefDto getFileBrief(Long teamId) {
-        // 1. team 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+    public void postFile(String authUser, PostFileDto postFileDto, Long taskId, Long teamId) {
+        // 1. 유저 체크 및 team 정보 불러오기
+        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
+
+        // 2. task 조회
+        Task task = tasksRepository.findByIdWithStageAndTeam(taskId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+
+        // 3. team에 속하는 task 이어야 함
+        if(task.getStage().getTeam() != userTeamDto.getTeam())
+            throw new NotFoundException(ErrorCode._BAD_REQUEST.getMessage());
+
+        // 4. file 생성
+        File file = File.builder()
+                .url(postFileDto.getUrl())
+                .filename(postFileDto.getFileName())
+                .size(postFileDto.getSize())
+                .task(task)
+                .team(userTeamDto.getTeam())
+                .user(userTeamDto.getUser())
+                .build();
+        filesRepository.save(file);
+    }
+
+    @Transactional
+    public void deleteFile(String authUser, Long fileId) {
+        // 1. file로 팀까지
+        File file = filesRepository.findByIdWithTeam(fileId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+
+        // 2. 팀메이트에서 유저까지 해서 없으면 에러
+        teammateRepository.findByUserIdAndTeam(authUser, file.getTeam())
+                .orElseThrow(() -> new ForbiddenException(ErrorCode.FORBIDDEN_USER.getMessage()));
+
+        filesRepository.delete(file);
+    }
+
+    @Transactional
+    public GetFileBriefDto getFileBrief(String authUser, Long teamId) {
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
         // 2. file 조회
         List<File> files = filesRepository.findAllByTeam(team);
 
         // 3. dto 생성
         int totalSize = 0;
-        int fileNum = files.size();
-        for (int i = 0; i < files.size(); i++) {
-            totalSize += files.get(i).getSize();
+        for (File file : files) {
+            totalSize += file.getSize();
         }
         return GetFileBriefDto.builder()
-                .fileNum(fileNum)
+                .fileNum(files.size())
                 .totalSize(totalSize)
                 .build();
-    }
-
-    @Transactional
-    public void postFile(PostFileDto postFileDto, Long taskId, Long teamId) {
-        // 1. team 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
-
-        // 2. task 조회
-        Task task = tasksRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
-
-        // 3. file 생성
-        File file = File.builder()
-                .url(postFileDto.getUrl())
-                .filename(postFileDto.getFileName())
-                .size(postFileDto.getSize())
-                .task(task)
-                .team(team)
-//                .user()
-                .build();
-        filesRepository.save(file);
-    }
-
-    @Transactional
-    public void deleteFile(Long fileId) {
-        filesRepository.deleteById(fileId);
     }
 }

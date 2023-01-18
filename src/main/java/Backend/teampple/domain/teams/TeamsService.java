@@ -1,12 +1,11 @@
 package Backend.teampple.domain.teams;
 
-import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.TeammateDto;
-import Backend.teampple.domain.teams.dto.UserTeammateDto;
+import Backend.teampple.domain.teams.dto.UserTeamDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
@@ -22,6 +21,7 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.BadRequestException;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -55,15 +52,13 @@ public class TeamsService{
 
     @Transactional
     public GetTeamDetailDto getTeamDetail(String authUser, Long teamId) {
-        // 1. team 정보 불러오기
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
-        // 2. 유저 체크 및 팀원 조회
-        List<Teammate> teammates = checkUser.checkIsUserInTeam(authUser, team).getTeammate();
+        // 2. 팀원 조회
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. 팀원 관련 정보 변환
-        teammates.size();
         List<String> teammatesImages = new ArrayList<>();
         teammates.forEach(teammate -> {
             teammatesImages.add(teammate.getUserProfile().getProfileImage());
@@ -119,31 +114,23 @@ public class TeamsService{
 
     @Transactional
     public void putTeam(String authUser, PutTeamDto putTeamDto, Long teamId) {
-        // 1. team 찾기
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
-        // 2. 유저 체크
-        checkUser.checkIsUserInTeam(authUser, team);
-
-        // 3. 수정 후 저장
+        // 2. 수정 후 저장
         team.update(putTeamDto);
         teamsRepository.save(team);
     }
 
     @Transactional
     public GetScheduleDto getSchedule(String authUser, Long teamId) {
-        // 1. 팀 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
-        // 2. 유저 체크
-        checkUser.checkIsUserInTeam(authUser, team);
-
-        // 3. 스케줄 조회
+        // 2. 스케줄 조회
         List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
 
-        // 4. 스케줄 dto 생성
+        // 3. 스케줄 dto 생성
         List<ScheduleDto> scheduleDtoList = new ArrayList<>();
         schedules.forEach(schedule -> {
             ScheduleDto converted = ScheduleDto.builder()
@@ -162,59 +149,47 @@ public class TeamsService{
 
     @Transactional
     public void postSchedule(String authUser, ScheduleDto scheduleDto, Long teamId) {
-        // 1. team 찾기
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
-        // 2. 유저 체크 및 팀원 조회
-        checkUser.checkIsUserInTeam(authUser, team);
-
-        // 3. 일정 생성
+        // 2. 일정 생성
         Schedule schedule = Schedule.builder()
                 .name(scheduleDto.getName())
                 .dueDate(scheduleDto.getDueDate())
                 .team(team)
                 .build();
 
-        // 4. 일정 저장
+        // 3. 일정 저장
         scheduleRepository.save(schedule);
     }
 
     @Transactional
     public List<GetTeamTasksDto> getTeamTasks(String authUser, Long teamId) {
-        // 1. 팀 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
-        // 2. 유저 체크
-        checkUser.checkIsUserInTeam(authUser, team);
-
-        // 3. 단계 불러오기
+        // 2. 단계 불러오기
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
 
-        // 4. 할 일 불러오기
-        List<GetTeamTasksDto> results = stages.stream()
-                .map(obj -> new GetTeamTasksDto(obj))
+        // 3. 할 일 불러오기
+        return stages.stream()
+                .map(GetTeamTasksDto::new)
                 .collect(toList());
-
-        return results;
     }
 
     @Transactional
     public GetTeammateDto getTeammate(String authUser, Long teamId) {
-        // 1. 팀 조회
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+        // 1. 유저 체크 및 team 정보 불러오기
+        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
 
-        // 2. 팀메이트, 유저 조회 및 팀 체크
-        UserTeammateDto userTeammateDto = checkUser.checkIsUserInTeam(authUser, team);
+        // 2. 팀원 조회
+        List<Teammate> teammates = teammateRepository.findAllByTeam(userTeamDto.getTeam());
 
         // 3. 팀메이트 dto 생성
-        User user = userTeammateDto.getUser();
-        List<Teammate> teammates = userTeammateDto.getTeammate();
+        User user = userTeamDto.getUser();
         List<TeammateDto> teammateDtoList = new ArrayList<>();
         teammates.forEach(teammate -> {
-            if (teammate.getId() != user.getId()) {
+            if (!Objects.equals(teammate.getId(), user.getId())) {
                 TeammateDto converted = TeammateDto.builder()
                         .teammateId(teammate.getId())
                         .name(teammate.getUserProfile().getName())
@@ -236,16 +211,21 @@ public class TeamsService{
 
     @Transactional
     public void deleteTeammate(String authUser, DeleteTeammateDto deleteTeammateDto, Long teamId) {
-        // 1. 유저 체크
-        Team team = teamsRepository.findById(teamId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
-        List<Teammate> teammates = checkUser.checkIsUserInTeam(authUser, team).getTeammate();
+        // 1. 유저 체크 및 team 정보 불러오기
+        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
 
-        // 2. Teammate 삭제
-        teammates.forEach(teammate -> {
-            if(teammate.getId().equals(deleteTeammateDto.getTeammateId())) {
+        // 2. 팀원 조회
+        List<Teammate> teammates = teammateRepository.findAllByTeam(userTeamDto.getTeam());
+
+        // 3. Teammate 삭제
+        boolean isConducted = false;
+        for (Teammate teammate : teammates) {
+            if (teammate.getId().equals(deleteTeammateDto.getTeammateId())) {
                 teammateRepository.delete(teammate);
+                isConducted = true;
             }
-        });
+        }
+        if(!isConducted)
+            throw new BadRequestException(ErrorCode.INVALID_TEAMMATE.getMessage());
     }
 }
