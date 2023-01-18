@@ -14,7 +14,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(BAD_REQUEST, "C001", " Invalid Input Value"),
     _INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "C000", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(BAD_REQUEST, "C001", "잘못된 요청입니다."),
-    _UNAUTHORIZED(UNAUTHORIZED, "C002", "권한이 없습니다."),
+    _UNAUTHORIZED(FORBIDDEN, "C002", "권한이 없습니다."),
     _METHOD_NOT_ALLOWED(METHOD_NOT_ALLOWED, "C003", "지원하지 않는 Http Method 입니다."),
 
     /* Auth 관련 오류 */
@@ -43,13 +43,15 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
-    MISMATCH_TEAM(BAD_REQUEST, "U002", "해당 유저가 속한 팀이 아닙니다."),
 
     // Feedback
     FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 피드백이 존재하지 않습니다."),
 
     // Template
-    TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
+    TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다."),
+
+    // File
+    FILE_NOT_FOUND(BAD_REQUEST, "F001", "파일이이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

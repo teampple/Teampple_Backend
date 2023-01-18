@@ -8,7 +8,9 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
+import Backend.teampple.global.error.exception.ForbiddenException;
 import Backend.teampple.global.error.exception.NotFoundException;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,7 @@ public class CheckUser {
         // 3. 유저 확인
         List<User> users = teammates.stream().map(teammate -> teammate.getUser()).collect(toList());
         if(!users.contains(user))
-            throw new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage());
+            throw new ForbiddenException(ErrorCode.FORBIDDEN_USER.getMessage());
 
         return UserTeammateDto.builder()
                 .user(user)

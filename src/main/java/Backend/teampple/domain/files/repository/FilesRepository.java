@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface FilesRepository extends JpaRepository<File, Long> {
     List<File> findAllByTaskOrderByUpdatedAt(Task task);
@@ -22,4 +24,7 @@ public interface FilesRepository extends JpaRepository<File, Long> {
     List<File> findAllWithTeamAndUserByTeam(@Param("team")Team team);
 
     List<File> findAllByTeam(Team team);
+
+    @Query("select f from File f join fetch f.team where f.id = :fileId")
+    Optional<File> findByIdWithTeam(@Param("fileId") Long fileId);
 }

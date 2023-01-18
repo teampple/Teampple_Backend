@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,53 +30,46 @@ public class FilesController {
     @GetMapping(value = "")
     @Operation(summary = "파일 목록 조회", description = "파일 목록 조회 API 입니다.\n"
             + "파일 목록을 조회합니다.")
-    public CommonResponse<List<GetFileDto>> getFile(@RequestParam("teamId") Long teamId) {
+    public CommonResponse<List<GetFileDto>> getFile(@AuthenticationPrincipal String authUser,
+                                                    @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 목록 조회");
 
-        // 유저 validation 추가해야함
-
-        List<GetFileDto> fileDtos = filesService.getFile(teamId);
+        List<GetFileDto> fileDtos = filesService.getFile(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), fileDtos);
     }
 
     @GetMapping(value = "info")
     @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.\n"
             + "파일 갯수를 조회합니다.")
-    public CommonResponse<GetFileBriefDto> getFileBrief(@RequestParam("teamId") Long teamId) {
+    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthenticationPrincipal String authUser,
+                                                        @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 갯수 조회");
 
-        // 유저 validation 추가해야함
-
-        GetFileBriefDto fileBriefDto = filesService.getFileBrief(teamId);
+        GetFileBriefDto fileBriefDto = filesService.getFileBrief(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), fileBriefDto);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "파일 등록", description = "파일 등록 API 입니다.\n"
             + "파일을 등록합니다.")
-    public CommonResponse<String> postFile(@Valid @RequestBody PostFileDto postFileDto,
+    public CommonResponse<String> postFile(@AuthenticationPrincipal String authUser,
+                                           @Valid @RequestBody PostFileDto postFileDto,
                                            @RequestParam("taskId") Long taskId,
                                            @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 파일 등록");
 
-        // 유저 validation 추가해야함
-
-        // 유저도 넘겨서 file 만들 때 추가해야함
-        filesService.postFile(postFileDto, taskId, teamId);
+        filesService.postFile(authUser, postFileDto, taskId, teamId);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @DeleteMapping(value = "")
     @Operation(summary = "파일 삭제", description = "파일 삭제 API 입니다.\n"
             + "파일을 삭제합니다.")
-    public CommonResponse<String> deleteFile(@RequestParam("fileId") Long fileId) {
-
+    public CommonResponse<String> deleteFile(@AuthenticationPrincipal String authUser,
+                                             @RequestParam("fileId") Long fileId) {
         log.info("[api-delete] 파일 삭제");
 
-        // 유저 validation 추가해야함
-
-        // 유저도 넘겨서 file 만들 때 추가해야함
-        filesService.deleteFile(fileId);
+        filesService.deleteFile(authUser, fileId);
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
     }
 }
