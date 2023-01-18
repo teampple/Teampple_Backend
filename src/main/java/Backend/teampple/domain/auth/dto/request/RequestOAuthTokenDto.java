@@ -3,14 +3,16 @@ package Backend.teampple.domain.auth.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 
 
 @Getter
+@Setter
 @ToString
 public class RequestOAuthTokenDto {
     @NonNull
-    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU1", required = true)
+    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU3", required = true)
     private String idToken;
 
     @NonNull

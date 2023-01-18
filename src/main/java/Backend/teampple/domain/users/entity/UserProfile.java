@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -52,6 +53,6 @@ public class UserProfile extends UserBaseEntity {
         this.schoolName = schoolName;
         this.major = major;
         this.entranceYear = entranceYear;
-        this.subscribePlan = subscribePlan;
+        this.subscribePlan = Objects.requireNonNullElse(subscribePlan, SubscriptionType.FreePlan);
     }
 }

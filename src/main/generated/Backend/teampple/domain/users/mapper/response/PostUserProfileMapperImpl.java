@@ -1,36 +1,36 @@
 package Backend.teampple.domain.users.mapper.response;
 
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
+import Backend.teampple.domain.auth.dto.request.RequestSignUpDto;
 import Backend.teampple.domain.users.entity.UserProfile;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-17T22:27:38+0900",
+    date = "2023-01-18T23:21:28+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.15 (OpenLogic)"
 )
 @Component
 public class PostUserProfileMapperImpl implements PostUserProfileMapper {
 
     @Override
-    public PostUserProfileDto toDto(UserProfile e) {
+    public RequestSignUpDto toDto(UserProfile e) {
         if ( e == null ) {
             return null;
         }
 
-        PostUserProfileDto.PostUserProfileDtoBuilder postUserProfileDto = PostUserProfileDto.builder();
+        RequestSignUpDto.RequestSignUpDtoBuilder requestSignUpDto = RequestSignUpDto.builder();
 
-        postUserProfileDto.name( e.getName() );
-        postUserProfileDto.profileImage( e.getProfileImage() );
-        postUserProfileDto.schoolName( e.getSchoolName() );
-        postUserProfileDto.major( e.getMajor() );
+        requestSignUpDto.name( e.getName() );
+        requestSignUpDto.profileImage( e.getProfileImage() );
+        requestSignUpDto.schoolName( e.getSchoolName() );
+        requestSignUpDto.major( e.getMajor() );
 
-        return postUserProfileDto.build();
+        return requestSignUpDto.build();
     }
 
     @Override
-    public UserProfile toEntity(PostUserProfileDto d) {
+    public UserProfile toEntity(RequestSignUpDto d) {
         if ( d == null ) {
             return null;
         }

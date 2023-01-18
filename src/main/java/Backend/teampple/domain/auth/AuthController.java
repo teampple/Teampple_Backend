@@ -2,8 +2,8 @@ package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.request.RequestOAuthTokenDto;
+import Backend.teampple.domain.auth.dto.request.RequestSignUpDto;
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,9 +35,9 @@ public class AuthController {
 
     @ApiOperation(value = "회원가입 요청")
     @PostMapping("/info")
-    public CommonResponse<ResponseTokenDto> signUp(@RequestBody RequestOAuthTokenDto requestOAuthTokenDto, @RequestBody PostUserProfileDto postUserProfileDto) {
-        ResponseTokenDto responseTokenDto = authService.join(requestOAuthTokenDto, postUserProfileDto);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), responseTokenDto);
+    public CommonResponse<ResponseTokenDto> signUp(@RequestBody RequestSignUpDto requestSignUpDto) {
+        ResponseTokenDto responseTokenDto = authService.join(requestSignUpDto);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(),responseTokenDto);
     }
 
     @ApiOperation(value = "회원탈퇴 요청")
