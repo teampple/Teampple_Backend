@@ -20,6 +20,7 @@ import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
+import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,8 @@ public class TeamsService{
 
     private final UserRepository userRepository;
 
+    private final CheckUser checkUser;
+
     @Transactional
     public GetTeamDetailDto getTeamDetail(String authUser, Long teamId) {
         // 1. team 정보 불러오기
@@ -57,7 +60,7 @@ public class TeamsService{
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크 및 팀원 조회
-        List<Teammate> teammates = checkIsUserInTeam(authUser, team).getTeammate();
+        List<Teammate> teammates = checkUser.checkIsUserInTeam(authUser, team).getTeammate();
 
         // 3. 팀원 관련 정보 변환
         teammates.size();
@@ -121,7 +124,7 @@ public class TeamsService{
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크
-        checkIsUserInTeam(authUser, team);
+        checkUser.checkIsUserInTeam(authUser, team);
 
         // 3. 수정 후 저장
         team.update(putTeamDto);
@@ -135,7 +138,7 @@ public class TeamsService{
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크
-        checkIsUserInTeam(authUser, team);
+        checkUser.checkIsUserInTeam(authUser, team);
 
         // 3. 스케줄 조회
         List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
@@ -164,7 +167,7 @@ public class TeamsService{
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크 및 팀원 조회
-        checkIsUserInTeam(authUser, team);
+        checkUser.checkIsUserInTeam(authUser, team);
 
         // 3. 일정 생성
         Schedule schedule = Schedule.builder()
@@ -184,7 +187,7 @@ public class TeamsService{
                 .orElseThrow(()->new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크
-        checkIsUserInTeam(authUser, team);
+        checkUser.checkIsUserInTeam(authUser, team);
 
         // 3. 단계 불러오기
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
@@ -204,7 +207,7 @@ public class TeamsService{
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
         // 2. 팀메이트, 유저 조회 및 팀 체크
-        UserTeammateDto userTeammateDto = checkIsUserInTeam(authUser, team);
+        UserTeammateDto userTeammateDto = checkUser.checkIsUserInTeam(authUser, team);
 
         // 3. 팀메이트 dto 생성
         User user = userTeammateDto.getUser();
@@ -236,7 +239,7 @@ public class TeamsService{
         // 1. 유저 체크
         Team team = teamsRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
-        List<Teammate> teammates = checkIsUserInTeam(authUser, team).getTeammate();
+        List<Teammate> teammates = checkUser.checkIsUserInTeam(authUser, team).getTeammate();
 
         // 2. Teammate 삭제
         teammates.forEach(teammate -> {
@@ -245,28 +248,4 @@ public class TeamsService{
             }
         });
     }
-
-
-    /*
-        해당 유저가 팀에 속한지 검사하는 method
-     */
-    private UserTeammateDto checkIsUserInTeam(String authUser, Team team) {
-        // 1. teammate 정보 불러오기
-        List<Teammate> teammates = teammateRepository.findAllByTeamWithUser(team);
-
-        // 2. 유저 불러오기
-        User user = userRepository.findByKakaoIdWithUserProfile(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
-
-        // 3. 유저 확인
-        List<User> users = teammates.stream().map(teammate -> teammate.getUser()).collect(toList());
-        if(!users.contains(user))
-            throw new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage());
-
-        return UserTeammateDto.builder()
-                .user(user)
-                .teammate(teammates)
-                .build();
-    }
-
 }

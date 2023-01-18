@@ -1,14 +1,30 @@
 package Backend.teampple.domain.users.service;
 
+import Backend.teampple.domain.stages.StagesService;
+import Backend.teampple.domain.stages.dto.response.GetStageDto;
+import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.stages.repository.StagesRepository;
+import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.teams.dto.UserTeammateDto;
+import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
+import Backend.teampple.domain.teams.entity.Team;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
+import Backend.teampple.domain.teams.repository.TeamsRepository;
+import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
+import Backend.teampple.global.common.validation.CheckUser;
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -17,6 +33,12 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
+
+    private final TeamsRepository teamsRepository;
+
+    private final StagesRepository stagesRepository;
+
+    private final CheckUser checkUser;
 
     @Override
     @Transactional
@@ -61,12 +83,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getTasks(String refreshToken) {
-        return "";
-    }
+    @Transactional
+    public GetUserTasksDto getUserTasks(String authUser, Long teamId){
+        // 1. team 조회
+        Team team = teamsRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
-    @Override
-    public String getFeedbacks(String refreshToken) {
-        return "";
+        // 2. 유저 체크
+        UserTeammateDto userTeammateDto = checkUser.checkIsUserInTeam(authUser, team);
+
+        // 3. team 조회
+        List<Team> teams = userTeammateDto.getTeammate().stream()
+                .map(teammate -> teammate.getTeam())
+                .collect(Collectors.toList());
+
+        // 4. stage 조회
+        List<GetTeamStageDto> getTeamStageDtos = teams.stream().map(t -> {
+            List<GetStageDto> getStageDtos = stagesRepository.findAllByTeam(t)
+                    .stream()
+                    .map(stage -> new GetStageDto(stage))
+                    .collect(Collectors.toList());
+            return GetTeamStageDto.builder()
+                    .stages(getStageDtos)
+                    .name(t.getName())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return GetUserTasksDto.builder()
+                .username(userTeammateDto.getUser().getUserProfile().getName())
+                .teams(getTeamStageDtos)
+                .build();
     }
 }

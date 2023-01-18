@@ -29,6 +29,7 @@ public enum ErrorCode {
 
     // Team
     TEAM_NOT_FOUND(BAD_REQUEST, "T001", "해당 팀플이 존재하지 않습니다."),
+    TEAM_NOT_VALID(BAD_REQUEST, "T002", "유효하지않은 팀플입니다."),
 
     // Teammate
     TEAMMATE_NOT_FOUND(BAD_REQUEST, "TM001", "해당 팀원이 존재하지 않습니다."),
