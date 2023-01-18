@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = forcedAuthentication(requestOAuthTokenDto);
         final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
 
-        userService.updateUserRefreshToken(requestOAuthTokenDto.getIdToken(), generateToken.getRefreshToken());
+        userService.updateUserRefreshToken(requestOAuthTokenDto.getIdToken(), generateToken.getJwtRefreshToken());
         return generateToken;
     }
 
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
 
         UserProfile profile = userProfileService.createProfile(postUserProfileDto);
-        userService.createUser(profile, requestOAuthTokenDto.getIdToken(), generateToken.getRefreshToken());
+        userService.createUser(profile, requestOAuthTokenDto.getIdToken(), generateToken.getJwtRefreshToken());
         return generateToken;
     }
 
