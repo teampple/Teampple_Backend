@@ -38,17 +38,6 @@ public class FilesController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(), fileDtos);
     }
 
-    @GetMapping(value = "info")
-    @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.\n"
-            + "파일 갯수를 조회합니다.")
-    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthenticationPrincipal String authUser,
-                                                        @RequestParam("teamId") Long teamId) {
-        log.info("[api-get] 파일 갯수 조회");
-
-        GetFileBriefDto fileBriefDto = filesService.getFileBrief(authUser, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), fileBriefDto);
-    }
-
     @PostMapping(value = "")
     @Operation(summary = "파일 등록", description = "파일 등록 API 입니다.\n"
             + "파일을 등록합니다.")
@@ -71,5 +60,16 @@ public class FilesController {
 
         filesService.deleteFile(authUser, fileId);
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
+    }
+
+    @GetMapping(value = "info")
+    @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.\n"
+            + "파일 갯수를 조회합니다.")
+    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthenticationPrincipal String authUser,
+                                                        @RequestParam("teamId") Long teamId) {
+        log.info("[api-get] 파일 갯수 조회");
+
+        GetFileBriefDto fileBriefDto = filesService.getFileBrief(authUser, teamId);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), fileBriefDto);
     }
 }
