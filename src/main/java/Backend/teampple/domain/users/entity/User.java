@@ -3,7 +3,6 @@ package Backend.teampple.domain.users.entity;
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,9 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-@Table(name = "Users")
-@SQLDelete(sql = "UPDATE Users SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@Table(name = "users")
+//@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE kakao_id = ?")
 public class User extends UserBaseEntity {
     @Id
     @Column(name = "user_id")
@@ -31,7 +29,7 @@ public class User extends UserBaseEntity {
     @Column
     private LocalDateTime expRT;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String kakaoId;
 
     @Builder
@@ -48,7 +46,7 @@ public class User extends UserBaseEntity {
         this.expRT = expRT;
     }
 
-    public void deleteRefreshToken() {
+    public void deleteToken() {
         this.refreshToken = null;
         this.expRT = null;
     }

@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public ResponseTokenDto login(RequestOAuthTokenDto requestOAuthTokenDto) {
         //TODO: 카카오 유효성 확인
+        //TODO: 회원가입 되어있는 유저인지, 삭제된 유저는 아닌지 확인 필요
         Authentication authentication = forcedAuthentication(requestOAuthTokenDto);
         final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
 
@@ -54,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void logout(Authentication authentication) {
         userService.deleteUserRefreshToken(authentication.getName());
     }
@@ -62,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public ResponseTokenDto join(RequestSignUpDto requestSignUpDto) {
         //TODO: 카카오 유효성 확인
+        //TODO: 이미 가입된 유저인지 확인 필요
+
         UserProfile userProfile = postUserProfileMapper.toEntity(requestSignUpDto);
         RequestOAuthTokenDto requestOAuthToken = requestOAuthTokenMapper.toEntity(requestSignUpDto);
 
@@ -74,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void withdrawal(Authentication authentication) {
         userService.deleteUser(authentication.getName());
     }
