@@ -24,10 +24,15 @@ public class TeammateDto {
     @ApiModelProperty(notes = "팀원 학과", example = "학과", required = true)
     private String major;
 
+    @NotNull
+    @ApiModelProperty(notes = "팀원 학과", example = "학과", required = true)
+    private Long teammateId;
+
     @Builder
-    public TeammateDto(String name, String schoolName, String major) {
+    public TeammateDto(String name, String schoolName, String major, Long teammateId) {
         this.name = name;
         this.schoolName = schoolName;
         this.major = major;
+        this.teammateId = teammateId;
     }
 }
