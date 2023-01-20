@@ -56,6 +56,9 @@ public enum ErrorCode {
     // File
     FILE_NOT_FOUND(BAD_REQUEST, "F001", "파일이이 존재하지 않습니다.");
 
+    // S3
+    
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
