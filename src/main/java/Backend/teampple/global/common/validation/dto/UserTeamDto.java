@@ -1,4 +1,4 @@
-package Backend.teampple.domain.teams.dto;
+package Backend.teampple.global.common.validation.dto;
 
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.users.entity.User;

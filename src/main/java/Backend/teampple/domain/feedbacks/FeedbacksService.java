@@ -6,32 +6,21 @@ import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
-import Backend.teampple.domain.files.dto.response.GetFileDto;
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
-import Backend.teampple.domain.teams.dto.UserTeamDto;
-import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

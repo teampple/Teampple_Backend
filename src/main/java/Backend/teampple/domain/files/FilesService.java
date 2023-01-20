@@ -7,7 +7,7 @@ import Backend.teampple.domain.files.entity.File;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
-import Backend.teampple.domain.teams.dto.UserTeamDto;
+import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;

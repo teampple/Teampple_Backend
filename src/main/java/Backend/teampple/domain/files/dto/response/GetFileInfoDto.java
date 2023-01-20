@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 public class GetFileInfoDto {
 
     @NotNull
+    @ApiModelProperty(notes = "파일 고유번호", example = "1", required = true)
+    private Long fileId;
+
+    @NotNull
     @ApiModelProperty(notes = "이름", example = "teampple", required = true)
     private String filename;
 
@@ -32,7 +36,8 @@ public class GetFileInfoDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public GetFileInfoDto(String filename, String url, Long size, LocalDateTime updatedAt) {
+    public GetFileInfoDto(Long id, String filename, String url, Long size, LocalDateTime updatedAt) {
+        this.fileId = id;
         this.filename = filename;
         this.url = url;
         this.size = size;
@@ -40,6 +45,7 @@ public class GetFileInfoDto {
     }
 
     public GetFileInfoDto(File file) {
+        this.fileId = file.getId();
         this.filename = file.getFilename();
         this.url = file.getUrl();
         this.size = file.getSize();
