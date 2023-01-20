@@ -24,4 +24,7 @@ public interface FilesRepository extends JpaRepository<File, Long> {
     List<File> findAllByTeamWithTeamAndUserAndUserProfile(@Param("team")Team team);
 
     List<File> findAllByTeam(Team team);
+
+    @Query("select f from File f join fetch f.team where f.id = :fileId")
+    Optional<File> findByIdWithTeam(@Param("fileId") Long fileId);
 }

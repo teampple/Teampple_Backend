@@ -3,7 +3,6 @@ package Backend.teampple.domain.users.entity;
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,9 +12,8 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-@Table(name = "UserProfile")
-@SQLDelete(sql = "UPDATE UserProfile SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@Table(name = "user_profile")
+//@SQLDelete(sql = "UPDATE user_profile SET is_deleted = true WHERE kakao_id = ?")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")

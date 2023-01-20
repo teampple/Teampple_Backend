@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestSignUpDto {
     @NonNull
-    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU1", required = true)
+    @ApiModelProperty(value = "kakao 로그인 고유 id", example = "kakaoU100", required = true)
     private String idToken;
     @NonNull
     @ApiModelProperty(value = "kakao accessToken", example = "string", required = true)
