@@ -46,7 +46,7 @@ public class User extends UserBaseEntity {
         this.expRT = expRT;
     }
 
-    public void deleteToken() {
+    public void deleteRefreshToken() {
         this.refreshToken = null;
         this.expRT = null;
     }
