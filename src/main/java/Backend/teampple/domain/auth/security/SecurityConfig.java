@@ -56,8 +56,9 @@ public class SecurityConfig {
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 /**해당 요청 누구나 접근 가능*/
                 .antMatchers(SwaggerPatterns).permitAll()
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/info").permitAll()
+                .antMatchers("/auth/login").permitAll() // 로그인
+                .antMatchers("/auth/info").permitAll() // 회원가입
+                .antMatchers("/api/invitations/validation").permitAll() // 초대 코드 검증
 //                .antMatchers("/**").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated()

@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 public class GetFeedbackDto {
 
     @NotNull
+    @ApiModelProperty(notes = "피드백 고유번호", example = "1", required = true)
+    private Long feedbackId;
+
+    @NotNull
     @ApiModelProperty(notes = "피드백 한 사람", example = "2023-01-01T11:22:33", required = true)
     private String adviser;
 
@@ -32,7 +36,8 @@ public class GetFeedbackDto {
     private String adviserImage;
 
     @Builder
-    public GetFeedbackDto(String adviser, String comment, LocalDateTime createdAt, String adviserImage) {
+    public GetFeedbackDto(Long id, String adviser, String comment, LocalDateTime createdAt, String adviserImage) {
+        this.feedbackId = id;
         this.adviser = adviser;
         this.comment = comment;
         this.createdAt = createdAt;
@@ -40,6 +45,7 @@ public class GetFeedbackDto {
     }
 
     public GetFeedbackDto(Feedback feedback) {
+        this.feedbackId = feedback.getId();
         this.adviser = feedback.getAdviser().getUserProfile().getName();
         this.comment = feedback.getComment();
         this.createdAt = feedback.getCreatedAt();

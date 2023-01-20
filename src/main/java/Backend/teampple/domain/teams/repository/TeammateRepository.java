@@ -16,11 +16,6 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
     List<Teammate> findAllByTeam(Team team);
 
     @Query("select tm from Teammate tm " +
-            "join fetch tm.user " +
-            "where tm.team = :team")
-    List<Teammate> findAllByTeamWithUser(@Param("team") Team team);
-
-    @Query("select tm from Teammate tm " +
             "join fetch tm.team t " +
             "where tm.user = :user and t.dueDate >= current_time")
     List<Teammate> findAllByUserWithTeamAfterNow(@Param("user") User user);
@@ -45,4 +40,24 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
             " join fetch tm.team" +
             " where u.kakaoId = :user")
     List<Teammate> findAllByUserWithUserAndTeam(@Param("user") String user);
+
+    @Query("select tm from Teammate tm " +
+            " join fetch tm.user" +
+            " where tm.team = :team")
+    List<Teammate> findAllByTeamWithUser(@Param("team") Team team);
+
+    @Query("select tm from Teammate tm" +
+            " join fetch tm.user" +
+            " where tm.team = :team and tm.user.kakaoId = :user")
+    Optional<Teammate> findAllByTeamAndUserWithUser(@Param("user") String User, @Param("team") Team team);
+
+    @Query("select tm from Teammate tm" +
+            " where tm.team = :team and tm.user.kakaoId = :user")
+    Optional<Teammate> findByTeamAndUser(@Param("user") String User, @Param("team") Team team);
+
+    @Query("select tm from Teammate tm" +
+            " join fetch tm.user u" +
+            " join fetch u.userProfile" +
+            " where tm.team = :team and tm.user.kakaoId = :user")
+    Optional<Teammate> findAllByTeamAndUserWithUserAndUserProfile(@Param("user") String User, @Param("team") Team team);
 }

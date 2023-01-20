@@ -14,6 +14,8 @@ import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
+import Backend.teampple.global.common.validation.CheckUser;
+import Backend.teampple.global.common.validation.dto.UserStageDto;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,24 +44,24 @@ public class TasksService {
 
     private final UserRepository userRepository;
 
-    @Transactional
-    public GetTaskDto getTask(Long taskId) {
+    private final CheckUser checkUser;
 
-        // 1. task 조회 stage 패치조인
-        Task task = tasksRepository.findByIdWithStage(taskId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+    @Transactional
+    public GetTaskDto getTask(String authUser, Long taskId) {
+        // 1. task 조회 및 유저 관한 확인
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. file 조회
         List<GetFileInfoDto> getFileInfoDtos = filesRepository.findAllByTaskOrderByUpdatedAt(task).stream()
-                .map(o -> new GetFileInfoDto(o)).collect(Collectors.toList());
+                .map(GetFileInfoDto::new).collect(Collectors.toList());
 
         // 3. operator 조회 유저 프로파일 패치조인
-        List<String> operators = operatorRepository.findAllByTask(task).stream()
+        List<String> operators = operatorRepository.findAllByTaskWithUserProfile(task).stream()
                 .map(o -> o.getUserProfile().getName()).collect(Collectors.toList());
 
         // 4. feedback 조회 유저, 유저 프로파일 패치조인
-        List<GetFeedbackDto> getFeedbackDtos = feedbackRepository.findByTask(task).stream()
-                .map(o -> new GetFeedbackDto(o)).collect(Collectors.toList());
+        List<GetFeedbackDto> getFeedbackDtos = feedbackRepository.findByTaskWithUserAndUserProfile(task).stream()
+                .map(GetFeedbackDto::new).collect(Collectors.toList());
 
         return GetTaskDto.builder()
                 .taskName(task.getName())
@@ -75,39 +78,44 @@ public class TasksService {
     };
 
     @Transactional
-    public void postTask(TaskDto taskDto, Long stageId) {
-        // 1. stage 찾기
-        Stage stage = stagesRepository.findById(stageId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.STAGE_NOT_FOUND.getMessage()));
+    public void postTask(String authUser, TaskDto taskDto, Long stageId) {
+        // 1. stage + user + 유저 검증
+        UserStageDto userStageDto = checkUser.checkIsUserCanPostTask(authUser, stageId);
 
         // 2. Task 생성
         Task task = Task.builder()
                 .name(taskDto.getName())
                 .startDate(taskDto.getStartDate())
                 .dueDate(taskDto.getDueDate())
-                .stage(stage)
+                .stage(userStageDto.getStage())
                 .build();
         tasksRepository.save(task);
 
-        // 3. 유저 정보 가져오기
+        // 3. operator user 불러오기
+        List<User> users = new ArrayList<>();
+        taskDto.getOperators()
+                .forEach(opId -> {
+                    User user = userRepository.findByIdWithUserProfile(opId)
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
+                    users.add(user);
+                });
+
 
         // 4. operator 생성
-//        postTaskDto.getOperators().forEach(operatorId -> {
-//            Operator operator = Operator.builder()
-//                    .task(task)
-//                    .user()
-//                    .userProfile();
-//            operatorRepository.save(operator);
-//        });
-
-
+        users.forEach(user -> {
+            Operator operator = Operator.builder()
+                    .task(task)
+                    .user(user)
+                    .userProfile(user.getUserProfile())
+                    .build();
+            operatorRepository.save(operator);
+        });
     }
 
     @Transactional
-    public void putTask(TaskDto taskDto, Long taskId) {
-        // 1. task 조회
-        Task task = tasksRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+    public void putTask(String authUser, TaskDto taskDto, Long taskId) {
+        // 1. task 조회 및 유저 관한 확인
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. operator 조회
         List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
@@ -138,7 +146,7 @@ public class TasksService {
         }
         if (operatorId.size() > operators.size()) {
             while (i < operatorId.size()) {
-                User user = userRepository.getByIdWithUserProfile(operatorId.get(i))
+                User user = userRepository.findById(operatorId.get(i))
                         .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
                 Operator operator = Operator.builder()
                         .user(user)
