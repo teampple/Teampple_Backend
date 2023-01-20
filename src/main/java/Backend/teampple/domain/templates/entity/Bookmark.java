@@ -24,7 +24,7 @@ public class Bookmark extends TimeBaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id")
     private Template template;
 }

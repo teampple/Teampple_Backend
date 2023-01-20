@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,26 +28,22 @@ public class TemplatesController {
     private final BookmarkService bookmarkService;
 
     @GetMapping(value = "")
-    @Operation(summary = "탬플릿 조회", description = "탬플릿 조회 API 입니다.\n"
-            + "탬플릿을 조회합니다. 작동x")
-    public CommonResponse<List<GetTemplateDto>> getTemplate() {
+    @Operation(summary = "탬플릿 조회", description = "탬플릿 조회 API 입니다.")
+    public CommonResponse<List<GetTemplateDto>> getTemplate(@AuthenticationPrincipal String authUser) {
         log.info("[api-get] 탬플릿 조회");
 
-        // 유저 validation 추가해야함
-
-        List<GetTemplateDto> getTemplateDtos = templatesService.getTemplate();
+        List<GetTemplateDto> getTemplateDtos = templatesService.getTemplate(authUser);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getTemplateDtos);
     }
 
     @PostMapping(value = "bookmarks")
     @Operation(summary = "탬플릿 북마크", description = "탬플릿 북마크 API 입니다.\n"
             + "탬플릿 즐겨찾기합니다. 작동x")
-    public CommonResponse<String> postBookmark(@Valid @RequestBody PostBookmarkDto postBookmarkDto) {
+    public CommonResponse<String> postBookmark(@AuthenticationPrincipal String authUser,
+                                               @Valid @RequestBody PostBookmarkDto postBookmarkDto) {
         log.info("[api-post] 탬플릿 즐겨찾기");
 
-        // 유저 validation 추가해야함
-
-        bookmarkService.postBookmark(postBookmarkDto);
+        bookmarkService.postBookmark(authUser, postBookmarkDto);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 }
