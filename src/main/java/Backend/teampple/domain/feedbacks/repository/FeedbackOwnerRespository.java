@@ -14,5 +14,5 @@ public interface FeedbackOwnerRespository extends JpaRepository<FeedbackOwner, L
     void deleteAllByFeedback(Feedback feedback);
 
     @Query("select fbo from FeedbackOwner fbo join fetch fbo.feedback fb join fetch fb.task order by fb.updatedAt")
-    List<FeedbackOwner> findAllByUserWithFeedbackWithTaskOrderByUpdatedAt(User user);
+    List<FeedbackOwner> findAllByUserWithFeedbackAndTaskOrderByUpdatedAt(User user);
 }

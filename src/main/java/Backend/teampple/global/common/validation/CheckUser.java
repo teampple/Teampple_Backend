@@ -54,11 +54,11 @@ public class CheckUser {
 
     public Feedback checkIsUserCanModifyFeedback(String authUser, Long feedbackId) {
         // 1. feedback + task + stage + team
-        Feedback feedback = feedbackRepository.findByIdWithTaskAndStageAndTeam(feedbackId)
+        Feedback feedback = feedbackRepository.findByIdWithTaskAndStage(feedbackId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.FEEDBACK_NOT_FOUND.getMessage()));
 
         // 2. teammate + user
-        teammateRepository.findAllByTeamAndUser(authUser, feedback.getTask().getStage().getTeam())
+        teammateRepository.findByTeamAndUser(authUser, feedback.getTask().getStage().getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
         return feedback;
@@ -70,7 +70,7 @@ public class CheckUser {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. teammate + user
-        teammateRepository.findAllByTeamAndUser(authUser, task.getStage().getTeam())
+        teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
         return task;
@@ -78,12 +78,12 @@ public class CheckUser {
 
 
     public UserStageDto checkIsUserCanPostTask(String authUser, Long stageId) {
-        // 1. stage + team
-        Stage stage = stagesRepository.findByIdWithTeam(stageId)
+        // 1. stage
+        Stage stage = stagesRepository.findById(stageId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. teammate + user + userprofile
-        Teammate teammate = teammateRepository.findAllByTeamAndUserWithUserProfile(authUser, stage.getTeam())
+        Teammate teammate = teammateRepository.findAllByTeamAndUserWithUserAndUserProfile(authUser, stage.getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
         return UserStageDto.builder()

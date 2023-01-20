@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 2. feedback owner 조회
-        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackWithTaskOrderByUpdatedAt(user);
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackAndTaskOrderByUpdatedAt(user);
 
         // 3. dto
         List<GetFeedbackBriefDto> feedbacks = feedbackOwners.stream()

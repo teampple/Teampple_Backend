@@ -42,7 +42,7 @@ public class FeedbacksService {
     @Transactional
     public void postFeedback(String authUser, PostFeedbackDto postFeedbackDto, Long taskId) {
         // 1. task 조회
-        Task task = tasksRepository.findByIdWithStageAndTeam(taskId)
+        Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. 유저 체크 및 유저 불러오기
@@ -57,7 +57,7 @@ public class FeedbacksService {
         feedbackRepository.save(feedback);
 
         // 3. 피드백 오너 생성 유저, 유저 프로파일 패치조인
-        List<Operator> operators = operatorRepository.findAllWithUserAndUserProfileByTask(task);
+        List<Operator> operators = operatorRepository.findAllByTask(task);
         operators.forEach(operator -> {
                     FeedbackOwner feedbackOwner = FeedbackOwner.builder()
                             .user(operator.getUser())

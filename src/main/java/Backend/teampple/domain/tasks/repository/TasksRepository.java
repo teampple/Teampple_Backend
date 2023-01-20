@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TasksRepository extends JpaRepository<Task, Long> {
-
-    @Query("select distinct t from Task t join fetch t.stage where t.id = :id")
+    @Query("select distinct t from Task t" +
+            " join fetch t.stage" +
+            " where t.id = :id")
     Optional<Task> findByIdWithStage(@Param("id") Long id);
-
-
-//    Optional<Task> findByIdWithTaskAndStageAndTeam(@Param("id")Long id);
 }

@@ -56,11 +56,11 @@ public class TasksService {
                 .map(GetFileInfoDto::new).collect(Collectors.toList());
 
         // 3. operator 조회 유저 프로파일 패치조인
-        List<String> operators = operatorRepository.findAllByTask(task).stream()
+        List<String> operators = operatorRepository.findAllByTaskWithUserProfile(task).stream()
                 .map(o -> o.getUserProfile().getName()).collect(Collectors.toList());
 
         // 4. feedback 조회 유저, 유저 프로파일 패치조인
-        List<GetFeedbackDto> getFeedbackDtos = feedbackRepository.findByTask(task).stream()
+        List<GetFeedbackDto> getFeedbackDtos = feedbackRepository.findByTaskWithUserAndUserProfile(task).stream()
                 .map(GetFeedbackDto::new).collect(Collectors.toList());
 
         return GetTaskDto.builder()
@@ -96,12 +96,12 @@ public class TasksService {
         taskDto.getOperators()
                 .forEach(opId -> {
                     User user = userRepository.findByIdWithUserProfile(opId)
-                            .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
                     users.add(user);
                 });
 
 
-        // 3. operator 생성
+        // 4. operator 생성
         users.forEach(user -> {
             Operator operator = Operator.builder()
                     .task(task)
@@ -146,7 +146,7 @@ public class TasksService {
         }
         if (operatorId.size() > operators.size()) {
             while (i < operatorId.size()) {
-                User user = userRepository.getByIdWithUserProfile(operatorId.get(i))
+                User user = userRepository.findById(operatorId.get(i))
                         .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
                 Operator operator = Operator.builder()
                         .user(user)

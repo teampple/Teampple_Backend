@@ -15,7 +15,4 @@ public interface StagesRepository extends JpaRepository<Stage, Long> {
     Optional<Stage> findAllByTeamAndSequenceNum(Team team, int sequenceNum);
 
     List<Stage> findAllByTeam(Team team);
-
-    @Query("select s from Stage s join fetch s.team where s.id = :stageId")
-    Optional<Stage> findByIdWithTeam(Long stageId);
 }

@@ -17,12 +17,11 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             " join fetch ad.userProfile" +
             " where f.task = :task" +
             " order by f.createdAt")
-    List<Feedback> findByTask(@Param("task")Task task);
+    List<Feedback> findByTaskWithUserAndUserProfile(@Param("task")Task task);
 
     @Query("select f from Feedback f " +
             " join fetch f.task t" +
             " join fetch t.stage s" +
-            " join fetch s.team" +
             " where f.id = :feedbackId")
-    Optional<Feedback> findByIdWithTaskAndStageAndTeam(@Param("feedbackId") Long feedbackId);
+    Optional<Feedback> findByIdWithTaskAndStage(@Param("feedbackId") Long feedbackId);
 }

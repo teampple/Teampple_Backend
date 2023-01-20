@@ -75,13 +75,12 @@ public class InvitationService {
         // 2. 이미 존재하는 팀원인지 체크
         List<Teammate> teammates = teammateRepository.findAllByTeamWithUser(team);
         teammates.forEach(teammate -> {
-                    log.info("{}", teammate.getUser().getKakaoId());
                     if(Objects.equals(teammate.getUser().getKakaoId(), authUser))
                         throw new BadRequestException(ErrorCode.TEAMMATE_ALREADY_EXIST.getMessage());
                 });
 
         // 3. 유저 조회
-        User user = userRepository.findByKakaoIdWithUserProfile(authUser)
+        User user = userRepository.findByKakaoId(authUser)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
 
         // 4. 팀원 생성
