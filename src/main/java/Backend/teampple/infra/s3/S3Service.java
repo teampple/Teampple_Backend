@@ -3,7 +3,9 @@ package Backend.teampple.infra.s3;
 import Backend.teampple.infra.s3.dto.GetS3UrlDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.*;
@@ -133,23 +135,19 @@ public class S3Service {
         expTimeMillis += 1000 * 60 * 60; // 1시간
         expiration.setTime(expTimeMillis);
 
-        try {
-            // url 생성
-            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
-                    .withMethod(HttpMethod.PUT)
-                    .withExpiration(expiration);
-            generatePresignedUrlRequest.addRequestParameter(
-                    Headers.S3_CANNED_ACL,
-                    CannedAccessControlList.PublicRead.toString());
-            URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
+        // url 생성
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
+                .withMethod(HttpMethod.PUT)
+                .withExpiration(expiration);
+        generatePresignedUrlRequest.addRequestParameter(
+                Headers.S3_CANNED_ACL,
+                CannedAccessControlList.PublicRead.toString());
+        URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
-            return GetS3UrlDto.builder()
-                    .preSignedUrl(url.toExternalForm())
-                    .build();
-        } catch (Exception e){
-            log.error("e.getMessage().toString()");
-            return new GetS3UrlDto();
-        }
+        // return
+        return GetS3UrlDto.builder()
+                .preSignedUrl(url.toExternalForm())
+                .build();
     }
 
 }

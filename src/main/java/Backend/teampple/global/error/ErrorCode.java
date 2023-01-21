@@ -54,10 +54,12 @@ public enum ErrorCode {
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다."),
 
     // File
-    FILE_NOT_FOUND(BAD_REQUEST, "F001", "파일이이 존재하지 않습니다.");
+    FILE_NOT_FOUND(BAD_REQUEST, "F001", "파일이 존재하지 않습니다."),
 
     // S3
-    
+    S3_SERVER_ERROR(BAD_REQUEST, "S3001", "Amazon S3가 처리할 수 없는 요청입니다."),
+    S3_CONNECTION_ERROR(BAD_REQUEST, "S3002", "Amazon S3에 연결할 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -83,7 +83,7 @@ public class S3Controller {
     @GetMapping(value = "/url")
     @Operation(summary = "presigned url 조회", description = "presigned url 조회 API 입니다.")
     public CommonResponse<GetS3UrlDto> getInvitation(@AuthenticationPrincipal String authUser) {
-        log.info("[api-get] 초대 링크 ");
+        log.info("[api-get] presigned url");
 
         GetS3UrlDto getS3UrlDto = s3Service.getS3Url(authUser);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getS3UrlDto);

@@ -2,6 +2,8 @@ package Backend.teampple.global.error;
 
 import Backend.teampple.global.error.exception.BaseException;
 import Backend.teampple.global.common.response.CommonResponse;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +68,22 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<CommonResponse> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("EmptyResultDataAccessException", e);
         return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
+                null, ErrorCode._BAD_REQUEST.getHttpStatus());
+    }
+
+    // The call was transmitted successfully, but Amazon S3 couldn't process it.
+    @ExceptionHandler(AmazonServiceException.class)
+    protected ResponseEntity<CommonResponse> handleAmazonServiceException(AmazonServiceException e) {
+        log.error("AmazonServiceException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_SERVER_ERROR.getMessage()),
+                null, ErrorCode._BAD_REQUEST.getHttpStatus());
+    }
+
+    // thrown when service could not be contacted for a response, or when client is unable to parse the response from service.
+    @ExceptionHandler(SdkClientException.class)
+    protected ResponseEntity<CommonResponse> handleSdkClientException(SdkClientException e) {
+        log.error("SdkClientException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_CONNECTION_ERROR.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
