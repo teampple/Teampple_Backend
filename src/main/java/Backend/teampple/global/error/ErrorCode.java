@@ -10,14 +10,14 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    // common
+    /* Common */
     INVALID_INPUT_VALUE(BAD_REQUEST, "C001", " Invalid Input Value"),
     _INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "C000", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(BAD_REQUEST, "C001", "잘못된 요청입니다."),
-    _UNAUTHORIZED(UNAUTHORIZED, "C002", "권한이 없습니다."),
     _METHOD_NOT_ALLOWED(METHOD_NOT_ALLOWED, "C003", "지원하지 않는 Http Method 입니다."),
 
-    /* Auth 관련 오류 */
+    /* Auth */
+    UNAUTHORIZED_ACCESS(UNAUTHORIZED, "AUTH000", "권한이 없습니다."),
     EXPIRED_TOKEN(BAD_REQUEST, "AUTH001", "만료된 엑세스 토큰입니다"),
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "AUTH002", "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "AUTH003", "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
@@ -26,27 +26,29 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "AUTH006", "로그아웃 된 사용자입니다"),
     FORBIDDEN_USER(FORBIDDEN, "AUTH007", "권한이 없는 유저입니다"),
     LOGIN_FAILED(UNAUTHORIZED, "AUTH008", "로그인에 실패했습니다"),
+    INVALID_TOKEN(BAD_REQUEST, "AUTH009", "유효하지 않은 토큰입니다"),
 
-    // Team
+
+    /* Team */
     TEAM_NOT_FOUND(BAD_REQUEST, "T001", "해당 팀플이 존재하지 않습니다."),
 
-    // Teammate
+    /* Teammate */
     TEAMMATE_NOT_FOUND(BAD_REQUEST, "TM001", "해당 팀원이 존재하지 않습니다."),
 
-    // Stage
+    /* Stage */
     STAGE_SEQUENCE_DUPLICATE(BAD_REQUEST, "S001", "단계 순서가 중복되었습니다."),
-    STAGE_NOT_FOUND(BAD_REQUEST,"S002","해당 단계가 존재하지 않습니다."),
+    STAGE_NOT_FOUND(BAD_REQUEST, "S002", "해당 단계가 존재하지 않습니다."),
 
-    // Task
+    /* Task */
     TASK_NOT_FOUND(BAD_REQUEST, "TK001", "해당 할 일이 존재하지 않습니다."),
 
-    // User
+    /* User */
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
 
-    // Feedback
+    /* Feedback */
     FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 피드백이 존재하지 않습니다."),
 
-    // Template
+    /* Template */
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
