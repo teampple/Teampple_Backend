@@ -7,18 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetStageDto {
-    @NotNull
     @ApiModelProperty(notes = "단계 명", example = "1단계", required = true)
     private String name;
 
-    @NotNull
     @ApiModelProperty(notes = "단계 완료 여부", example = "true", required = true)
     private boolean isDone;
 

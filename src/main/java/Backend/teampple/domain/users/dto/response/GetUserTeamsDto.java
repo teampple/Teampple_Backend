@@ -10,10 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetUserTeamsDto {
-
     @ApiModelProperty(notes = "팀플", required = true)
     List<GetTeamDto> teams;
-
 
     @Builder
     public GetUserTeamsDto(List<GetTeamDto> teams) {

@@ -13,12 +13,12 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Feedback")
 @Getter
-@NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
+@EqualsAndHashCode
+@Table(name = "Feedback")
 public class Feedback extends TimeBaseEntity {
     @Id
     @Column(name = "feedback_id")
@@ -37,7 +37,6 @@ public class Feedback extends TimeBaseEntity {
 
     @Column(nullable = false)
     private String comment;
-
 
     @Builder
     public Feedback(Long id, Task task, User adviser, String comment) {

@@ -3,17 +3,16 @@ package Backend.teampple.domain.teams.entity;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.global.common.entity.TimeBaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Teammate")
 @Getter
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@Table(name = "Teammate")
 public class Teammate extends TimeBaseEntity {
     @Id
     @Column(name = "teammate_id")

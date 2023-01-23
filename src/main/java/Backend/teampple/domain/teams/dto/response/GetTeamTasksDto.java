@@ -2,13 +2,11 @@ package Backend.teampple.domain.teams.dto.response;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
-import Backend.teampple.domain.tasks.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeamTasksDto {
@@ -42,7 +39,6 @@ public class GetTeamTasksDto {
 
     @ApiModelProperty(value = "할 일", required = true)
     private List<GetTaskBriefDto> tasks;
-
 
     public GetTeamTasksDto(Stage stage) {
         taskname = stage.getTaskName();

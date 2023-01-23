@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class PostFileDto {

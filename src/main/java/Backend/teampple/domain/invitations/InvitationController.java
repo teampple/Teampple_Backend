@@ -2,7 +2,6 @@ package Backend.teampple.domain.invitations;
 
 import Backend.teampple.domain.invitations.dto.response.GetInvitationDto;
 import Backend.teampple.domain.invitations.dto.response.GetInvitationValidationDto;
-import Backend.teampple.domain.tasks.dto.response.GetTaskDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/invitations")
 @Api(tags = "초대")
 public class InvitationController {
-
     private final InvitationService invitationService;
 
     @GetMapping(value = "")

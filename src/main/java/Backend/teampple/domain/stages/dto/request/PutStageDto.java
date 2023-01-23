@@ -9,11 +9,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class PutStageDto {
-
     @Valid
     @NotNull
     @ApiModelProperty(notes = "단계", required = true)

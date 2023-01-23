@@ -10,11 +10,11 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Operator")
 @Getter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
+@Table(name = "Operator")
 public class Operator extends TimeBaseEntity {
     @Id
     @Column(name = "operator_id")

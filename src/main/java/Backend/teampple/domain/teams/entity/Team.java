@@ -3,17 +3,16 @@ package Backend.teampple.domain.teams.entity;
 import Backend.teampple.domain.teams.dto.request.PutTeamDto;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Team")
 @Getter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
+@Table(name = "Team")
 public class Team extends PeriodBaseEntity {
     @Id
     @Column(name = "team_id")

@@ -3,8 +3,6 @@ package Backend.teampple.domain.teams.dto.response;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode

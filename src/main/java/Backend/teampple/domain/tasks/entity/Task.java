@@ -14,12 +14,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Task")
 @Getter
-@NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
+@EqualsAndHashCode
+@Table(name = "Task")
 public class Task extends PeriodBaseEntity {
     @Id
     @Column(name = "task_id")

@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class ScheduleDto {

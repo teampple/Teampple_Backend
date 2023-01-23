@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface FeedbackOwnerRespository extends JpaRepository<FeedbackOwner, Long> {
-    List<FeedbackOwner> findAllByFeedback(Feedback feedback);
-
     void deleteAllByFeedback(Feedback feedback);
 
     @Query("select fbo from FeedbackOwner fbo" +

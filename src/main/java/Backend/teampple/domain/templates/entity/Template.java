@@ -6,13 +6,11 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Template")
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
+@Table(name = "Template")
 public class Template extends TimeBaseEntity {
     @Id
     @Column(name = "template_id")
@@ -24,4 +22,11 @@ public class Template extends TimeBaseEntity {
 
     @Column(nullable = false)
     private String urls;
+
+    @Builder
+    public Template(Long id, String name, String urls) {
+        this.id = id;
+        this.name = name;
+        this.urls = urls;
+    }
 }

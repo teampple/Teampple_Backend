@@ -6,10 +6,7 @@ import Backend.teampple.domain.templates.entity.Template;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTemplateDto {

@@ -10,7 +10,6 @@ import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
-import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.ForbiddenException;
@@ -27,9 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FilesService {
-
-    private final TeamsRepository teamsRepository;
-
     private final FilesRepository filesRepository;
 
     private final TasksRepository tasksRepository;

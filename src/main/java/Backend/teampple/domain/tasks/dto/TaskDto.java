@@ -5,18 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class TaskDto {
-
     @NotNull
     @ApiModelProperty(notes = "할 일 이름", example = "이름", required = true)
     private String name;

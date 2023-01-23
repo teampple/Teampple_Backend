@@ -3,7 +3,6 @@ package Backend.teampple.domain.stages;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
-import Backend.teampple.domain.teams.dto.request.PostTeamDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,6 @@ import java.util.List;
 @RequestMapping("/stages")
 @Api(tags = "단계")
 public class StagesController {
-
     private final StagesService stagesService;
 
     @GetMapping(value = "")

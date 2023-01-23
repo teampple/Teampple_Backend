@@ -10,7 +10,6 @@ import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
-import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class StagesService {
-
-    private final TeamsRepository teamsRepository;
-
     private final StagesRepository stagesRepository;
 
     private final CheckUser checkUser;

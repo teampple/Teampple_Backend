@@ -1,13 +1,11 @@
 package Backend.teampple.domain.teams.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class TeammateDto {
