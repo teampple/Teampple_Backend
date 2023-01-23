@@ -2,6 +2,8 @@ package Backend.teampple.domain.auth.jwt;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -86,7 +88,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
         }
 
         /**userDetails 반환*/
