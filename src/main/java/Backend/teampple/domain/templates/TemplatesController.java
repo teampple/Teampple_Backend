@@ -34,8 +34,7 @@ public class TemplatesController {
     }
 
     @PostMapping(value = "bookmarks")
-    @Operation(summary = "탬플릿 북마크", description = "탬플릿 북마크 API 입니다.\n"
-            + "탬플릿 즐겨찾기합니다. 작동x")
+    @Operation(summary = "탬플릿 북마크 여부 변경", description = "탬플릿 북마크 여부 변경 API 입니다.")
     public CommonResponse<String> postBookmark(@AuthenticationPrincipal String authUser,
                                                @Valid @RequestBody PostBookmarkDto postBookmarkDto) {
         log.info("[api-post] 탬플릿 즐겨찾기");

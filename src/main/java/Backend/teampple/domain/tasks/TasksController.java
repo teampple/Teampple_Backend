@@ -54,6 +54,16 @@ public class TasksController {
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
+    @DeleteMapping(value = "")
+    @Operation(summary = "할 일 삭제", description = "할 일 삭제 API 입니다.")
+    public CommonResponse<String> deleteTask(@AuthenticationPrincipal String authUser,
+                                          @RequestParam("taskId") Long taskId) {
+        log.info("[api-delete] 할 일 삭제");
+
+        tasksService.deleteTask(authUser, taskId);
+        return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
+    }
+
     @PostMapping(value = "/status")
     @Operation(summary = "할 일 완료 여부 변경", description = "할 일 완료 여부 변경 API 입니다.")
     public CommonResponse<String> getConvertStatus(@AuthenticationPrincipal String authUser,

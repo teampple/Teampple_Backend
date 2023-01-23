@@ -44,9 +44,6 @@ public class Stage extends PeriodBaseEntity {
     @Column(columnDefinition = "varchar(50) default ''")
     private String lectureName;
 
-    @Column(columnDefinition = "varchar(255) default ''")
-    private String goal;
-
     @Column(nullable = false)
     @ColumnDefault("0")
     private int achievement;
@@ -63,7 +60,7 @@ public class Stage extends PeriodBaseEntity {
 
     @Builder
     public Stage(Long id, Team team, List<Task> tasks, String taskName,
-                 String lectureName, String goal, int achievement, int totalTask,
+                 String lectureName, int achievement, int totalTask,
                  Boolean isDone, int sequenceNum, LocalDateTime startDate, LocalDateTime dueDate) {
         init(startDate, dueDate);
         this.id = id;
@@ -71,7 +68,6 @@ public class Stage extends PeriodBaseEntity {
         this.tasks = tasks;
         this.taskName = taskName;
         this.lectureName = lectureName;
-        this.goal = goal;
         this.achievement = achievement;
         this.totalTask = totalTask;
         this.isDone = isDone;
@@ -82,5 +78,27 @@ public class Stage extends PeriodBaseEntity {
         this.sequenceNum = stageDto.getSequenceNum();
         this.taskName = stageDto.getName();
         init(stageDto.getStartDate(), stageDto.getDueDate());
+    }
+
+    public void increaseTotalTask(int addition){
+        this.totalTask += addition;
+    }
+
+    public void decreaseTotalTask(int deletion){
+        this.totalTask -= deletion;
+    }
+
+    public void increaseAchievement(int addition){
+        this.achievement += addition;
+        if (this.achievement == this.totalTask) {
+            this.isDone = true;
+        }
+    }
+
+    public void decreaseAchievement(int deletion){
+        this.achievement -= deletion;
+        if (this.achievement != this.totalTask) {
+            this.isDone = false;
+        }
     }
 }
