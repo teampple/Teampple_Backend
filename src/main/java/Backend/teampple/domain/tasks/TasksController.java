@@ -44,7 +44,7 @@ public class TasksController {
     }
 
     @PutMapping(value = "")
-    @Operation(summary = "할 일 추가", description = "할 일 추가 API 입니다.")
+    @Operation(summary = "할 일 수정", description = "할 일 수정 API 입니다.")
     public CommonResponse<String> putTask(@AuthenticationPrincipal String authUser,
                                           @Valid @RequestBody TaskDto taskDto,
                                           @RequestParam("taskId") Long taskId) {

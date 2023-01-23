@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @NoArgsConstructor
 @RedisHash(value = "invitation", timeToLive = 7200) // 2시간
 public class Invitation {
-
     @Id
     @Indexed
     private String code;

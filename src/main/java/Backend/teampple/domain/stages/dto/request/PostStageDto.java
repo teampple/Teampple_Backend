@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class PostStageDto {

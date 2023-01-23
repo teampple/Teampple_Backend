@@ -5,13 +5,11 @@ import Backend.teampple.domain.templates.entity.Bookmark;
 import Backend.teampple.domain.templates.entity.Template;
 import Backend.teampple.domain.templates.repository.BookmarkRepository;
 import Backend.teampple.domain.templates.repository.TemplateRespository;
-import Backend.teampple.domain.users.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TemplatesService {
-
     private final TemplateRespository templateRespository;
 
     private final BookmarkRepository bookmarkRepository;

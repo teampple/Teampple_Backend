@@ -2,11 +2,10 @@ package Backend.teampple.domain.feedbacks.repository;
 
 import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
-import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.users.entity.User;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

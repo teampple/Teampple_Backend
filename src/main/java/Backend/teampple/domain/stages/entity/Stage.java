@@ -6,7 +6,6 @@ import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.OnDelete;
@@ -18,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Stage")
 @Getter
 @ToString(exclude = "tasks")
-@EqualsAndHashCode
 @DynamicInsert
+@EqualsAndHashCode
 @NoArgsConstructor
+@Table(name = "Stage")
 public class Stage extends PeriodBaseEntity {
     @Id
     @Column(name = "stage_id")

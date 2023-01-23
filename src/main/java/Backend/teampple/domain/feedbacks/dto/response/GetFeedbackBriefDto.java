@@ -1,7 +1,6 @@
 package Backend.teampple.domain.feedbacks.dto.response;
 
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
-import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.tasks.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;

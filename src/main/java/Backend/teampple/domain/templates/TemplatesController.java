@@ -1,9 +1,7 @@
 package Backend.teampple.domain.templates;
 
-import Backend.teampple.domain.teams.dto.request.PostTeamDto;
 import Backend.teampple.domain.templates.dto.request.PostBookmarkDto;
 import Backend.teampple.domain.templates.dto.response.GetTemplateDto;
-import Backend.teampple.domain.templates.repository.TemplateRespository;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +20,6 @@ import java.util.List;
 @RequestMapping("/templates")
 @Api(tags = "탬플릿")
 public class TemplatesController {
-
     private final TemplatesService templatesService;
 
     private final BookmarkService bookmarkService;

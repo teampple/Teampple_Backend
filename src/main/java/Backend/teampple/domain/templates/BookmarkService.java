@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
-
     private final TemplateRespository templateRespository;
 
     private final BookmarkRepository bookmarkRepository;

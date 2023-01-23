@@ -4,7 +4,6 @@ import Backend.teampple.domain.invitations.dto.response.GetInvitationDto;
 import Backend.teampple.domain.invitations.dto.response.GetInvitationValidationDto;
 import Backend.teampple.domain.invitations.entity.Invitation;
 import Backend.teampple.domain.invitations.repository.InvitationRepository;
-import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
@@ -28,7 +27,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class InvitationService {
-
     private final TeamsRepository teamsRepository;
 
     private final InvitationRepository invitationRepository;

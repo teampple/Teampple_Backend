@@ -19,12 +19,10 @@ import javax.validation.Valid;
 @RequestMapping("/feedbacks")
 @Api(tags = "피드백")
 public class FeedbacksController {
-
     private final FeedbacksService feedbacksService;
 
     @PostMapping(value = "")
-    @Operation(summary = "피드백 생성", description = "피드백 생성 API 입니다.\n"
-            + "피드백을 생성합니다.")
+    @Operation(summary = "피드백 생성", description = "피드백 생성 API 입니다.")
     public CommonResponse<String> getFile(@AuthenticationPrincipal String authUser,
                                           @Valid @RequestBody PostFeedbackDto postFeedbackDto,
                                           @RequestParam("taskId") Long taskId) {
@@ -35,8 +33,7 @@ public class FeedbacksController {
     }
 
     @PutMapping(value = "")
-    @Operation(summary = "피드백 수정", description = "피드백 수정 API 입니다.\n"
-            + "피드백을 수정합니다.")
+    @Operation(summary = "피드백 수정", description = "피드백 수정 API 입니다.")
     public CommonResponse<String> putFile(@AuthenticationPrincipal String authUser,
                                           @Valid @RequestBody PutFeedbackDto putFeedbackDto,
                                           @RequestParam("feedbackId") Long feedbackId) {
@@ -47,14 +44,11 @@ public class FeedbacksController {
     }
 
     @DeleteMapping(value = "")
-    @Operation(summary = "피드백 삭제", description = "피드백 삭제 API 입니다.\n"
-            + "피드백을 삭제합니다.")
+    @Operation(summary = "피드백 삭제", description = "피드백 삭제 API 입니다.")
     public CommonResponse<String> deleteFile(@AuthenticationPrincipal String authUser,
                                              @RequestParam("feedbackId") Long feedbackId) {
 
         log.info("[api-delete] 피드백 삭제");
-
-        // 유저 validation 추가해야함
 
         feedbacksService.deleteFeedback(authUser, feedbackId);
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());

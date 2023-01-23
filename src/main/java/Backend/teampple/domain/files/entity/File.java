@@ -11,13 +11,11 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "File")
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
+@Table(name = "File")
 public class File extends TimeBaseEntity {
     @Id
     @Column(name = "file_id")
@@ -48,4 +46,14 @@ public class File extends TimeBaseEntity {
     @Column(nullable = false)
     private Long size;
 
+    @Builder
+    public File(Long id, Task task, User user, Team team, String url, String filename, Long size) {
+        this.id = id;
+        this.task = task;
+        this.user = user;
+        this.team = team;
+        this.url = url;
+        this.filename = filename;
+        this.size = size;
+    }
 }

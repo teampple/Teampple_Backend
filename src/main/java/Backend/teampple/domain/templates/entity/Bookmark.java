@@ -7,13 +7,11 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Bookmark")
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor // builder 때문에 들어감
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
+@Table(name = "Bookmark")
 public class Bookmark extends TimeBaseEntity {
     @Id
     @Column(name = "bookmark_id")
@@ -27,4 +25,11 @@ public class Bookmark extends TimeBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id")
     private Template template;
+
+    @Builder
+    public Bookmark(Long id, User user, Template template) {
+        this.id = id;
+        this.user = user;
+        this.template = template;
+    }
 }

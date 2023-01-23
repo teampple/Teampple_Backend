@@ -13,10 +13,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "FeedbackOwner")
 public class FeedbackOwner extends TimeBaseEntity {
     @Id

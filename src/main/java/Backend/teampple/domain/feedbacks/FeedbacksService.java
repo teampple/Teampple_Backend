@@ -11,7 +11,6 @@ import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
@@ -34,8 +33,6 @@ public class FeedbacksService {
     private final OperatorRepository operatorRepository;
 
     private final FeedbackOwnerRespository feedbackOwnerRespository;
-
-    private final UserRepository userRepository;
 
     private final CheckUser checkUser;
 

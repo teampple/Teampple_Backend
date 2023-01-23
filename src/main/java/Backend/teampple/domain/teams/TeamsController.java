@@ -1,22 +1,18 @@
 package Backend.teampple.domain.teams;
 
-import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
 import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
-import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -53,8 +49,7 @@ public class TeamsController {
     }
 
     @PutMapping(value = "")
-    @Operation(summary = "팀플 정보 수정", description = "팀플 정보 수정 API 입니다.\n"
-            + "팀플 정보를 수정합니다.")
+    @Operation(summary = "팀플 정보 수정", description = "팀플 정보 수정 API 입니다.")
     public CommonResponse<String> putTeam(@AuthenticationPrincipal String authUser,
                                           @Valid @RequestBody PutTeamDto putTeamDto,
                                           @RequestParam("teamId") Long teamId) {
@@ -65,8 +60,7 @@ public class TeamsController {
     }
 
     @PostMapping(value = "schedules")
-    @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.\n"
-            + "팀플 일정을 생성합니다.")
+    @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.")
     public CommonResponse<String> postSchedule(@AuthenticationPrincipal String authUser,
                                                @Valid @RequestBody ScheduleDto scheduleDto,
                                                @RequestParam("teamId") Long teamId) {
@@ -77,8 +71,7 @@ public class TeamsController {
     }
 
     @GetMapping(value = "schedules")
-    @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다.\n"
-            + "팀플 일정을 조회합니다."
+    @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다."
             + "name 과 duedate는 팀의 이름과 마감일이고, schedule은 팀의 일정입니다.")
     public CommonResponse<GetScheduleDto> getSchedule(@AuthenticationPrincipal String authUser,
                                                       @RequestParam("teamId") Long teamId) {
@@ -89,8 +82,7 @@ public class TeamsController {
     }
 
     @GetMapping(value = "tasks")
-    @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.\n"
-            + "팀플 화면에 쓰일 정보를 조회합니다.")
+    @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.")
     public CommonResponse<List<GetTeamTasksDto>> getTeamTasks(@AuthenticationPrincipal String authUser,
                                                               @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀 할 일 정보 조회");
@@ -100,8 +92,7 @@ public class TeamsController {
     }
 
     @GetMapping(value = "teammates")
-    @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다.\n"
-            + "팀원 정보를 조회합니다."
+    @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다."
             + "리스트가 아닌 값들은 '나'의 정보이고, 리스트는 '나'를 제외한 팀원입니다.")
     public CommonResponse<GetTeammateDto> getTeammate(@AuthenticationPrincipal String authUser,
                                                       @RequestParam("teamId") Long teamId) {
@@ -112,8 +103,7 @@ public class TeamsController {
     }
 
     @DeleteMapping(value = "teammates")
-    @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.\n"
-            + "팀원을 삭제합니다.")
+    @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.")
     public CommonResponse<String> deleteTeammate(@AuthenticationPrincipal String authUser,
                                                  @Valid @RequestBody DeleteTeammateDto deleteTeammateDto,
                                                  @RequestParam("teamId") Long teamId) {

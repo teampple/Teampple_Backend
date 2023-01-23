@@ -8,13 +8,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Schedule")
 @Getter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
+@Table(name = "Schedule")
 public class Schedule extends PeriodBaseEntity {
-
     @Id
     @Column(name = "schedule_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

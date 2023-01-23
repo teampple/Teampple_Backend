@@ -7,8 +7,6 @@ import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
-import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.tasks.dto.TaskDto;
 import Backend.teampple.domain.tasks.dto.response.GetTaskDto;
 import Backend.teampple.domain.tasks.entity.Operator;
@@ -35,7 +33,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TasksService {
-
     private final TasksRepository tasksRepository;
 
     private final FilesRepository filesRepository;
@@ -43,8 +40,6 @@ public class TasksService {
     private final OperatorRepository operatorRepository;
 
     private final FeedbackRepository feedbackRepository;
-
-    private final StagesRepository stagesRepository;
 
     private final FeedbackOwnerRespository feedbackOwnerRespository;
 
