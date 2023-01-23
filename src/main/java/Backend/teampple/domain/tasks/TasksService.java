@@ -7,6 +7,8 @@ import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
+import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.tasks.dto.TaskDto;
 import Backend.teampple.domain.tasks.dto.response.GetTaskDto;
 import Backend.teampple.domain.tasks.entity.Operator;
@@ -42,6 +44,8 @@ public class TasksService {
     private final FeedbackRepository feedbackRepository;
 
     private final FeedbackOwnerRespository feedbackOwnerRespository;
+
+    private final StagesRepository stagesRepository;
 
     private final UserRepository userRepository;
 
@@ -120,6 +124,11 @@ public class TasksService {
                     .build();
             operatorRepository.save(operator);
         });
+
+        // 5. stage total 늘리기
+        Stage stage = userStageDto.getStage();
+        stage.increaseTotalTask(1);
+        stagesRepository.save(stage);
     }
 
     @Transactional
@@ -179,6 +188,19 @@ public class TasksService {
         tasksRepository.save(task);
     }
 
+    public void deleteTask(String authUser, Long taskId) {
+        // 1. task 조회 및 유저 관한 확인
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
+
+        // 2. 삭제
+        tasksRepository.delete(task);
+
+        // 3. stage totaltask 변경
+        Stage stage = task.getStage();
+        stage.decreaseTotalTask(1);
+        stagesRepository.save(stage);
+    }
+
     public void getConvertStatus(String authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
@@ -186,5 +208,14 @@ public class TasksService {
         // 2. task status convert
         task.convertStatus();
         tasksRepository.save(task);
+
+        // 3. stage achievement 변경
+        Stage stage = task.getStage();
+        if (task.isDone()) {
+            stage.increaseAchievement(1);
+        } else {
+            stage.decreaseAchievement(1);
+        }
+        stagesRepository.save(stage);
     }
 }
