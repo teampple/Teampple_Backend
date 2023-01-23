@@ -6,12 +6,14 @@ import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
+import Backend.teampple.global.common.validation.dto.UserTaskDto;
 import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
-import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
 import Backend.teampple.global.error.exception.UnauthorizedException;
@@ -23,17 +25,19 @@ import org.springframework.stereotype.Component;
 public class CheckUser {
     private final TeammateRepository teammateRepository;
 
-    private final FeedbackRepository feedbackRepository;
-
     private final TasksRepository tasksRepository;
 
+    private final FeedbackRepository feedbackRepository;
+
     private final StagesRepository stagesRepository;
+
+    private final UserRepository userRepository;
 
     /*
     해당 유저가 팀에 속한지 검사하는 method
     */
     public UserTeamDto checkIsUserInTeam(String authUser, Long teamid) {
-        // 1. teammate + user + team
+        // 1. teammate + user
         Teammate teammate = teammateRepository.findAllByTeamIdAndUserWithTeamAndUser(authUser, teamid)
                 .orElseThrow(() -> new NotFoundException(ErrorCode._BAD_REQUEST.getMessage()));
 
@@ -64,16 +68,19 @@ public class CheckUser {
         return feedback;
     }
 
-    public Task checkIsUserHaveAuthForTask(String authUser, Long taskId) {
+    public UserTaskDto checkIsUserHaveAuthForTask(String authUser, Long taskId) {
         // 1. task + stage
         Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. teammate + user
-        teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
+        Teammate teammate = teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
-        return task;
+        return UserTaskDto.builder()
+                .user(teammate.getUser())
+                .task(task)
+                .build();
     }
 
 
