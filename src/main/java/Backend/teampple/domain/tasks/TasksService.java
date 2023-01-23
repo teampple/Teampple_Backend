@@ -168,4 +168,13 @@ public class TasksService {
         task.update(taskDto);
         tasksRepository.save(task);
     }
+
+    public void getConvertStatus(String authUser, Long taskId) {
+        // 1. task 조회 및 유저 관한 확인
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
+
+        // 2. task status convert
+        task.convertStatus();
+        tasksRepository.save(task);
+    }
 }

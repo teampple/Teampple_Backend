@@ -53,4 +53,14 @@ public class TasksController {
         tasksService.putTask(authUser, taskDto, taskId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
+
+    @PostMapping(value = "/status")
+    @Operation(summary = "할 일 완료 여부 변경", description = "할 일 완료 여부 변경 API 입니다.")
+    public CommonResponse<String> getConvertStatus(@AuthenticationPrincipal String authUser,
+                                              @RequestParam("taskId") Long taskId) {
+        log.info("[api-get] 할 일 완료 여부 변경");
+
+        tasksService.getConvertStatus(authUser, taskId);
+        return CommonResponse.onSuccess(HttpStatus.OK.value());
+    }
 }
