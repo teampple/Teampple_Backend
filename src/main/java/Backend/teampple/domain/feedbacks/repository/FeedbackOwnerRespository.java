@@ -2,6 +2,7 @@ package Backend.teampple.domain.feedbacks.repository;
 
 import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
+import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.users.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface FeedbackOwnerRespository extends JpaRepository<FeedbackOwner, L
             " where fbo.user = :user" +
             " order by fb.updatedAt")
     List<FeedbackOwner> findAllByUserWithFeedbackOrderByUpdatedAt(@Param("user") User user);
+
+    @Query("select fbo from FeedbackOwner fbo" +
+            " where fbo.user = :user and fbo.feedback in :feedbacks")
+    List<FeedbackOwner> findAllByUserAndFeedback(User user, List<Feedback> feedbacks);
 }
