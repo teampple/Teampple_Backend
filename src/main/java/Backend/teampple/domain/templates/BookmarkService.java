@@ -35,10 +35,15 @@ public class BookmarkService {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 3. bookmark 생성
-        Bookmark bookmark = Bookmark.builder()
-                .user(user)
-                .template(template)
-                .build();
-        bookmarkRepository.save(bookmark);
+        Bookmark bookmark = bookmarkRepository.findByUserAndTemplate(user, template);
+        if (bookmark == null) {
+            Bookmark newBookmark = Bookmark.builder()
+                    .user(user)
+                    .template(template)
+                    .build();
+            bookmarkRepository.save(newBookmark);
+        } else {
+            bookmarkRepository.delete(bookmark);
+        }
     }
 }
