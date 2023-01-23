@@ -11,4 +11,10 @@ import java.util.Optional;
 public interface TasksRepository extends JpaRepository<Task, Long> {
     @Query("select distinct t from Task t join fetch t.stage where t.id = :id")
     Optional<Task> findByIdWithStage(@Param("id")Long id);
+
+    @Query("select distinct t from Task t" +
+            " join fetch t.stage s" +
+            " join fetch s.team" +
+            " where t.id = :taskId")
+    Optional<Task> findByIdWithStageAndTeam(Long taskId);
 }

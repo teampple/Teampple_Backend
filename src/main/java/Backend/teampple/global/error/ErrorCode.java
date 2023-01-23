@@ -16,6 +16,7 @@ public enum ErrorCode {
     _BAD_REQUEST(BAD_REQUEST, "C001", "잘못된 요청입니다."),
     _METHOD_NOT_ALLOWED(METHOD_NOT_ALLOWED, "C003", "지원하지 않는 Http Method 입니다."),
 
+
     /* Auth */
     UNAUTHORIZED_ACCESS(UNAUTHORIZED, "AUTH000", "권한이 없습니다."),
     EXPIRED_TOKEN(BAD_REQUEST, "AUTH001", "만료된 엑세스 토큰입니다"),
@@ -31,9 +32,11 @@ public enum ErrorCode {
 
     /* Team */
     TEAM_NOT_FOUND(BAD_REQUEST, "T001", "해당 팀플이 존재하지 않습니다."),
+    TEAM_NOT_VALID(BAD_REQUEST, "T002", "유효하지 않은 팀플입니다."),
 
     /* Teammate */
     TEAMMATE_NOT_FOUND(BAD_REQUEST, "TM001", "해당 팀원이 존재하지 않습니다."),
+    INVALID_TEAMMATE(BAD_REQUEST, "TM002", "유효하지 않은 팀원입니다."),
 
     /* Stage */
     STAGE_SEQUENCE_DUPLICATE(BAD_REQUEST, "S001", "단계 순서가 중복되었습니다."),
@@ -44,12 +47,19 @@ public enum ErrorCode {
 
     /* User */
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
+    MISMATCH_TEAM(BAD_REQUEST, "U002", "해당 유저가 속한 팀이 아닙니다."),
 
     /* Feedback */
     FEEDBACK_NOT_FOUND(BAD_REQUEST, "U001", "해당 피드백이 존재하지 않습니다."),
 
+
+    /* File */
+    FILE_NOT_FOUND(BAD_REQUEST, "F001", "파일이이 존재하지 않습니다."),
+
+
     /* Template */
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -67,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseTokenDto join(RequestSignUpDto requestSignUpDto) {
         //TODO: 카카오 유효성 확인
         //TODO: 이미 가입된 유저인지 확인 필요
+
         UserProfile userProfile = postUserProfileMapper.toEntity(requestSignUpDto);
         RequestOAuthTokenDto requestOAuthToken = requestOAuthTokenMapper.toEntity(requestSignUpDto);
 

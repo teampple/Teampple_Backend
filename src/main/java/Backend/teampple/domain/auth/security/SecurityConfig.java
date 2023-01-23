@@ -23,6 +23,7 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
+            "/v2/api-docs"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -55,7 +56,9 @@ public class SecurityConfig {
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 /**해당 요청 누구나 접근 가능*/
                 .antMatchers(SwaggerPatterns).permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/auth/login").permitAll()
+                .antMatchers("/auth/info").permitAll()
+//                .antMatchers("/**").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated()
                 .and()

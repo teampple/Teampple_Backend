@@ -9,9 +9,11 @@ import lombok.Getter;
 @Getter
 public class ForbiddenException extends BaseException {
     public ForbiddenException() {
-        super(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage());
+        super(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS.getMessage());
     }
     public ForbiddenException(ErrorCode errorCode,String message) {
-        super(errorCode, message);
+        super(errorCode, message);}
+    public ForbiddenException(String message) {
+        super(ErrorCode.UNAUTHORIZED_ACCESS, message);
     }
 }
