@@ -1,5 +1,8 @@
 package Backend.teampple.domain.tasks;
 
+import Backend.teampple.domain.feedbacks.entity.Feedback;
+import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
+import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.repository.FilesRepository;
@@ -16,6 +19,7 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
+import Backend.teampple.global.common.validation.dto.UserTaskDto;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +46,8 @@ public class TasksService {
 
     private final StagesRepository stagesRepository;
 
+    private final FeedbackOwnerRespository feedbackOwnerRespository;
+
     private final UserRepository userRepository;
 
     private final CheckUser checkUser;
@@ -49,7 +55,9 @@ public class TasksService {
     @Transactional
     public GetTaskDto getTask(String authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
+        UserTaskDto userTaskDto = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
+        Task task = userTaskDto.getTask();
+        User user = userTaskDto.getUser();
 
         // 2. file 조회
         List<GetFileInfoDto> getFileInfoDtos = filesRepository.findAllByTaskOrderByUpdatedAt(task).stream()
@@ -59,9 +67,16 @@ public class TasksService {
         List<String> operators = operatorRepository.findAllByTaskWithUserProfile(task).stream()
                 .map(o -> o.getUserProfile().getName()).collect(Collectors.toList());
 
-        // 4. feedback 조회 유저, 유저 프로파일 패치조인
-        List<GetFeedbackDto> getFeedbackDtos = feedbackRepository.findByTaskWithUserAndUserProfile(task).stream()
+        // 4. feedback + adviser + adviserProfile
+        List<Feedback> feedbacks = feedbackRepository.findByTaskWithUserAndUserProfile(task);
+        List<GetFeedbackDto> getFeedbackDtos = feedbacks.stream()
                 .map(GetFeedbackDto::new).collect(Collectors.toList());
+
+        // 5. feedbackOwner ischecked update
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserAndFeedback(user, feedbacks);
+        feedbackOwners.stream()
+                .filter(feedbackOwner -> !feedbackOwner.isChecked())
+                .forEach(FeedbackOwner::updateCheckStatus);
 
         return GetTaskDto.builder()
                 .taskName(task.getName())
@@ -115,7 +130,7 @@ public class TasksService {
     @Transactional
     public void putTask(String authUser, TaskDto taskDto, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 
         // 2. operator 조회
         List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
@@ -166,6 +181,15 @@ public class TasksService {
 
         // 4. task update
         task.update(taskDto);
+        tasksRepository.save(task);
+    }
+
+    public void getConvertStatus(String authUser, Long taskId) {
+        // 1. task 조회 및 유저 관한 확인
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
+
+        // 2. task status convert
+        task.convertStatus();
         tasksRepository.save(task);
     }
 }

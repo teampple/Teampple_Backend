@@ -52,4 +52,8 @@ public class FeedbackOwner extends TimeBaseEntity {
         this.feedback = feedback;
         this.isChecked = isChecked;
     }
+
+    public void updateCheckStatus(){
+        this.isChecked = true;
+    }
 }
