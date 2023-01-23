@@ -4,6 +4,7 @@ import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.global.common.response.CommonResponse;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
