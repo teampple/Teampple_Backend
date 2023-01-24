@@ -32,10 +32,10 @@ public class JwtTokenProvider {
     /**
      * 토큰 유효 시간
      */
-    private static final long JWT_EXPIRATION_TIME = 1000L * 60 * 60;
     /**60분*/
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 14;
+    private static final long JWT_EXPIRATION_TIME = 1000L * 60 * 60;
     /**2주*/
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 14;
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -95,13 +95,12 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN, ErrorCode.INVALID_AUTH_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
         }
 
         /**userDetails 반환*/
         UserDetails userDetails = customUserDetailService.loadUserByUsername(
                 claims.getSubject());
-        log.info(userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), "",
                 userDetails.getAuthorities());
     }
