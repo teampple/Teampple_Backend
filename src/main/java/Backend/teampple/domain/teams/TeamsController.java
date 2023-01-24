@@ -2,10 +2,7 @@ package Backend.teampple.domain.teams;
 
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.request.*;
-import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
-import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
-import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
-import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
+import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,12 +37,12 @@ public class TeamsController {
     @PostMapping(value = "")
     @Operation(summary = "팀플 생성", description = "팀플 생성 API 입니다.\n"
             + "팀과 팀의 단계를 생성합니다. stage가 없어도 []를 보내줘야 합니다.")
-    public CommonResponse<String> postTeam(@AuthenticationPrincipal String authUser,
-                                           @Valid @RequestBody PostTeamDto postTeamDto) {
+    public CommonResponse<PostTeamResDto> postTeam(@AuthenticationPrincipal String authUser,
+                                                   @Valid @RequestBody PostTeamDto postTeamDto) {
         log.info("[api-post] 팀 생성");
 
-        teamsService.createTeam(authUser, postTeamDto);
-        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
+        PostTeamResDto postTeamResDto = teamsService.createTeam(authUser, postTeamDto);
+        return CommonResponse.onSuccess(HttpStatus.CREATED.value(), postTeamResDto);
     }
 
     @PutMapping(value = "")
