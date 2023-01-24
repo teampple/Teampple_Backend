@@ -17,8 +17,11 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeamTasksDto {
+    @ApiModelProperty(value = "단계 고유번호", example = "1", required = true)
+    private Long stageId;
+
     @ApiModelProperty(value = "단계 이름", example = "계단", required = true)
-    private String taskname;
+    private String stageName;
 
     @ApiModelProperty(value = "단계 시작일", example = "2023-01-01T11:22:33", required = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
@@ -41,7 +44,8 @@ public class GetTeamTasksDto {
     private List<GetTaskBriefDto> tasks;
 
     public GetTeamTasksDto(Stage stage) {
-        taskname = stage.getTaskName();
+        stageId = stage.getId();
+        stageName = stage.getTaskName();
         startDate = stage.getStartDate();
         dueDate = stage.getDueDate();
         sequenceNum = stage.getSequenceNum();

@@ -5,12 +5,9 @@ import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.TeammateDto;
+import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.dto.request.*;
-import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
-import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;
-import Backend.teampple.domain.teams.dto.response.GetTeamTasksDto;
-import Backend.teampple.domain.teams.dto.response.GetTeammateDto;
 import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
@@ -75,7 +72,7 @@ public class TeamsService{
     }
 
     @Transactional
-    public void createTeam(String authUser, PostTeamDto postTeamDto) {
+    public PostTeamResDto createTeam(String authUser, PostTeamDto postTeamDto) {
         // 1. 팀 생성
         Team team = Team.builder()
                 .name(postTeamDto.getName())
@@ -110,6 +107,8 @@ public class TeamsService{
                     stagesRepository.save(stage);
                 }
         );
+
+        return new PostTeamResDto(team);
     }
 
     @Transactional

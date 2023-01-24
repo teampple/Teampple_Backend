@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class GetTaskBriefDto{
+    @ApiModelProperty(value = "할 일 고유번호", example = "1", required = true)
+    private Long taskId;
+
     @ApiModelProperty(value = "할 일 이름", example = "이름", required = true)
     private String name;
 
@@ -17,6 +20,7 @@ public class GetTaskBriefDto{
     private boolean isDone;
 
     public GetTaskBriefDto(Task task) {
+        this.taskId = task.getId();
         this.name = task.getName();
         this.isDone = task.isDone();
     }
