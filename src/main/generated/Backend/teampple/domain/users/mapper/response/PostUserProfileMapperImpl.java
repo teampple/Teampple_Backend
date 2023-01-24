@@ -14,33 +14,33 @@ import org.springframework.stereotype.Component;
 public class PostUserProfileMapperImpl implements PostUserProfileMapper {
 
     @Override
-    public RequestSignUpDto toDto(UserProfile e) {
-        if ( e == null ) {
+    public RequestSignUpDto toDto(UserProfile arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         RequestSignUpDto.RequestSignUpDtoBuilder requestSignUpDto = RequestSignUpDto.builder();
 
-        requestSignUpDto.name( e.getName() );
-        requestSignUpDto.profileImage( e.getProfileImage() );
-        requestSignUpDto.schoolName( e.getSchoolName() );
-        requestSignUpDto.major( e.getMajor() );
+        requestSignUpDto.name( arg0.getName() );
+        requestSignUpDto.profileImage( arg0.getProfileImage() );
+        requestSignUpDto.schoolName( arg0.getSchoolName() );
+        requestSignUpDto.major( arg0.getMajor() );
 
         return requestSignUpDto.build();
     }
 
     @Override
-    public UserProfile toEntity(RequestSignUpDto d) {
-        if ( d == null ) {
+    public UserProfile toEntity(RequestSignUpDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         UserProfile.UserProfileBuilder userProfile = UserProfile.builder();
 
-        userProfile.name( d.getName() );
-        userProfile.profileImage( d.getProfileImage() );
-        userProfile.schoolName( d.getSchoolName() );
-        userProfile.major( d.getMajor() );
+        userProfile.name( arg0.getName() );
+        userProfile.profileImage( arg0.getProfileImage() );
+        userProfile.schoolName( arg0.getSchoolName() );
+        userProfile.major( arg0.getMajor() );
 
         return userProfile.build();
     }

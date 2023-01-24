@@ -14,31 +14,31 @@ import org.springframework.stereotype.Component;
 public class RequestOAuthTokenMapperImpl implements RequestOAuthTokenMapper {
 
     @Override
-    public RequestSignUpDto toDto(RequestOAuthTokenDto e) {
-        if ( e == null ) {
+    public RequestSignUpDto toDto(RequestOAuthTokenDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         RequestSignUpDto.RequestSignUpDtoBuilder requestSignUpDto = RequestSignUpDto.builder();
 
-        requestSignUpDto.idToken( e.getIdToken() );
-        requestSignUpDto.oauthAccessToken( e.getOauthAccessToken() );
-        requestSignUpDto.oauthRefreshToken( e.getOauthRefreshToken() );
+        requestSignUpDto.idToken( arg0.getIdToken() );
+        requestSignUpDto.oauthAccessToken( arg0.getOauthAccessToken() );
+        requestSignUpDto.oauthRefreshToken( arg0.getOauthRefreshToken() );
 
         return requestSignUpDto.build();
     }
 
     @Override
-    public RequestOAuthTokenDto toEntity(RequestSignUpDto d) {
-        if ( d == null ) {
+    public RequestOAuthTokenDto toEntity(RequestSignUpDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         RequestOAuthTokenDto requestOAuthTokenDto = new RequestOAuthTokenDto();
 
-        requestOAuthTokenDto.setIdToken( d.getIdToken() );
-        requestOAuthTokenDto.setOauthAccessToken( d.getOauthAccessToken() );
-        requestOAuthTokenDto.setOauthRefreshToken( d.getOauthRefreshToken() );
+        requestOAuthTokenDto.setIdToken( arg0.getIdToken() );
+        requestOAuthTokenDto.setOauthAccessToken( arg0.getOauthAccessToken() );
+        requestOAuthTokenDto.setOauthRefreshToken( arg0.getOauthRefreshToken() );
 
         return requestOAuthTokenDto;
     }

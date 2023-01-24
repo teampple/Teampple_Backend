@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 public class PutUserProfileMapperImpl implements PutUserProfileMapper {
 
     @Override
-    public Object toDto(Object e) {
-        if ( e == null ) {
+    public Object toDto(Object arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
@@ -25,8 +25,8 @@ public class PutUserProfileMapperImpl implements PutUserProfileMapper {
     }
 
     @Override
-    public Object toEntity(Object d) {
-        if ( d == null ) {
+    public Object toEntity(Object arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
@@ -36,19 +36,19 @@ public class PutUserProfileMapperImpl implements PutUserProfileMapper {
     }
 
     @Override
-    public void updateFromDto(PutUserProfileDto d, UserProfile e) {
-        if ( d == null ) {
+    public void updateFromDto(PutUserProfileDto arg0, UserProfile arg1) {
+        if ( arg0 == null ) {
             return;
         }
 
-        if ( d.getSchoolName() != null ) {
-            e.setSchoolName( d.getSchoolName() );
+        if ( arg0.getSchoolName() != null ) {
+            arg1.setSchoolName( arg0.getSchoolName() );
         }
-        if ( d.getMajor() != null ) {
-            e.setMajor( d.getMajor() );
+        if ( arg0.getMajor() != null ) {
+            arg1.setMajor( arg0.getMajor() );
         }
-        if ( d.getEntranceYear() != null ) {
-            e.setEntranceYear( d.getEntranceYear() );
+        if ( arg0.getEntranceYear() != null ) {
+            arg1.setEntranceYear( arg0.getEntranceYear() );
         }
     }
 }

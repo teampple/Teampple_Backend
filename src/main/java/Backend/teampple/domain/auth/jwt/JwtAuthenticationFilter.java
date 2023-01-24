@@ -1,5 +1,7 @@
 package Backend.teampple.domain.auth.jwt;
 
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

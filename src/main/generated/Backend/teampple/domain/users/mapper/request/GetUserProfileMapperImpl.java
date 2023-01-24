@@ -15,42 +15,42 @@ import org.springframework.stereotype.Component;
 public class GetUserProfileMapperImpl implements GetUserProfileMapper {
 
     @Override
-    public GetUserProfileDto toDto(UserProfile e) {
-        if ( e == null ) {
+    public GetUserProfileDto toDto(UserProfile arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         GetUserProfileDto.GetUserProfileDtoBuilder getUserProfileDto = GetUserProfileDto.builder();
 
-        getUserProfileDto.name( e.getName() );
-        getUserProfileDto.email( e.getEmail() );
-        getUserProfileDto.profileImage( e.getProfileImage() );
-        getUserProfileDto.schoolName( e.getSchoolName() );
-        getUserProfileDto.major( e.getMajor() );
-        getUserProfileDto.entranceYear( e.getEntranceYear() );
-        if ( e.getSubscribePlan() != null ) {
-            getUserProfileDto.subscribePlan( e.getSubscribePlan().name() );
+        getUserProfileDto.name( arg0.getName() );
+        getUserProfileDto.email( arg0.getEmail() );
+        getUserProfileDto.profileImage( arg0.getProfileImage() );
+        getUserProfileDto.schoolName( arg0.getSchoolName() );
+        getUserProfileDto.major( arg0.getMajor() );
+        getUserProfileDto.entranceYear( arg0.getEntranceYear() );
+        if ( arg0.getSubscribePlan() != null ) {
+            getUserProfileDto.subscribePlan( arg0.getSubscribePlan().name() );
         }
 
         return getUserProfileDto.build();
     }
 
     @Override
-    public UserProfile toEntity(GetUserProfileDto d) {
-        if ( d == null ) {
+    public UserProfile toEntity(GetUserProfileDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         UserProfile.UserProfileBuilder userProfile = UserProfile.builder();
 
-        userProfile.name( d.getName() );
-        userProfile.email( d.getEmail() );
-        userProfile.profileImage( d.getProfileImage() );
-        userProfile.schoolName( d.getSchoolName() );
-        userProfile.major( d.getMajor() );
-        userProfile.entranceYear( d.getEntranceYear() );
-        if ( d.getSubscribePlan() != null ) {
-            userProfile.subscribePlan( Enum.valueOf( SubscriptionType.class, d.getSubscribePlan() ) );
+        userProfile.name( arg0.getName() );
+        userProfile.email( arg0.getEmail() );
+        userProfile.profileImage( arg0.getProfileImage() );
+        userProfile.schoolName( arg0.getSchoolName() );
+        userProfile.major( arg0.getMajor() );
+        userProfile.entranceYear( arg0.getEntranceYear() );
+        if ( arg0.getSubscribePlan() != null ) {
+            userProfile.subscribePlan( Enum.valueOf( SubscriptionType.class, arg0.getSubscribePlan() ) );
         }
 
         return userProfile.build();
