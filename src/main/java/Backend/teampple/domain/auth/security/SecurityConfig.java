@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -40,34 +41,40 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        return http
+        http
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
+
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 /**해당 요청 누구나 접근 가능*/
                 .antMatchers(SwaggerPatterns).permitAll()
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/info").permitAll()
-//                .antMatchers("/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/auth/login", "/auth/info").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .headers().frameOptions().disable()
-                .and().build();
+                .headers().frameOptions().disable();
+
+        http.logout().logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID");
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
-    /** cors 설정 configuration bean */
+    /**
+     * cors 설정 configuration bean
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

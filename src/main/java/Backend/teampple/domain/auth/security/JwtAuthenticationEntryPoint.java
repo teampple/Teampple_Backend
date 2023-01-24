@@ -12,14 +12,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
-@Component
 /**
  * user 정보가 없는 경우
  * */
+@Slf4j
+@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN, ErrorCode.INVALID_AUTH_TOKEN.getMessage());
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException e) throws IOException, ServletException {
+        //TODO: 추후 custom Error 으로 변경 예정
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ErrorCode.INVALID_AUTH_TOKEN.getMessage());
+//        throw new UnauthorizedException();
     }
 }
