@@ -3,9 +3,12 @@ package Backend.teampple.global.common.response;
 import Backend.teampple.global.error.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 /**
  * api 공통 응답 형식입니다.
@@ -43,6 +46,17 @@ public class CommonResponse <T> {
                 .message("요청에 성공하였습니다.")
                 .data(data)
                 .build();
+    }
+
+    //filter chain 을 위한 JSON 생성자
+    public static JSONObject jsonOf(ErrorCode errorCode) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("timestamp", LocalDateTime.now());
+        jsonObject.put("success", false);
+        jsonObject.put("message", errorCode.getMessage());
+        jsonObject.put("status", errorCode.getHttpStatus().value());
+        jsonObject.put("code", errorCode.getCode());
+        return jsonObject;
     }
 
     public static <T> CommonResponse<T> onFailure(ErrorCode errorCode, String message) {
