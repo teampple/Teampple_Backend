@@ -90,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto) {
         /**refreshToken 유효성 확인*/
         if (!jwtTokenProvider.validateToken(requestJwtTokenDto.getJwtRefreshToken())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN.getMessage());
         }
         /** userDetails 조회*/
         Authentication authentication = jwtTokenProvider.getAuthentication(requestJwtTokenDto.getJwtAccessToken());
@@ -99,8 +99,14 @@ public class AuthServiceImpl implements AuthService {
         Backend.teampple.domain.users.entity.User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
+        /** 로그아웃 확인 */
+        if(user.getRefreshToken() ==null){
+            throw new UnauthorizedException(ErrorCode.REFRESH_TOKEN_NOT_FOUND.getMessage());
+        }
+
+        /** refreshToken 유효성 확인 */
         if (!user.getRefreshToken().equals(requestJwtTokenDto.getJwtRefreshToken()) || user.getExpRT().isBefore(LocalDateTime.now())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
         }
 
         final ResponseTokenDto generateToken = ResponseTokenDto.builder()
