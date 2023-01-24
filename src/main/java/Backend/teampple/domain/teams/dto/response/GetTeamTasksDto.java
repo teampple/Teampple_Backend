@@ -17,6 +17,9 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeamTasksDto {
+    @ApiModelProperty(value = "단계 고유번호", example = "1", required = true)
+    private Long stageId;
+
     @ApiModelProperty(value = "단계 이름", example = "계단", required = true)
     private String stageName;
 
@@ -41,6 +44,7 @@ public class GetTeamTasksDto {
     private List<GetTaskBriefDto> tasks;
 
     public GetTeamTasksDto(Stage stage) {
+        stageId = stage.getId();
         stageName = stage.getTaskName();
         startDate = stage.getStartDate();
         dueDate = stage.getDueDate();
