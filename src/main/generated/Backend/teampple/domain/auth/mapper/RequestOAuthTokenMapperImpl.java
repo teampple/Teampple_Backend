@@ -7,38 +7,38 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-24T00:52:36+0900",
+    date = "2023-01-24T19:56:09+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.15 (OpenLogic)"
 )
 @Component
 public class RequestOAuthTokenMapperImpl implements RequestOAuthTokenMapper {
 
     @Override
-    public RequestSignUpDto toDto(RequestOAuthTokenDto arg0) {
-        if ( arg0 == null ) {
+    public RequestSignUpDto toDto(RequestOAuthTokenDto e) {
+        if ( e == null ) {
             return null;
         }
 
         RequestSignUpDto.RequestSignUpDtoBuilder requestSignUpDto = RequestSignUpDto.builder();
 
-        requestSignUpDto.idToken( arg0.getIdToken() );
-        requestSignUpDto.oauthAccessToken( arg0.getOauthAccessToken() );
-        requestSignUpDto.oauthRefreshToken( arg0.getOauthRefreshToken() );
+        requestSignUpDto.idToken( e.getIdToken() );
+        requestSignUpDto.oauthAccessToken( e.getOauthAccessToken() );
+        requestSignUpDto.oauthRefreshToken( e.getOauthRefreshToken() );
 
         return requestSignUpDto.build();
     }
 
     @Override
-    public RequestOAuthTokenDto toEntity(RequestSignUpDto arg0) {
-        if ( arg0 == null ) {
+    public RequestOAuthTokenDto toEntity(RequestSignUpDto d) {
+        if ( d == null ) {
             return null;
         }
 
         RequestOAuthTokenDto requestOAuthTokenDto = new RequestOAuthTokenDto();
 
-        requestOAuthTokenDto.setIdToken( arg0.getIdToken() );
-        requestOAuthTokenDto.setOauthAccessToken( arg0.getOauthAccessToken() );
-        requestOAuthTokenDto.setOauthRefreshToken( arg0.getOauthRefreshToken() );
+        requestOAuthTokenDto.setIdToken( d.getIdToken() );
+        requestOAuthTokenDto.setOauthAccessToken( d.getOauthAccessToken() );
+        requestOAuthTokenDto.setOauthRefreshToken( d.getOauthRefreshToken() );
 
         return requestOAuthTokenDto;
     }
