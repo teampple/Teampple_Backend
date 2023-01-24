@@ -1,7 +1,6 @@
 package Backend.teampple.domain.users.dto.response;
 
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackBriefDto;
-import Backend.teampple.domain.teams.dto.response.GetTeamDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +15,6 @@ import java.util.List;
 public class GetUserFeedbacksDto {
     @ApiModelProperty(notes = "피드백", required = true)
     List<GetFeedbackBriefDto> feedbacks;
-
 
     @Builder
     public GetUserFeedbacksDto(List<GetFeedbackBriefDto> feedbacks) {

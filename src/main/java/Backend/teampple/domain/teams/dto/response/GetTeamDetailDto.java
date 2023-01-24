@@ -1,16 +1,13 @@
 package Backend.teampple.domain.teams.dto.response;
 
-import Backend.teampple.domain.teams.entity.Teammate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeamDetailDto {

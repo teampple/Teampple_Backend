@@ -37,6 +37,7 @@ public enum ErrorCode {
     /* Teammate */
     TEAMMATE_NOT_FOUND(BAD_REQUEST, "TM001", "해당 팀원이 존재하지 않습니다."),
     INVALID_TEAMMATE(BAD_REQUEST, "TM002", "유효하지 않은 팀원입니다."),
+    TEAMMATE_ALREADY_EXIST(BAD_REQUEST, "TM001", "이미 존재하는 팀원입니다."),
 
     /* Stage */
     STAGE_SEQUENCE_DUPLICATE(BAD_REQUEST, "S001", "단계 순서가 중복되었습니다."),
@@ -59,7 +60,10 @@ public enum ErrorCode {
 
     /* Template */
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
-
+    
+    /** S3 */
+    S3_SERVER_ERROR(BAD_REQUEST, "S3001", "Amazon S3가 처리할 수 없는 요청입니다."),
+    S3_CONNECTION_ERROR(BAD_REQUEST, "S3002", "Amazon S3에 연결할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

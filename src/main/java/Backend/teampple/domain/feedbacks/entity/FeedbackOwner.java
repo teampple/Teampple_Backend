@@ -13,10 +13,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "FeedbackOwner")
 public class FeedbackOwner extends TimeBaseEntity {
     @Id
@@ -51,5 +51,9 @@ public class FeedbackOwner extends TimeBaseEntity {
         this.userProfile = userProfile;
         this.feedback = feedback;
         this.isChecked = isChecked;
+    }
+
+    public void updateCheckStatus(){
+        this.isChecked = true;
     }
 }

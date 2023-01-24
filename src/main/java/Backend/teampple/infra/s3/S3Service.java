@@ -1,6 +1,13 @@
 package Backend.teampple.infra.s3;
 
+import Backend.teampple.infra.s3.dto.GetS3UrlDto;
+import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.domain.users.repository.UserRepository;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.HttpMethod;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +21,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 @Service
 public class S3Service {
+    private final UserRepository userRepository;
+
     private final AmazonS3 amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -105,6 +117,37 @@ public class S3Service {
     //TODO: 재정의 필요
     private void validateFileExists(MultipartFile multipartFile) {
 //        custom error 필요
+    }
+
+
+    public GetS3UrlDto getS3Url(String authUser) {
+        // 1. 유저 확인
+        User user = userRepository.findByKakaoIdWithUserProfile(authUser)
+                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+
+        // 2. s3 로직
+        // filename
+        String fileName = user.getUserProfile().getName() + "-" + UUID.randomUUID().toString();
+
+        // url 유효기간
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60; // 1시간
+        expiration.setTime(expTimeMillis);
+
+        // url 생성
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
+                .withMethod(HttpMethod.PUT)
+                .withExpiration(expiration);
+        generatePresignedUrlRequest.addRequestParameter(
+                Headers.S3_CANNED_ACL,
+                CannedAccessControlList.PublicRead.toString());
+        URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
+
+        // return
+        return GetS3UrlDto.builder()
+                .preSignedUrl(url.toExternalForm())
+                .build();
     }
 
 }

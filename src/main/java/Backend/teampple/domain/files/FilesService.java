@@ -7,10 +7,9 @@ import Backend.teampple.domain.files.entity.File;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
-import Backend.teampple.domain.teams.dto.UserTeamDto;
+import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
-import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.ForbiddenException;
@@ -27,9 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FilesService {
-
-    private final TeamsRepository teamsRepository;
-
     private final FilesRepository filesRepository;
 
     private final TasksRepository tasksRepository;
@@ -44,7 +40,7 @@ public class FilesService {
         Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
         // 2. file 조회
-        List<File> files = filesRepository.findAllWithTeamAndUserByTeam(team);
+        List<File> files = filesRepository.findAllByTeamWithTeamAndUserAndUserProfile(team);
 
         return files.stream()
                 .map(GetFileDto::new)
@@ -57,7 +53,7 @@ public class FilesService {
         UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
 
         // 2. task 조회
-        Task task = tasksRepository.findByIdWithStageAndTeam(taskId)
+        Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 3. team에 속하는 task 이어야 함
@@ -78,8 +74,8 @@ public class FilesService {
 
     @Transactional
     public void deleteFile(String authUser, Long fileId) {
-        // 1. file로 팀까지
-        File file = filesRepository.findByIdWithTeam(fileId)
+        // 1. file 조회
+        File file = filesRepository.findById(fileId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. 팀메이트에서 유저까지 해서 없으면 에러

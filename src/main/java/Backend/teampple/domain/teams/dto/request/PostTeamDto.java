@@ -11,18 +11,10 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- *  팀 생성에 사용하는 request dto 입니다.
- */
-
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Builder
 public class PostTeamDto {
-
     @NotNull
     @ApiModelProperty(value = "팀플 이름", example = "teampple", required = true)
     private String name;
@@ -41,9 +33,17 @@ public class PostTeamDto {
     @ApiModelProperty(notes = "팀플 마감일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime dueDate;
 
-
     @Valid
     @Nullable
     @ApiModelProperty(value = "팀플 이름", required = true)
     private List<StageDto> stages;
+
+    @Builder
+    public PostTeamDto(String name, String goal, LocalDateTime startDate, LocalDateTime dueDate, @Nullable List<StageDto> stages) {
+        this.name = name;
+        this.goal = goal;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+        this.stages = stages;
+    }
 }

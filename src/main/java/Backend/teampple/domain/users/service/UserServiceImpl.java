@@ -1,10 +1,15 @@
 package Backend.teampple.domain.users.service;
 
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackBriefDto;
+import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
+import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.stages.dto.response.GetStageDto;
+import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
+import Backend.teampple.domain.tasks.entity.Task;
+import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.dto.response.GetTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
 import Backend.teampple.domain.teams.entity.Team;
@@ -19,6 +24,7 @@ import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.InternalServerException;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private final StagesRepository stagesRepository;
     private final TeammateRepository teammateRepository;
     private final FeedbackOwnerRespository feedbackOwnerRespository;
+    private final TasksRepository tasksRepository;
+    private final FeedbackRepository feedbackRepository;
     private final CheckUser checkUser;
 
     @Override
@@ -96,15 +104,19 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
 
         // 3. stage 조회
-        List<GetTeamStageDto> getTeamStageDtos = teams.stream().map(t -> {
-            List<GetStageDto> getStageDtos = stagesRepository.findAllByTeam(t)
-                    .stream()
-                    .map(GetStageDto::new)
-                    .collect(Collectors.toList());
-            return GetTeamStageDto.builder()
-                    .stages(getStageDtos)
-                    .name(t.getName())
-                    .build();
+        List<GetTeamStageDto> getTeamStageDtos = teams.stream()
+                .map(team -> {
+                    List<Stage> stages = stagesRepository.findAllByTeam(team);
+                    List<GetStageDto> getStageDtos = stages.stream()
+                            .map(GetStageDto::new)
+                            .collect(Collectors.toList());
+                    long achievement = stages.stream().filter(Stage::isDone).count();
+                    return GetTeamStageDto.builder()
+                            .stages(getStageDtos)
+                            .totalStage((long)getStageDtos.size())
+                            .achievement(achievement)
+                            .name(team.getName())
+                            .build();
         }).collect(Collectors.toList());
 
         return GetUserTasksDto.builder()
@@ -145,16 +157,27 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 2. feedback owner 조회
-        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackWithTaskOrderByUpdatedAt(user);
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackOrderByUpdatedAt(user);
 
-        // 3. dto
-        List<GetFeedbackBriefDto> feedbacks = feedbackOwners.stream()
-                .map(feedbackOwner -> GetFeedbackBriefDto.builder()
-                        .taskName(feedbackOwner.getFeedback().getTask().getName())
-                        .isChecked(feedbackOwner.isChecked())
-                        .modifiedAt(feedbackOwner.getFeedback().getUpdatedAt())
-                        .build())
+        // 3. task + stage + team
+        List<Long> tasksId = feedbackOwners.stream()
+                .map(feedbackOwner -> feedbackOwner.getFeedback().getTask().getId())
                 .collect(Collectors.toList());
+        List<Long> uniqueTasksId = tasksId.stream().distinct().collect(Collectors.toList());
+        List<Task> tasks = tasksRepository.findByIdWithStageAndTeam(uniqueTasksId);
+
+        // 4. feedback, team명 매칭
+        List<GetFeedbackBriefDto> feedbacks = feedbackOwners.stream()
+                .map(feedbackOwner -> {
+                    Task t = tasks.stream()
+                            .filter(task -> feedbackOwner.getFeedback().getTask().equals(task))
+                            .findFirst()
+                            .orElseThrow(InternalServerException::new);
+                    return new GetFeedbackBriefDto(feedbackOwner, t);
+                })
+                .collect(Collectors.toList());
+
+
 
         return GetUserFeedbacksDto.builder()
                 .feedbacks(feedbacks)

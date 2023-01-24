@@ -2,6 +2,8 @@ package Backend.teampple.global.error;
 
 import Backend.teampple.global.error.exception.BaseException;
 import Backend.teampple.global.common.response.CommonResponse;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -88,6 +90,22 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<CommonResponse> handleBadCredentialsException(BadCredentialsException e) {
         log.error("handleBadCredentialsException", e);
         return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.UNAUTHORIZED_ACCESS,ErrorCode.UNAUTHORIZED_ACCESS.getMessage()), HttpStatus.UNAUTHORIZED);
+
+    // The call was transmitted successfully, but Amazon S3 couldn't process it.
+    @ExceptionHandler(AmazonServiceException.class)
+    protected ResponseEntity<CommonResponse> handleAmazonServiceException(AmazonServiceException e) {
+        log.error("AmazonServiceException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_SERVER_ERROR.getMessage()),
+                null, ErrorCode._BAD_REQUEST.getHttpStatus());
+    }
+
+    // thrown when service could not be contacted for a response, or when client is unable to parse the response from service.
+    @ExceptionHandler(SdkClientException.class)
+    protected ResponseEntity<CommonResponse> handleSdkClientException(SdkClientException e) {
+        log.error("SdkClientException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_CONNECTION_ERROR.getMessage()),
+                null, ErrorCode._BAD_REQUEST.getHttpStatus());
+
     }
 
     // 위에서 따로 처리하지 않은 에러를 모두 처리해줍니다.

@@ -8,11 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Builder
 public class PutTeamDto {
 
     @NotNull
@@ -32,4 +29,12 @@ public class PutTeamDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @ApiModelProperty(notes = "팀플 마감일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime dueDate;
+
+    @Builder
+    public PutTeamDto(String name, String goal, LocalDateTime startDate, LocalDateTime dueDate) {
+        this.name = name;
+        this.goal = goal;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+    }
 }

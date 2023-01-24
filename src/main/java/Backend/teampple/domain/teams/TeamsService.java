@@ -5,7 +5,7 @@ import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.TeammateDto;
-import Backend.teampple.domain.teams.dto.UserTeamDto;
+import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.GetScheduleDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamDetailDto;

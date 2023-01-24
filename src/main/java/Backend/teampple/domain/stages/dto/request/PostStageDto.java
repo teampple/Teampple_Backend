@@ -11,10 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class PutStageDto {
+public class PostStageDto {
     @Valid
     @NotNull
     @ApiModelProperty(notes = "단계", required = true)
     List<StageDto> stages;
-
 }

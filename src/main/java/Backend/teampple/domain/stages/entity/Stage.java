@@ -6,7 +6,6 @@ import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.OnDelete;
@@ -18,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Stage")
 @Getter
 @ToString(exclude = "tasks")
-@EqualsAndHashCode
 @DynamicInsert
+@EqualsAndHashCode
 @NoArgsConstructor
+@Table(name = "Stage")
 public class Stage extends PeriodBaseEntity {
     @Id
     @Column(name = "stage_id")
@@ -45,9 +44,6 @@ public class Stage extends PeriodBaseEntity {
     @Column(columnDefinition = "varchar(50) default ''")
     private String lectureName;
 
-    @Column(columnDefinition = "varchar(255) default ''")
-    private String goal;
-
     @Column(nullable = false)
     @ColumnDefault("0")
     private int achievement;
@@ -64,7 +60,7 @@ public class Stage extends PeriodBaseEntity {
 
     @Builder
     public Stage(Long id, Team team, List<Task> tasks, String taskName,
-                 String lectureName, String goal, int achievement, int totalTask,
+                 String lectureName, int achievement, int totalTask,
                  Boolean isDone, int sequenceNum, LocalDateTime startDate, LocalDateTime dueDate) {
         init(startDate, dueDate);
         this.id = id;
@@ -72,7 +68,6 @@ public class Stage extends PeriodBaseEntity {
         this.tasks = tasks;
         this.taskName = taskName;
         this.lectureName = lectureName;
-        this.goal = goal;
         this.achievement = achievement;
         this.totalTask = totalTask;
         this.isDone = isDone;
@@ -83,5 +78,27 @@ public class Stage extends PeriodBaseEntity {
         this.sequenceNum = stageDto.getSequenceNum();
         this.taskName = stageDto.getName();
         init(stageDto.getStartDate(), stageDto.getDueDate());
+    }
+
+    public void increaseTotalTask(int addition){
+        this.totalTask += addition;
+    }
+
+    public void decreaseTotalTask(int deletion){
+        this.totalTask -= deletion;
+    }
+
+    public void increaseAchievement(int addition){
+        this.achievement += addition;
+        if (this.achievement == this.totalTask) {
+            this.isDone = true;
+        }
+    }
+
+    public void decreaseAchievement(int deletion){
+        this.achievement -= deletion;
+        if (this.achievement != this.totalTask) {
+            this.isDone = false;
+        }
     }
 }

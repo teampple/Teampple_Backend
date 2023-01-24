@@ -14,12 +14,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Task")
 @Getter
-@NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 @DynamicInsert
+@NoArgsConstructor
+@EqualsAndHashCode
+@Table(name = "Task")
 public class Task extends PeriodBaseEntity {
     @Id
     @Column(name = "task_id")
@@ -52,5 +52,9 @@ public class Task extends PeriodBaseEntity {
     public void update(TaskDto taskDto) {
         this.name = taskDto.getName();
         init(taskDto.getStartDate(), taskDto.getDueDate());
+    }
+
+    public void convertStatus(){
+        this.isDone = !this.isDone;
     }
 }

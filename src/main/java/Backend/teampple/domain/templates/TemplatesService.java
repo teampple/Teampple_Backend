@@ -10,48 +10,39 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TemplatesService {
-
     private final TemplateRespository templateRespository;
 
     private final BookmarkRepository bookmarkRepository;
 
     @Transactional
-    public List<GetTemplateDto> getTemplate() {
+    public List<GetTemplateDto> getTemplate(String authUser) {
         // 1. template 조회
-        List<Template> templates = templateRespository.findAll();
+        List<Template> templates = templateRespository.findAllOrderById();
 
         // 2. bookmark 조회
-//        List<Bookmark> bookmarks = bookmarkRepository.findAllByUserOrderByTemplateId();
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByUserWithTemplateOrderById(authUser);
 
-        // 3. template에 bookmark 표시
-//        int bmIndex = 0;
-//        List<GetTemplateDto> getTemplateDtos = new ArrayList<>();
-//        for (Template template : templates) {
-//            GetTemplateDto getTemplateDto;
-//            if (template.getId().equals(bookmarks.get(bmIndex).getTemplate().getId())) {
-//                getTemplateDto = GetTemplateDto.builder()
-//                        .name(template.getName())
-//                        .url(template.getUrls())
-//                        .bookmarked(true)
-//                        .build();
-//            } else {
-//                getTemplateDto = GetTemplateDto.builder()
-//                        .name(template.getName())
-//                        .url(template.getUrls())
-//                        .bookmarked(false)
-//                        .build();
-//            }
-//            getTemplateDtos.add(getTemplateDto);
-//        }
-//
-//        return getTemplateDtos;
-        return new ArrayList<>();
+        // 3. bookmarks 된거부터 dto에 추가
+        List<GetTemplateDto> getTemplateDtos = bookmarks.stream()
+                .map(GetTemplateDto::new)
+                .collect(Collectors.toList());
+
+        // 4. 나머지 template 추가
+        int bmIndex = 0;
+        for (Template template : templates) {
+            if (!template.getId().equals(bookmarks.get(bmIndex).getTemplate().getId())) {
+                getTemplateDtos.add(new GetTemplateDto(template));
+                bmIndex++;
+            }
+        }
+
+        return getTemplateDtos;
     }
 }

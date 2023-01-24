@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StagesRepository extends JpaRepository<Stage, Long> {
-
     List<Stage> findAllByTeamOrderBySequenceNum(Team team);
-
-    Optional<Stage> findAllByTeamAndSequenceNum(Team team, int sequenceNum);
 
     List<Stage> findAllByTeam(Team team);
 }
