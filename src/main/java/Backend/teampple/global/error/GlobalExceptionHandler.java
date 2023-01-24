@@ -6,11 +6,8 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,14 +21,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @ApiIgnore
 @Slf4j
 public class GlobalExceptionHandler {
-
-    // 비즈니스 로직 에러 처리
-    @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<CommonResponse> handleBusinessException(BaseException baseException) {
-        log.error("handleBusinessException", baseException);
-        return new ResponseEntity<>(CommonResponse.onFailure(baseException.getErrorCode(), baseException.getMessage()),
-                null, baseException.getErrorCode().getHttpStatus());
-    }
 
     // @Valid 으로 binding error 시 발생
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -54,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<CommonResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.error("HttpMessageNotReadableException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -62,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<CommonResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.error("MethodArgumentTypeMismatchException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -70,33 +59,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     protected ResponseEntity<CommonResponse> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("EmptyResultDataAccessException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
-    }
-
-    /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<CommonResponse> handleAccessDeniedException(AccessDeniedException e) {
-        log.error("handleAccessDeniedException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.FORBIDDEN_USER,ErrorCode.FORBIDDEN_USER.getMessage()), HttpStatus.FORBIDDEN);
-    }
-
-    /**
-     * 로그인 정보가 일치하지 않을 때
-     */
-    @ExceptionHandler({BadCredentialsException.class})
-    protected ResponseEntity<CommonResponse> handleBadCredentialsException(BadCredentialsException e) {
-        log.error("handleBadCredentialsException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     // The call was transmitted successfully, but Amazon S3 couldn't process it.
     @ExceptionHandler(AmazonServiceException.class)
     protected ResponseEntity<CommonResponse> handleAmazonServiceException(AmazonServiceException e) {
         log.error("AmazonServiceException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_SERVER_ERROR.getMessage()),
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode.S3_SERVER_ERROR.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -104,9 +75,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SdkClientException.class)
     protected ResponseEntity<CommonResponse> handleSdkClientException(SdkClientException e) {
         log.error("SdkClientException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_CONNECTION_ERROR.getMessage()),
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode.S3_CONNECTION_ERROR.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
 
+    }
+
+    // 비즈니스 로직 에러 처리
+    @ExceptionHandler(BaseException.class)
+    protected ResponseEntity<CommonResponse> handleBusinessException(final BaseException baseException) {
+        log.error("handleBusinessException", baseException);
+        return new ResponseEntity<>(CommonResponse.onFailure(baseException.getErrorCode(), baseException.getMessage()),
+                null, baseException.getErrorCode().getHttpStatus());
     }
 
     // 위에서 따로 처리하지 않은 에러를 모두 처리해줍니다.

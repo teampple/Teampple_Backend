@@ -59,7 +59,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void logout(Authentication authentication) {
-        userService.deleteUserRefreshToken(authentication.getName());
+        Backend.teampple.domain.users.entity.User user = userRepository.findByKakaoId(authentication.getName())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+
+        /**이미 로그아웃 되어있는 유저인지*/
+        if (user.getRefreshToken() == null){
+            throw new BadRequestException();
+        }
+
+        SecurityContextHolder.clearContext();
+        userService.deleteUserRefreshToken(user);
     }
 
     @Override

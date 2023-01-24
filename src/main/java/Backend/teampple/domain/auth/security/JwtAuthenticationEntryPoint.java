@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth.security;
 
+import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -22,8 +22,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException e) throws IOException, ServletException {
-        //TODO: 추후 custom Error 으로 변경 예정
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ErrorCode.INVALID_AUTH_TOKEN.getMessage());
-//        throw new UnauthorizedException();
+        //TODO: 세부적으로 나누어야함
+        setResponse(response,ErrorCode.UNAUTHORIZED_ACCESS);
+    }
+
+    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().print(CommonResponse.jsonOf(errorCode));
     }
 }

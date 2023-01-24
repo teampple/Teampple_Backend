@@ -68,23 +68,21 @@ public class UserServiceImpl implements UserService {
     public void updateUserRefreshToken(String kakaoId, String refreshToken) {
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-        user.updateRefreshToken(refreshToken,LocalDateTime.now().plusWeeks(2L));
+        user.updateRefreshToken(refreshToken, LocalDateTime.now().plusWeeks(2L));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void deleteUserRefreshToken(String kakaoId) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+    public void deleteUserRefreshToken(User user) {
         user.deleteRefreshToken();
         User save = userRepository.save(user);
-        log.info(save.getRefreshToken()+save.getExpRT());
+        log.info(save.getRefreshToken() + save.getExpRT());
     }
 
     @Override
     @Transactional
-    public void deleteUser(String kakaoId){
+    public void deleteUser(String kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
         userProfileService.deleteUserProfile(user.getUserProfile());
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserTasksDto getUserTasks(String authUser){
+    public GetUserTasksDto getUserTasks(String authUser) {
         // 1. 팀원 조회 + 유저 + 팀
         List<Teammate> teammates = teammateRepository.findAllByUserWithUserAndTeam(authUser);
 
@@ -113,11 +111,11 @@ public class UserServiceImpl implements UserService {
                     long achievement = stages.stream().filter(Stage::isDone).count();
                     return GetTeamStageDto.builder()
                             .stages(getStageDtos)
-                            .totalStage((long)getStageDtos.size())
+                            .totalStage((long) getStageDtos.size())
                             .achievement(achievement)
                             .name(team.getName())
                             .build();
-        }).collect(Collectors.toList());
+                }).collect(Collectors.toList());
 
         return GetUserTasksDto.builder()
                 .username(teammates.get(0).getUser().getUserProfile().getName())
@@ -176,7 +174,6 @@ public class UserServiceImpl implements UserService {
                     return new GetFeedbackBriefDto(feedbackOwner, t);
                 })
                 .collect(Collectors.toList());
-
 
 
         return GetUserFeedbacksDto.builder()
