@@ -89,7 +89,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({BadCredentialsException.class})
     protected ResponseEntity<CommonResponse> handleBadCredentialsException(BadCredentialsException e) {
         log.error("handleBadCredentialsException", e);
-        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.UNAUTHORIZED_ACCESS,ErrorCode.UNAUTHORIZED_ACCESS.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
 
     // The call was transmitted successfully, but Amazon S3 couldn't process it.
     @ExceptionHandler(AmazonServiceException.class)

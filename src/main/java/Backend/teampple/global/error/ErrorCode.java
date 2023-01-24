@@ -59,7 +59,7 @@ public enum ErrorCode {
 
 
     /* Template */
-    TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다.");
+    TEMPLATE_NOT_FOUND(BAD_REQUEST, "TM001", "탬플릿이 존재하지 않습니다."),
     
     /** S3 */
     S3_SERVER_ERROR(BAD_REQUEST, "S3001", "Amazon S3가 처리할 수 없는 요청입니다."),
