@@ -2,8 +2,9 @@ package Backend.teampple.domain.auth.jwt;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,17 +29,23 @@ public class JwtTokenProvider {
     private String secretKey;
     private final CustomUserDetailServiceImpl customUserDetailService;
 
-    /** 토큰 유효 시간 */
-    private static final long JWT_EXPIRATION_TIME = 1000L * 60 * 60; /**60분*/
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 14;/**2주*/
+    /**
+     * 토큰 유효 시간
+     */
+    /**60분*/
+    private static final long JWT_EXPIRATION_TIME = 1000L * 60 * 60;
+    /**2주*/
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 14;
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    public Key getSecretKey(){
+    public Key getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    /** 토큰 생성 */
+    /**
+     * 토큰 생성
+     */
     public ResponseTokenDto generateToken(Authentication authentication)
             throws HttpServerErrorException.InternalServerError {
         final Date now = new Date();
@@ -79,20 +86,21 @@ public class JwtTokenProvider {
 
     /**토큰 유효성 확인*/
 
-    /**JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드*/
+    /**
+     * JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
+     */
     public Authentication getAuthentication(String token) {
         /** 토큰 복호화*/
         /** 사용자 속성값*/
         Claims claims = parseClaims(token);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
         }
 
         /**userDetails 반환*/
         UserDetails userDetails = customUserDetailService.loadUserByUsername(
                 claims.getSubject());
-        log.info(userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), "",
                 userDetails.getAuthorities());
     }

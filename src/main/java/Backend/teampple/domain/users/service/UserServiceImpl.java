@@ -32,10 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -44,21 +42,13 @@ import java.util.stream.Stream;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
-
     private final TeamsRepository teamsRepository;
-
     private final StagesRepository stagesRepository;
-
     private final TeammateRepository teammateRepository;
-
     private final FeedbackOwnerRespository feedbackOwnerRespository;
-
     private final TasksRepository tasksRepository;
-
     private final FeedbackRepository feedbackRepository;
-
     private final CheckUser checkUser;
-
 
     @Override
     @Transactional

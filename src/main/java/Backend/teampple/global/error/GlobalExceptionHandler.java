@@ -6,8 +6,11 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -71,6 +74,23 @@ public class GlobalExceptionHandler {
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
+    /**
+     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<CommonResponse> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("handleAccessDeniedException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.FORBIDDEN_USER,ErrorCode.FORBIDDEN_USER.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * 로그인 정보가 일치하지 않을 때
+     */
+    @ExceptionHandler({BadCredentialsException.class})
+    protected ResponseEntity<CommonResponse> handleBadCredentialsException(BadCredentialsException e) {
+        log.error("handleBadCredentialsException", e);
+        return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode.UNAUTHORIZED_ACCESS,ErrorCode.UNAUTHORIZED_ACCESS.getMessage()), HttpStatus.UNAUTHORIZED);
+
     // The call was transmitted successfully, but Amazon S3 couldn't process it.
     @ExceptionHandler(AmazonServiceException.class)
     protected ResponseEntity<CommonResponse> handleAmazonServiceException(AmazonServiceException e) {
@@ -85,6 +105,7 @@ public class GlobalExceptionHandler {
         log.error("SdkClientException", e);
         return new ResponseEntity<>(CommonResponse.onFailure(ErrorCode._BAD_REQUEST,ErrorCode.S3_CONNECTION_ERROR.getMessage()),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
+
     }
 
     // 위에서 따로 처리하지 않은 에러를 모두 처리해줍니다.

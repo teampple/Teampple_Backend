@@ -9,9 +9,12 @@ import lombok.Getter;
 @Getter
 public class UnauthorizedException extends BaseException {
     public UnauthorizedException() {
-        super(ErrorCode._UNAUTHORIZED, ErrorCode._UNAUTHORIZED.getMessage());
+        super(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS.getMessage());
     }
     public UnauthorizedException(String message) {
-        super(ErrorCode._UNAUTHORIZED, message);
+        super(ErrorCode.UNAUTHORIZED_ACCESS, message);
+    }
+    public UnauthorizedException(ErrorCode errorCode,String message) {
+        super(errorCode, message);
     }
 }

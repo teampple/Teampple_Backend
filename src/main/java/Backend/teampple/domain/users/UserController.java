@@ -8,6 +8,7 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
 import Backend.teampple.global.common.response.CommonResponse;
+import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
