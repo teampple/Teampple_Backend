@@ -85,6 +85,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserProfile profile = userProfileService.createProfile(userProfile);
         userService.createUser(profile, requestOAuthToken.getIdToken(), generateToken.getJwtRefreshToken());
+
         return generateToken;
     }
 
