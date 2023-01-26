@@ -29,6 +29,9 @@ public enum ErrorCode {
     LOGIN_FAILED(UNAUTHORIZED, "AUTH008", "로그인에 실패했습니다"),
     INVALID_TOKEN(BAD_REQUEST, "AUTH009", "유효하지 않은 토큰입니다"),
 
+    /* Kakao */
+    KAKAO_CODE_ERROR(BAD_REQUEST, "K001", "유효하지 않은 카카오 코드입니다"),
+    KAKAO_TOKEN_ERROR(BAD_REQUEST, "K002", "유효하지 않은 카카오 토큰입니다"),
 
     /* Team */
     TEAM_NOT_FOUND(BAD_REQUEST, "T001", "해당 팀플이 존재하지 않습니다."),
