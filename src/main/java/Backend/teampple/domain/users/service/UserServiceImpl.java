@@ -1,13 +1,12 @@
 package Backend.teampple.domain.users.service;
 
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackBriefDto;
-import Backend.teampple.domain.feedbacks.entity.Feedback;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
-import Backend.teampple.domain.stages.dto.response.GetStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
+import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.dto.response.GetTeamDto;
@@ -32,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,8 +47,6 @@ public class UserServiceImpl implements UserService {
     private final TeammateRepository teammateRepository;
     private final FeedbackOwnerRespository feedbackOwnerRespository;
     private final TasksRepository tasksRepository;
-    private final FeedbackRepository feedbackRepository;
-    private final CheckUser checkUser;
 
     @Override
     @Transactional
@@ -101,17 +99,28 @@ public class UserServiceImpl implements UserService {
                 .map(Teammate::getTeam)
                 .collect(Collectors.toList());
 
-        // 3. stage 조회
+        // 3. task 조회
+        List<Stage> stages = stagesRepository.findAllByTeamsOrderByTeamId(teams);
+        List<Task> tasks = tasksRepository.findAllByStagesOrderByStageId(stages);
+//
         List<GetTeamStageDto> getTeamStageDtos = teams.stream()
                 .map(team -> {
-                    List<Stage> stages = stagesRepository.findAllByTeam(team);
-                    List<GetStageDto> getStageDtos = stages.stream()
-                            .map(GetStageDto::new)
-                            .collect(Collectors.toList());
-                    long achievement = stages.stream().filter(Stage::isDone).count();
+                    List<GetTaskBriefDto> getTaskBriefDtos = new ArrayList<>();
+                    stages.stream()
+                            .filter(stage -> stage.getTeam().equals(team))
+                            .forEach(stage -> {
+                                tasks.stream()
+                                        .filter(task -> task.getStage().equals(stage))
+                                        .forEach(task -> {
+                                            getTaskBriefDtos.add(new GetTaskBriefDto(task));
+                                        });
+                            });
+                    long achievement = getTaskBriefDtos.stream()
+                            .filter(GetTaskBriefDto::isDone).count();
                     return GetTeamStageDto.builder()
-                            .stages(getStageDtos)
-                            .totalStage((long) getStageDtos.size())
+                            .teamId(team.getId())
+                            .tasks(getTaskBriefDtos)
+                            .totalStage((long) getTaskBriefDtos.size())
                             .achievement(achievement)
                             .name(team.getName())
                             .build();

@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetFeedbackBriefDto {
+    @ApiModelProperty(notes = "팀플 고유번호", example = "1", required = true)
+    private Long teamId;
+
     @ApiModelProperty(notes = "팀플 이름", example = "team", required = true)
     private String teamName;
 
-    @ApiModelProperty(notes = "피드백 고유번호", example = "1", required = true)
+    @ApiModelProperty(notes = "피드백 할 일 고유번호", example = "1", required = true)
     private Long taskId;
 
     @ApiModelProperty(notes = "피드백 할 일 이름", example = "할 일", required = true)
@@ -28,16 +31,19 @@ public class GetFeedbackBriefDto {
     @ApiModelProperty(notes = "피드백 확인 여부", example = "true", required = true)
     private boolean isChecked;
 
-
     @Builder
-    public GetFeedbackBriefDto(String teamName, Long taskId, String taskName, LocalDateTime modifiedAt, boolean isChecked) {
+    public GetFeedbackBriefDto(Long teamId, String teamName, Long taskId, String taskName,
+                               LocalDateTime modifiedAt, boolean isChecked) {
+        this.teamId = teamId;
         this.teamName = teamName;
         this.taskId = taskId;
         this.taskName = taskName;
         this.modifiedAt = modifiedAt;
         this.isChecked = isChecked;
     }
+
     public GetFeedbackBriefDto(FeedbackOwner feedbackOwner, Task task) {
+        this.teamId = task.getStage().getTeam().getId();
         this.teamName = task.getStage().getTeam().getName();
         this.taskId = feedbackOwner.getFeedback().getTask().getId();
         this.taskName = feedbackOwner.getFeedback().getTask().getName();
