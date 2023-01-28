@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetFileDto {
+    @ApiModelProperty(notes = "할 일 아이디", example = "1", required = true)
+    private Long taskId;
+
     @ApiModelProperty(notes = "파일 아이디", example = "1", required = true)
     private Long fileId;
 
@@ -39,6 +42,7 @@ public class GetFileDto {
     private LocalDateTime updatedAt;
 
     public GetFileDto(File file) {
+        this.taskId = file.getTask().getId();
         this.fileId = file.getId();
         this.fileName = file.getFilename();
         this.route = file.getTask().getName();
