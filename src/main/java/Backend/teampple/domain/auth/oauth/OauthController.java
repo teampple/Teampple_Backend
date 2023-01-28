@@ -3,15 +3,13 @@ package Backend.teampple.domain.auth.oauth;
 import Backend.teampple.domain.auth.oauth.dto.KakaoTokenDto;
 import Backend.teampple.domain.auth.oauth.dto.KakaoUserDto;
 import Backend.teampple.global.common.response.CommonResponse;
-import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @RestController
@@ -24,7 +22,14 @@ public class OauthController {
     @GetMapping("/kakao/url")
     @Operation(summary = "카카오 로그인 url, 입력하면 로그인할 수 있음. 로그인 후 나오는 화면의 url에서 'code' 값을 이용해 토큰 발급 가능")
     public CommonResponse<String> kakaoUrl(){
-        String response = oauthService.getKakaoUrl();
+        String response = oauthService.getKakaoUrl(true);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), response);
+    }
+
+    @GetMapping("/kakao/url/test")
+    @Operation(summary = "카카오 로그인 url, 입력하면 로그인할 수 있음. 로그인 후 나오는 화면의 url에서 'code' 값을 이용해 토큰 발급 가능")
+    public CommonResponse<String> kakaoUrlTest(){
+        String response = oauthService.getKakaoUrl(false);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), response);
     }
 
@@ -32,7 +37,6 @@ public class OauthController {
     @Operation(summary = "카카오 토큰 발급")
     public CommonResponse<KakaoTokenDto> kakaoLogin(@RequestParam String code) {
         KakaoTokenDto kakaoTokenDTO = oauthService.getKakaoToken(code);
-        log.info(kakaoTokenDTO.getAccessToken());
         return CommonResponse.onSuccess(HttpStatus.OK.value(), kakaoTokenDTO);
     }
 
@@ -43,10 +47,11 @@ public class OauthController {
         return CommonResponse.onSuccess(HttpStatus.OK.value(),kakaoUserDTO);
     }
 
-    @GetMapping(value = "/kakao/success")
-    @Operation(summary = "oauth 리다이렉트 확인용")
-    public CommonResponse<String> getRedirect(@RequestParam String jwtAccessToken, @RequestParam String jwtRefreshToken){
-        log.info(jwtAccessToken,jwtRefreshToken);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
+    @GetMapping("/kakao/develop")
+    @Operation(summary = "개발용 회원가입입니다 클라이언트가 몰라도 됩니다.")
+    public ResponseEntity<KakaoTokenDto> developUserSign(@RequestParam("code") String code) {
+        KakaoTokenDto kakaoTokenDto = oauthService.getKakaoDevelop(code);
+        return ResponseEntity.ok()
+                .body(kakaoTokenDto);
     }
 }
