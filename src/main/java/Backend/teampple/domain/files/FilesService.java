@@ -40,7 +40,7 @@ public class FilesService {
         Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
 
         // 2. file 조회
-        List<File> files = filesRepository.findAllByTeamWithTeamAndUserAndUserProfile(team);
+        List<File> files = filesRepository.findAllByTeamWithTaskAndUserAndUserProfile(team);
 
         return files.stream()
                 .map(GetFileDto::new)

@@ -34,12 +34,14 @@ public class TemplatesService {
                 .map(GetTemplateDto::new)
                 .collect(Collectors.toList());
 
+        List<Long> bookmarkedId = bookmarks.stream()
+                .map(bookmark -> bookmark.getTemplate().getId())
+                .collect(Collectors.toList());
+
         // 4. 나머지 template 추가
-        int bmIndex = 0;
         for (Template template : templates) {
-            if (!template.getId().equals(bookmarks.get(bmIndex).getTemplate().getId())) {
+            if (!bookmarkedId.contains(template.getId())) {
                 getTemplateDtos.add(new GetTemplateDto(template));
-                bmIndex++;
             }
         }
 
