@@ -1,4 +1,4 @@
-package Backend.teampple.domain.auth.oauth;
+package Backend.teampple.domain.auth.oauth.securityOauth;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;

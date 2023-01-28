@@ -54,4 +54,10 @@ public class OauthController {
         return ResponseEntity.ok()
                 .body(kakaoTokenDto);
     }
+
+    @GetMapping("/kakao/success")
+    @Operation(summary = "개발용 회원가입입니다 클라이언트가 몰라도 됩니다.")
+    public CommonResponse<String> developUserSign() {
+        return CommonResponse.onSuccess(HttpStatus.OK.value(),"성공");
+    }
 }

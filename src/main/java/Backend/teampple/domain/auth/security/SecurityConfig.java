@@ -3,6 +3,8 @@ package Backend.teampple.domain.auth.security;
 import Backend.teampple.domain.auth.jwt.JwtAuthenticationFilter;
 //import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
 //import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
+import Backend.teampple.domain.auth.oauth.securityOauth.CustomOAuth2UserService;
+import Backend.teampple.domain.auth.oauth.securityOauth.OAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +33,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//    private final OAuthSuccessHandler oauthSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuthSuccessHandler oauthSuccessHandler;
 
 //    @Bean
 //    public WebSecurityCustomizer configure() {
@@ -68,12 +70,12 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
 
 //        /**oauth login 로직*/
-//        http.oauth2Login()
-//                .userInfoEndpoint().userService(customOAuth2UserService)
-//                .and()
-//                .successHandler(oauthSuccessHandler)
-////                .failureHandler(configFailureHandler())
-//                .permitAll();
+        http.oauth2Login()
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .successHandler(oauthSuccessHandler)
+//                .failureHandler(configFailureHandler())
+                .permitAll();
 
         http.headers()
                 .frameOptions().disable();
