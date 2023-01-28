@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         /**이미 로그아웃 되어있는 유저인지*/
-        if (user.getRefreshToken() == null){
+        if (user.getRefreshToken() == null) {
             throw new BadRequestException();
         }
 
@@ -110,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         /** 로그아웃 확인 */
-        if(user.getRefreshToken() ==null){
+        if (user.getRefreshToken() == null) {
             throw new UnauthorizedException(ErrorCode.REFRESH_TOKEN_NOT_FOUND.getMessage());
         }
 
@@ -133,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
         log.info(requestOAuthTokenDto.getIdToken());
         final User user = new User(requestOAuthTokenDto.getIdToken(), "", roles);
 
-        final Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, roles);
+        final Authentication authentication = new UsernamePasswordAuthenticationToken(user, "", roles);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return authentication;

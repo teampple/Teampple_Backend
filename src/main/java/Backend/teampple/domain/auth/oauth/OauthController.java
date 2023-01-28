@@ -32,6 +32,7 @@ public class OauthController {
     @Operation(summary = "카카오 토큰 발급")
     public CommonResponse<KakaoTokenDto> kakaoLogin(@RequestParam String code) {
         KakaoTokenDto kakaoTokenDTO = oauthService.getKakaoToken(code);
+        log.info(kakaoTokenDTO.getAccessToken());
         return CommonResponse.onSuccess(HttpStatus.OK.value(), kakaoTokenDTO);
     }
 
@@ -40,5 +41,12 @@ public class OauthController {
     public CommonResponse<KakaoUserDto> kakaoMe(@RequestParam String token) {
         KakaoUserDto kakaoUserDTO = oauthService.getKakaoUserInfo(token);
         return CommonResponse.onSuccess(HttpStatus.OK.value(),kakaoUserDTO);
+    }
+
+    @GetMapping(value = "/kakao/success")
+    @Operation(summary = "oauth 리다이렉트 확인용")
+    public CommonResponse<String> getRedirect(@RequestParam String jwtAccessToken, @RequestParam String jwtRefreshToken){
+        log.info(jwtAccessToken,jwtRefreshToken);
+        return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 }

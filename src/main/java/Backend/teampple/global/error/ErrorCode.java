@@ -29,6 +29,9 @@ public enum ErrorCode {
     LOGIN_FAILED(UNAUTHORIZED, "AUTH008", "로그인에 실패했습니다"),
     INVALID_TOKEN(BAD_REQUEST, "AUTH009", "유효하지 않은 토큰입니다"),
 
+    /* OAuth */
+    INVALID_PROVIDER(BAD_REQUEST, "OAUTH001", "서비스에서 제공하지 않는 제공자 입니다."),
+
     /* Kakao */
     KAKAO_CODE_ERROR(BAD_REQUEST, "K001", "유효하지 않은 카카오 코드입니다"),
     KAKAO_TOKEN_ERROR(BAD_REQUEST, "K002", "유효하지 않은 카카오 토큰입니다"),

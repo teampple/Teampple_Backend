@@ -37,3 +37,4 @@ out/
 .vscode/
 .env*
 .properties*
+!**/src/main/generated
