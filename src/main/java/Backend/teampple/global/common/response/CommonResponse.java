@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 /**
  * api 공통 응답 형식입니다.
  */
-@AllArgsConstructor
 @Getter
-@Builder
 public class CommonResponse <T> {
     @JsonProperty("status")
     private int code;
@@ -29,6 +27,14 @@ public class CommonResponse <T> {
     @JsonProperty("data")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+
+    @Builder
+    public CommonResponse(int code, boolean success, String message, T data) {
+        this.code = code;
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
 
     public static <T> CommonResponse<T> onSuccess(int code) {
         return CommonResponse.<T>builder()
