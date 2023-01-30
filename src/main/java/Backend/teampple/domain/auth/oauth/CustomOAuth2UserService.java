@@ -1,8 +1,6 @@
 package Backend.teampple.domain.auth.oauth.securityOauth;
 
 import Backend.teampple.domain.auth.mapper.OAuth2AttributeUserMapper;
-import Backend.teampple.domain.auth.oauth.OAuth2Attribute;
-import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +14,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,21 +26,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("엥");
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("엥");
+
         log.info("{}",userRequest.getClientRegistration());
         log.info("{}",userRequest.getAccessToken().getTokenValue());
         log.info("{}",userRequest.getAdditionalParameters());
         log.info(String.valueOf(oAuth2User));
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-//        /**provider 정보*/
-//        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-//
-//        /**userInfoEndPoint*/
-//        ClientRegistration.ProviderDetails.UserInfoEndpoint userInfoEndpoint = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint();
-//
-//        OAuth2Attribute oAuth2Attribute =
-//                OAuth2Attribute.of(registrationId, userInfoEndpoint.getUserNameAttributeName(), oAuth2User.getAttributes());
-//
+        /**provider 정보*/
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+        /**userInfoEndPoint*/
+        ClientRegistration.ProviderDetails.UserInfoEndpoint userInfoEndpoint = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint();
+
+        OAuth2Attribute oAuth2Attribute =
+                OAuth2Attribute.of(registrationId, userInfoEndpoint.getUserNameAttributeName(), oAuth2User.getAttributes());
+
 //        /**회원 가입 여부 확인*/
 //        if (!userRepository.existsByKakaoId(oAuth2Attribute.getOAuthId())) {
 //            User user = oAuth2AttributeUserMapper.toDto(oAuth2Attribute);
@@ -64,6 +59,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //                email=wjdtkdgns329@naver.com}}]
 
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
+        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), oAuth2Attribute.convertToMap(), "id");
     }
 }

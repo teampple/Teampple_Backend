@@ -40,8 +40,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
+
     private final TeamsRepository teamsRepository;
     private final StagesRepository stagesRepository;
     private final TeammateRepository teammateRepository;
@@ -50,14 +52,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void createUser(UserProfile userProfile, String kakaoId, String refreshToken) {
-        User user = User.builder()
-                .userProfile(userProfile)
-                .refreshToken(refreshToken)
-                //TODO: 시간 주입 방식 변경 필요
-                .expRT(LocalDateTime.now().plusWeeks(2L))
-                .kakaoId(kakaoId)
-                .build();
+    public void saveUser(UserProfile userProfile, String kakaoId) {
+        User user = userRepository.findByKakaoId(kakaoId)
+                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+        user.saveUserProfile(userProfile);
         userRepository.save(user);
     }
 

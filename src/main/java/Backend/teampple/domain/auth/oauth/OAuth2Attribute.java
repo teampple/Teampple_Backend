@@ -1,4 +1,4 @@
-package Backend.teampple.domain.auth.oauth;
+package Backend.teampple.domain.auth.oauth.securityOauth;
 
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class OAuth2Attribute {
     private final Map<String, Object> attributes;
     private final String attributeKey;
-    private final String OAuthId;
+    private final long OAuthId;
     private final String email;
     private final String name;
     private String provider;
@@ -36,7 +36,7 @@ public class OAuth2Attribute {
 
         return OAuth2Attribute.builder()
                 .name((String) kakaoProfile.get("nickname"))
-                .OAuthId((String) attributes.get("id"))
+                .OAuthId((Long) attributes.get("id"))
                 .email((String) kakaoAccount.get("email"))
                 .provider("kakao")
                 .attributes(kakaoAccount)
@@ -57,7 +57,7 @@ public class OAuth2Attribute {
     }
 
     @Builder
-    public OAuth2Attribute(Map<String, Object> attributes, String attributeKey, String OAuthId, String email, String name, String provider) {
+    public OAuth2Attribute(Map<String, Object> attributes, String attributeKey, long OAuthId, String email, String name, String provider) {
         this.attributes = attributes;
         this.attributeKey = attributeKey;
         this.OAuthId = OAuthId;

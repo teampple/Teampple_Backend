@@ -2,6 +2,7 @@ package Backend.teampple.domain.auth.oauth.securityOauth;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
+import Backend.teampple.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.io.IOException;
 @Component
 public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -32,8 +34,11 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         /**JwtToken 생성*/
         ResponseTokenDto responseTokenDto = jwtTokenProvider.generateToken(authentication);
 
+        /**RefreshToken update*/
+//        userService.updateUserRefreshToken(authentication, responseTokenDto.getJwtRefreshToken());
+
         /**JwtToken 과 함께 리다이렉트*/
-        String targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8080/api/oauth/kakao/success")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/api/oauth/kakao/success")
                 .queryParam("jwtAccessToken", responseTokenDto.getJwtAccessToken())
                 .queryParam("jwtRefreshToken", responseTokenDto.getJwtRefreshToken())
                 .build().toUriString();

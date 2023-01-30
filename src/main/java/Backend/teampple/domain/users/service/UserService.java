@@ -8,7 +8,7 @@ import Backend.teampple.domain.users.entity.UserProfile;
 
 
 public interface UserService {
-    void createUser(UserProfile userProfile, String kakaoId, String refreshToken);
+    void saveUser(UserProfile userProfile, String kakaoId);
 
     void updateUserRefreshToken(String kakaoId, String refreshToken);
 

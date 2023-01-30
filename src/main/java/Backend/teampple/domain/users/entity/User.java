@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @Table(name = "users")
 //@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE kakao_id = ?")
+// TODO: User_Role 추가 예정 및 redis 적용 예정
 public class User extends UserBaseEntity {
     @Id
     @Column(name = "user_id")
@@ -39,6 +40,10 @@ public class User extends UserBaseEntity {
         this.refreshToken = refreshToken;
         this.expRT = expRT;
         this.kakaoId = kakaoId;
+    }
+
+    public void saveUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 
     public void updateRefreshToken(String refreshToken, LocalDateTime expRT) {

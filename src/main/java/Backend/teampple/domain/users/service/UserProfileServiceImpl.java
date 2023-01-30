@@ -1,10 +1,12 @@
 package Backend.teampple.domain.users.service;
 
+import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
+import Backend.teampple.domain.users.mapper.response.PostUserProfileMapper;
 import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
@@ -24,10 +26,12 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     private final GetUserProfileMapper getUserProfileMapper;
     private final PutUserProfileMapper putUserProfileMapper;
+    private final PostUserProfileMapper postUserProfileMapper;
 
     @Override
     @Transactional
-    public UserProfile createProfile(UserProfile userProfile) {
+    public UserProfile createProfile(PostUserProfileDto postUserProfileDto) {
+        UserProfile userProfile = postUserProfileMapper.toEntity(postUserProfileDto);
         return userProfileRepository.save(userProfile);
     }
 
@@ -35,7 +39,6 @@ public class UserProfileServiceImpl implements UserProfileService {
     public GetUserProfileDto getUserProfile(Authentication authentication) {
         User user = userRepository.findByKakaoId(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
