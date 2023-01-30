@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .antMatchers("/auth/login", "/auth/info").permitAll()
                 .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/invitations/validation").permitAll() // 초대 코드 검증
+                .antMatchers("/**").permitAll() // 초대 코드 검증
 //                .antMatchers("/**").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated();
@@ -73,9 +74,10 @@ public class SecurityConfig {
         http.oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
-                .successHandler(oauthSuccessHandler)
+                .successHandler(oauthSuccessHandler);
+//                .and()
 //                .failureHandler(configFailureHandler())
-                .permitAll();
+//                .permitAll();
 
         http.headers()
                 .frameOptions().disable();
