@@ -3,8 +3,8 @@ package Backend.teampple.domain.auth.security;
 import Backend.teampple.domain.auth.jwt.JwtAuthenticationFilter;
 //import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
 //import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
-import Backend.teampple.domain.auth.oauth.securityOauth.CustomOAuth2UserService;
-import Backend.teampple.domain.auth.oauth.securityOauth.OAuthSuccessHandler;
+import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
+import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,18 +66,14 @@ public class SecurityConfig {
                 .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/invitations/validation").permitAll() // 초대 코드 검증
                 .antMatchers("/**").permitAll() // 초대 코드 검증
-//                .antMatchers("/**").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated();
 
-//        /**oauth login 로직*/
+        /**oauth login 로직*/
         http.oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
                 .successHandler(oauthSuccessHandler);
-//                .and()
-//                .failureHandler(configFailureHandler())
-//                .permitAll();
 
         http.headers()
                 .frameOptions().disable();
@@ -86,7 +82,7 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
 
-        //form 로그인 시 사용
+        //TODO: Filter 찾아보고
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
