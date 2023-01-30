@@ -1,4 +1,4 @@
-package Backend.teampple.domain.auth.oauth.securityOauth;
+package Backend.teampple.domain.auth.oauth;
 
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;

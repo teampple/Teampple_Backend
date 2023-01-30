@@ -1,4 +1,4 @@
-package Backend.teampple.domain.auth.oauth.securityOauth;
+package Backend.teampple.domain.auth.oauth;
 
 import Backend.teampple.domain.auth.mapper.OAuth2AttributeUserMapper;
 import Backend.teampple.domain.users.repository.UserRepository;
@@ -14,12 +14,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-    private final UserRepository userRepository;
     private final OAuth2AttributeUserMapper oAuth2AttributeUserMapper;
 
     @Override
@@ -31,6 +31,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("{}",userRequest.getAccessToken().getTokenValue());
         log.info("{}",userRequest.getAdditionalParameters());
         log.info(String.valueOf(oAuth2User));
+        Map<String, Object> attributes = oAuth2User.getAttributes();
         /**provider 정보*/
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
@@ -39,12 +40,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userInfoEndpoint.getUserNameAttributeName(), oAuth2User.getAttributes());
-
-//        /**회원 가입 여부 확인*/
-//        if (!userRepository.existsByKakaoId(oAuth2Attribute.getOAuthId())) {
-//            User user = oAuth2AttributeUserMapper.toDto(oAuth2Attribute);
-//            userRepository.save(user);
-//        }
 
 //        -------------response 값------------
 //        id=2643611141,
@@ -59,6 +54,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //                email=wjdtkdgns329@naver.com}}]
 
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), oAuth2Attribute.convertToMap(), "id");
+        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
     }
 }

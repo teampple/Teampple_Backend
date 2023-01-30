@@ -1,7 +1,8 @@
-package Backend.teampple.domain.auth.oauth.securityOauth;
+package Backend.teampple.domain.auth.oauth;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
+import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**OAuth 인증에 성공하면 시큐리티가 접근 시켜주는 클래스*/
+/**
+ * OAuth 인증에 성공하면 시큐리티가 접근 시켜주는 클래스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -34,8 +38,13 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         /**JwtToken 생성*/
         ResponseTokenDto responseTokenDto = jwtTokenProvider.generateToken(authentication);
 
-        /**RefreshToken update*/
-//        userService.updateUserRefreshToken(authentication, responseTokenDto.getJwtRefreshToken());
+        /**회원 가입 여부 확인 및 RefreshToken update*/
+        if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
+//            User user = oAuth2AttributeUserMapper.toDto(oAuth2Attribute);
+//            userRepository.save(user);
+        } else {
+            userService.updateUserRefreshToken(oAuth2User.getName(), responseTokenDto.getJwtRefreshToken());
+        }
 
         /**JwtToken 과 함께 리다이렉트*/
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/api/oauth/kakao/success")
