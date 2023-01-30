@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth.jwt;
 
 import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
-import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
+import Backend.teampple.domain.auth.form.CustomUserDetailServiceImpl;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
