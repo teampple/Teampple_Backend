@@ -187,17 +187,18 @@ public class TeamsService{
         // 3. 팀메이트 dto 생성
         User user = userTeamDto.getUser();
         List<TeammateDto> teammateDtoList = new ArrayList<>();
-        teammates.forEach(teammate -> {
-            if (!Objects.equals(teammate.getId(), user.getId())) {
-                TeammateDto converted = TeammateDto.builder()
-                        .teammateId(teammate.getId())
-                        .name(teammate.getUserProfile().getName())
-                        .schoolName(teammate.getUserProfile().getSchoolName())
-                        .major(teammate.getUserProfile().getMajor())
-                        .build();
-                teammateDtoList.add(converted);
-
-            }
+        teammates.stream()
+                .filter(teammate -> !teammate.getUser().equals(user))
+                .forEach(teammate -> {
+                    if (!Objects.equals(teammate.getId(), user.getId())) {
+                        TeammateDto converted = TeammateDto.builder()
+                                .teammateId(teammate.getId())
+                                .name(teammate.getUserProfile().getName())
+                                .schoolName(teammate.getUserProfile().getSchoolName())
+                                .major(teammate.getUserProfile().getMajor())
+                                .build();
+                        teammateDtoList.add(converted);
+                    }
         });
 
         return GetTeammateDto.builder()
