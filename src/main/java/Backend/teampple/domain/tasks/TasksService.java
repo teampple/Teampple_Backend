@@ -15,6 +15,8 @@ import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.teams.entity.Teammate;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -48,6 +50,8 @@ public class TasksService {
     private final StagesRepository stagesRepository;
 
     private final UserRepository userRepository;
+
+    private final TeammateRepository teammateRepository;
 
     private final CheckUser checkUser;
 
@@ -106,21 +110,14 @@ public class TasksService {
         tasksRepository.save(task);
 
         // 3. operator user 불러오기
-        List<User> users = new ArrayList<>();
-        taskDto.getOperators()
-                .forEach(opId -> {
-                    User user = userRepository.findByIdWithUserProfile(opId)
-                            .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
-                    users.add(user);
-                });
-
+        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
 
         // 4. operator 생성
-        users.forEach(user -> {
+        teammates.forEach(teammate -> {
             Operator operator = Operator.builder()
                     .task(task)
-                    .user(user)
-                    .userProfile(user.getUserProfile())
+                    .user(teammate.getUser())
+                    .userProfile(teammate.getUserProfile())
                     .build();
             operatorRepository.save(operator);
         });
