@@ -18,18 +18,14 @@ import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
 import Backend.teampple.global.common.validation.dto.UserTaskDto;
-import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,8 +44,6 @@ public class TasksService {
     private final FeedbackOwnerRespository feedbackOwnerRespository;
 
     private final StagesRepository stagesRepository;
-
-    private final UserRepository userRepository;
 
     private final TeammateRepository teammateRepository;
 
@@ -134,52 +128,32 @@ public class TasksService {
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 
         // 2. operator 조회
-        List<Operator> operators = operatorRepository.findAllByTaskOrderByUserId(task);
+        List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
+        List<User> curUsers = operators.stream()
+                .map(Operator::getUser)
+                .collect(Collectors.toList());
 
-        // 3. operator taskDto 비교후 변경
+        // 3. taskDto
         List<Teammate> teammates = teammateRepository.findAllByIdOrderByUserId(taskDto.getOperators());
         List<User> newUsers = teammates.stream()
                 .map(Teammate::getUser)
                 .collect(Collectors.toList());
-        int i = 0, j = 0;
-        while (i < newUsers.size() && j < operators.size()) {
-            Long id = newUsers.get(i).getId();
-            Long op = operators.get(j).getUser().getId();
-            if (id.equals(op)) {
-                i++; j++;
-                continue;
-            }
-            if (id > op) {
-                operatorRepository.delete(operators.get(j));
-                j++;
-            }
-            if (id < op) {
-                Operator operator = Operator.builder()
-                        .user(newUsers.get(i))
-                        .userProfile(newUsers.get(i).getUserProfile())
-                        .task(task)
-                        .build();
-                operatorRepository.save(operator);
-                i++;
-            }
-        }
-        if (newUsers.size() > operators.size()) {
-            while (i < newUsers.size()) {
-                Operator operator = Operator.builder()
-                        .user(newUsers.get(i))
-                        .userProfile(newUsers.get(i).getUserProfile())
-                        .task(task)
-                        .build();
-                operatorRepository.save(operator);
-                i++;
-            }
-        } else {
-            while (j < operators.size()) {
-                operatorRepository.delete(operators.get(j));
-                j++;
-            }
 
-        }
+        // 3.1 삭제
+        operators.stream()
+                .filter(operator -> !newUsers.contains(operator.getUser()))
+                .forEach(operatorRepository::delete);
+        // 3.2 추가
+        newUsers.stream()
+                .filter(newUser -> !curUsers.contains(newUser))
+                .forEach(newUser -> {
+                    Operator operator = Operator.builder()
+                            .user(newUser)
+                            .userProfile(newUser.getUserProfile())
+                            .task(task)
+                            .build();
+                    operatorRepository.save(operator);
+                });
 
         // 4. task update
         task.update(taskDto);

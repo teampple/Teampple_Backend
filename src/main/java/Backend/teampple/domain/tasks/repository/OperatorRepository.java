@@ -14,11 +14,8 @@ public interface OperatorRepository extends JpaRepository<Operator, Long> {
     @Query("select distinct o from Operator o join fetch o.userProfile where o.task = :task")
     List<Operator> findAllByTaskWithUserProfile(@Param("task") Task task);
 
-    @Query("select distinct o from Operator o  where o.task = :task order by o.user.id")
-    List<Operator> findAllByTaskOrderByUserId(@Param("task") Task task);
+    @Query("select distinct o from Operator o join fetch o.user where o.task = :task order by o.user.id")
+    List<Operator> findAllByTaskWithUserOrderByUserId(@Param("task") Task task);
 
     List<Operator> findAllByTask(@Param("task") Task task);
-
-    @Query("select distinct o from Operator o where o.user in :users order by o.user.id")
-    List<Operator> findAllByIdOrderByUserId(@Param("users") List<User> users);
 }
