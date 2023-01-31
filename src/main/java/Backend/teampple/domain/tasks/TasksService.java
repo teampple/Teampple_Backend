@@ -15,15 +15,21 @@ import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.teams.entity.Teammate;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
 import Backend.teampple.global.common.validation.dto.UserTaskDto;
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +50,8 @@ public class TasksService {
     private final StagesRepository stagesRepository;
 
     private final TeammateRepository teammateRepository;
+
+    private final UserRepository userRepository;
 
     private final CheckUser checkUser;
 
