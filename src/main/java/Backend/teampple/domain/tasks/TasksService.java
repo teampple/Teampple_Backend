@@ -134,13 +134,16 @@ public class TasksService {
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 
         // 2. operator 조회
-        List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
+        List<Operator> operators = operatorRepository.findAllByTaskOrderByUserId(task);
 
         // 3. operator taskDto 비교후 변경
-        List<Long> operatorId = taskDto.getOperators();
+        List<Teammate> teammates = teammateRepository.findAllByIdOrderByUserId(taskDto.getOperators());
+        List<User> newUsers = teammates.stream()
+                .map(Teammate::getUser)
+                .collect(Collectors.toList());
         int i = 0, j = 0;
-        for (; i < operatorId.size() && j < operators.size(); i++) {
-            Long id = operatorId.get(i);
+        while (i < newUsers.size() && j < operators.size()) {
+            Long id = newUsers.get(i).getId();
             Long op = operators.get(j).getUser().getId();
             if (id.equals(op)) {
                 i++; j++;
@@ -152,21 +155,19 @@ public class TasksService {
             }
             if (id < op) {
                 Operator operator = Operator.builder()
-                        .user(operators.get(j).getUser())
-                        .userProfile(operators.get(j).getUserProfile())
+                        .user(newUsers.get(i))
+                        .userProfile(newUsers.get(i).getUserProfile())
                         .task(task)
                         .build();
                 operatorRepository.save(operator);
                 i++;
             }
         }
-        if (operatorId.size() > operators.size()) {
-            while (i < operatorId.size()) {
-                User user = userRepository.findById(operatorId.get(i))
-                        .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+        if (newUsers.size() > operators.size()) {
+            while (i < newUsers.size()) {
                 Operator operator = Operator.builder()
-                        .user(user)
-                        .userProfile(user.getUserProfile())
+                        .user(newUsers.get(i))
+                        .userProfile(newUsers.get(i).getUserProfile())
                         .task(task)
                         .build();
                 operatorRepository.save(operator);
