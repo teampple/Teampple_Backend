@@ -18,14 +18,18 @@ import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
 import Backend.teampple.global.common.validation.dto.UserTaskDto;
+import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +50,8 @@ public class TasksService {
     private final StagesRepository stagesRepository;
 
     private final TeammateRepository teammateRepository;
+
+    private final UserRepository userRepository;
 
     private final CheckUser checkUser;
 
@@ -104,14 +110,21 @@ public class TasksService {
         tasksRepository.save(task);
 
         // 3. operator user 불러오기
-        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
+        List<User> users = new ArrayList<>();
+        taskDto.getOperators()
+                .forEach(opId -> {
+                    User user = userRepository.findByIdWithUserProfile(opId)
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
+                    users.add(user);
+                });
+
 
         // 4. operator 생성
-        teammates.forEach(teammate -> {
+        users.forEach(user -> {
             Operator operator = Operator.builder()
                     .task(task)
-                    .user(teammate.getUser())
-                    .userProfile(teammate.getUserProfile())
+                    .user(user)
+                    .userProfile(user.getUserProfile())
                     .build();
             operatorRepository.save(operator);
         });
