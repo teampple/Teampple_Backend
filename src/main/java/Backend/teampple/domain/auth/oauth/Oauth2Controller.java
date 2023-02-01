@@ -1,11 +1,13 @@
 package Backend.teampple.domain.auth.oauth;
 
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +28,12 @@ public class Oauth2Controller {
     public CommonResponse<String> developUserSign(@RequestParam(value = "jwtAccessToken") String jwtAccessToken) {
         log.info(jwtAccessToken);
         return CommonResponse.onSuccess(HttpStatus.OK.value(),jwtAccessToken);
+    }
+
+    @GetMapping("/login/oauth2/test")
+    @Operation(summary = "개발용 회원가입입니다 클라이언트가 몰라도 됩니다.")
+    public CommonResponse<String> developAuthentication(@AuthenticationPrincipal User user) {
+        log.info("code:"+user.getKakaoId());
+        return CommonResponse.onSuccess(HttpStatus.OK.value(),"ok");
     }
 }

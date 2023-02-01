@@ -1,7 +1,8 @@
 package Backend.teampple.domain.auth.oauth;
 
-import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
+import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,20 +37,15 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
 
         /**JwtToken 생성*/
-        ResponseTokenDto responseTokenDto = jwtTokenProvider.generateToken(authentication);
+        JwtTokenDto jwtTokenDto = jwtTokenProvider.generateToken(authentication);
 
-        /**회원 가입 여부 확인 및 RefreshToken update*/
-        if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
-//            User user = oAuth2AttributeUserMapper.toDto(oAuth2Attribute);
-//            userRepository.save(user);
-        } else {
-            userService.updateUserRefreshToken(oAuth2User.getName(), responseTokenDto.getJwtRefreshToken());
-        }
+        /**RefreshToken update*/
+        userService.updateUserRefreshToken(oAuth2User.getName(), jwtTokenDto.getJwtRefreshToken(), jwtTokenDto.getExpRT());
 
         /**JwtToken 과 함께 리다이렉트*/
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/api/oauth/kakao/success")
-                .queryParam("jwtAccessToken", responseTokenDto.getJwtAccessToken())
-                .queryParam("jwtRefreshToken", responseTokenDto.getJwtRefreshToken())
+                .queryParam("jwtAccessToken", jwtTokenDto.getJwtAccessToken())
+                .queryParam("jwtRefreshToken", jwtTokenDto.getJwtRefreshToken())
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
