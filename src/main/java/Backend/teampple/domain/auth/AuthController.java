@@ -1,10 +1,9 @@
 package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
-import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
+import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class AuthController {
     @PostMapping("/info")
     @Operation(summary = "회원가입 요청", description = "회원가입 요청 API/ Form 회원가입 시 사용")
     public CommonResponse<String> signUp() {
-        return CommonResponse.onSuccess(HttpStatus.OK.value(),"ok");
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), "ok");
     }
 
     @DeleteMapping("/withdrawal")
@@ -46,8 +45,8 @@ public class AuthController {
 
     @PostMapping("/reIssuance")
     @Operation(summary = "JWT access 토큰 재발급 요청", description = "JWT access 토큰 재발급 요청 API 입니다.")
-    public CommonResponse<ResponseTokenDto> reIssuance(Authentication authentication, @RequestBody RequestJwtTokenDto requestJwtTokenDto){
-        ResponseTokenDto responseTokenDto = authService.reIssuance(requestJwtTokenDto);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), responseTokenDto);
+    public CommonResponse<ResponseJwtTokenDto> reIssuance(Authentication authentication, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
+        ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(requestJwtTokenDto);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), responseJwtTokenDto);
     }
 }

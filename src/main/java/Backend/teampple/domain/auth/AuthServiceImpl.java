@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
-import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
+import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.domain.users.service.UserService;
@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -30,9 +29,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseTokenDto login() {
+    public ResponseJwtTokenDto login() {
 //        final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseTokenDto.builder().build();
+        return ResponseJwtTokenDto.builder().build();
     }
 
     @Override
@@ -52,9 +51,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseTokenDto join() {
+    public ResponseJwtTokenDto join() {
 //        final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseTokenDto.builder().build();
+        return ResponseJwtTokenDto.builder().build();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto) {
+    public ResponseJwtTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto) {
         /**refreshToken 유효성 확인*/
         if (!jwtTokenProvider.validateToken(requestJwtTokenDto.getJwtRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_TOKEN.getMessage());
@@ -83,11 +82,11 @@ public class AuthServiceImpl implements AuthService {
         }
 
         /** refreshToken 유효성 확인 */
-        if (!user.getRefreshToken().equals(requestJwtTokenDto.getJwtRefreshToken()) || user.getExpRT().isBefore(LocalDateTime.now())) {
+        if (!user.getRefreshToken().equals(requestJwtTokenDto.getJwtRefreshToken()) || user.getExpRT().before(new Date())) {
             throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
         }
 
-        final ResponseTokenDto generateToken = ResponseTokenDto.builder()
+        final ResponseJwtTokenDto generateToken = ResponseJwtTokenDto.builder()
                 .jwtAccessToken(jwtTokenProvider.generateAccessToken(authentication, new Date()))
                 .jwtRefreshToken(requestJwtTokenDto.getJwtRefreshToken())
                 .build();
