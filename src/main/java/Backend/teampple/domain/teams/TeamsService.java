@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -200,8 +201,13 @@ public class TeamsService{
                         teammateDtoList.add(converted);
                     }
         });
+        Teammate userTeammate = teammates.stream()
+                .filter(teammate -> teammate.getUser().equals(user))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
 
         return GetTeammateDto.builder()
+                .teammateId(userTeammate.getId())
                 .name(user.getUserProfile().getName())
                 .schoolName(user.getUserProfile().getSchoolName())
                 .major(user.getUserProfile().getMajor())
