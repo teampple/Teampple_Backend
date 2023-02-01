@@ -36,18 +36,13 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public GetUserProfileDto getUserProfile(Authentication authentication) {
-        User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+    public GetUserProfileDto getUserProfile(User user) {
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
     @Override
     @Transactional
-    public GetUserProfileDto updateUserProfile(Authentication authentication, PutUserProfileDto putUserProfileDto) {
-        User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-
+    public GetUserProfileDto updateUserProfile(User user, PutUserProfileDto putUserProfileDto) {
         UserProfile userProfile = user.getUserProfile();
 
         putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);

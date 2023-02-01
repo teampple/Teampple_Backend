@@ -6,6 +6,7 @@ import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
 import Backend.teampple.domain.users.service.UserProfileService;
@@ -33,23 +34,23 @@ public class UserController {
 
     @PostMapping("/userprofiles")
     @Operation(summary = "프로필 생성 요청", description = "프로필 생성 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> postProfile(Authentication authentication, @RequestBody PostUserProfileDto postUserProfileDto) {
+    public CommonResponse<GetUserProfileDto> postProfile(@AuthenticationPrincipal User user, @RequestBody PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = userProfileService.createProfile(postUserProfileDto);
-        userService.saveUserProfile(userProfile, authentication.getName());
+        userService.saveUserProfile(userProfile, user);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserProfileMapper.toDto(userProfile));
     }
 
     @GetMapping("/userprofiles")
     @Operation(summary = "프로필 요청", description = "프로필 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> getProfiles(Authentication authentication) {
-        GetUserProfileDto userProfile = userProfileService.getUserProfile(authentication);
+    public CommonResponse<GetUserProfileDto> getProfiles(@AuthenticationPrincipal User user) {
+        GetUserProfileDto userProfile = userProfileService.getUserProfile(user);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }
 
     @PutMapping("/userprofiles")
     @Operation(summary = "프로필 수정 요청", description = "프로필 수정 API 입니다.")
-    public CommonResponse<GetUserProfileDto> updateProfile(Authentication authentication, @RequestBody PutUserProfileDto putUserProfileDto) {
-        GetUserProfileDto userProfile = userProfileService.updateUserProfile(authentication, putUserProfileDto);
+    public CommonResponse<GetUserProfileDto> updateProfile(@AuthenticationPrincipal User user, @RequestBody PutUserProfileDto putUserProfileDto) {
+        GetUserProfileDto userProfile = userProfileService.updateUserProfile(user, putUserProfileDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }
 
