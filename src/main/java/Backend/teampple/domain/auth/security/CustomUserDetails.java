@@ -1,7 +1,6 @@
-package Backend.teampple.domain.auth.form;
+package Backend.teampple.domain.auth.security;
 
 import Backend.teampple.domain.users.entity.User;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,29 +11,23 @@ import java.util.Map;
 
 /**
  * customUserDetail -> Authentication 내부에 들어있는 User 객체 값
- * userName = userEntity 를 조회할 수 있는 uniqueKey
  */
 @Getter
-public class CustomUserDetails<OAuth2UserInfo> implements UserDetails, OAuth2User {
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private final User user;
     private final Collection<GrantedAuthority> authorities;
-    private OAuth2UserInfo oAuth2UserInfo;
+    private Map<String, Object> attributes;
 
-//    public CustomUserDetails(User user, Collection<GrantedAuthority> authorities) {
-//        this.user = user;
-//        this.authorities = authorities;
-//    }
-
-    @Builder
-    public CustomUserDetails(User user, OAuth2UserInfo oAuth2UserInfo, Collection<GrantedAuthority> authorities) {
+    public CustomUserDetails(User user, Collection<GrantedAuthority> authorities) {
         this.user = user;
         this.authorities = authorities;
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
+    public CustomUserDetails(User user, Map<String, Object> attributes, Collection<GrantedAuthority> authorities) {
+        this.user = user;
+        this.attributes = attributes;
+        this.authorities = authorities;
     }
 
     @Override
@@ -49,7 +42,7 @@ public class CustomUserDetails<OAuth2UserInfo> implements UserDetails, OAuth2Use
 
     @Override
     public String getUsername() {
-        return "user.id";
+        return user.getKakaoId();
     }
 
     @Override
@@ -72,8 +65,16 @@ public class CustomUserDetails<OAuth2UserInfo> implements UserDetails, OAuth2Use
         return !user.isDeleted();
     }
 
+    /**
+     * OAuth
+     */
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return String.valueOf(attributes.get("id"));
     }
 }

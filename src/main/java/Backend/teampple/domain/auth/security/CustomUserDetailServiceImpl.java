@@ -1,4 +1,4 @@
-package Backend.teampple.domain.auth.form;
+package Backend.teampple.domain.auth.security;
 
 import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.users.entity.User;
@@ -21,7 +21,6 @@ import java.util.Collections;
 @Transactional(readOnly = true)
 /**
  * Spring Security 에서 사용자 정보를 담는 인터페이스
- * Form 형식으로 구성 , Teampple Form 형식 미구현
  * */
 public class CustomUserDetailServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
@@ -31,9 +30,6 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
         log.info(username);
         User user = userRepository.findByKakaoId(username)
                 .orElseThrow(() -> new NotFoundException("[" + username + "] 사용자를 찾을 수 없습니다."));
-        return CustomUserDetails.builder()
-                .user(user)
-                .authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
-                .build();
+        return new CustomUserDetails(user,Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }
