@@ -35,7 +35,7 @@ public class UserController {
     @Operation(summary = "프로필 생성 요청", description = "프로필 생성 요청 API 입니다.")
     public CommonResponse<GetUserProfileDto> postProfile(Authentication authentication, @RequestBody PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = userProfileService.createProfile(postUserProfileDto);
-        userService.saveUser(userProfile, authentication.getName());
+        userService.saveUserProfile(userProfile, authentication.getName());
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserProfileMapper.toDto(userProfile));
     }
 

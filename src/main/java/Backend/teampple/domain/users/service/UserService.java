@@ -6,11 +6,13 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 
+import java.util.Date;
+
 
 public interface UserService {
-    void saveUser(UserProfile userProfile, String kakaoId);
+    void saveUserProfile(UserProfile userProfile, String kakaoId);
 
-    void updateUserRefreshToken(String kakaoId, String refreshToken);
+    void updateUserRefreshToken(String kakaoId, String refreshToken, Date expRT);
 
     void deleteUserRefreshToken(User user);
 

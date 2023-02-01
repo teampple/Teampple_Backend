@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(UserProfile userProfile, String kakaoId) {
+    public void saveUserProfile(UserProfile userProfile, String kakaoId) {
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
         user.saveUserProfile(userProfile);
@@ -61,10 +62,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserRefreshToken(String kakaoId, String refreshToken) {
+    public void updateUserRefreshToken(String kakaoId, String refreshToken, Date expRT) {
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-        user.updateRefreshToken(refreshToken, LocalDateTime.now().plusWeeks(2L));
+        user.updateRefreshToken(refreshToken, expRT);
         userRepository.save(user);
     }
 
