@@ -3,6 +3,7 @@ package Backend.teampple.domain.auth;
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.domain.users.service.UserService;
 import Backend.teampple.global.error.ErrorCode;
@@ -36,10 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void logout(Authentication authentication) {
-        Backend.teampple.domain.users.entity.User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
-
+    public void logout(User user) {
         /**이미 로그아웃 되어있는 유저인지*/
         if (user.getRefreshToken() == null) {
             throw new BadRequestException();
@@ -58,8 +56,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void withdrawal(Authentication authentication) {
-        userService.deleteUser(authentication.getName());
+    public void withdrawal(User user) {
+        userService.deleteUser(user);
     }
 
     @Override

@@ -2,12 +2,14 @@ package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +27,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 요청", description = "로그아웃 요청 API 입니다.")
-    public CommonResponse<String> logout(Authentication authentication) {
-        authService.logout(authentication);
+    public CommonResponse<String> logout(@AuthenticationPrincipal User user) {
+        authService.logout(user);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
@@ -38,14 +40,14 @@ public class AuthController {
 
     @DeleteMapping("/withdrawal")
     @Operation(summary = "회원탈퇴 요청", description = "회원탈퇴 요청 API 입니다.")
-    public CommonResponse<String> withdrawal(Authentication authentication) {
-        authService.withdrawal(authentication);
+    public CommonResponse<String> withdrawal(@AuthenticationPrincipal User user) {
+        authService.withdrawal(user);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
     @PostMapping("/reIssuance")
     @Operation(summary = "JWT access 토큰 재발급 요청", description = "JWT access 토큰 재발급 요청 API 입니다.")
-    public CommonResponse<ResponseJwtTokenDto> reIssuance(Authentication authentication, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
+    public CommonResponse<ResponseJwtTokenDto> reIssuance(@AuthenticationPrincipal User user, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
         ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(requestJwtTokenDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), responseJwtTokenDto);
     }

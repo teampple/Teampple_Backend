@@ -21,7 +21,6 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.InternalServerException;
 import Backend.teampple.global.error.exception.NotFoundException;
@@ -30,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,18 +51,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUserProfile(UserProfile userProfile, String kakaoId) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+    public void saveUserProfile(UserProfile userProfile, User user) {
         user.saveUserProfile(userProfile);
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUserRefreshToken(String kakaoId, String refreshToken, Date expRT) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
+    public void updateUserRefreshToken(User user, String refreshToken, Date expRT) {
         user.updateRefreshToken(refreshToken, expRT);
         userRepository.save(user);
     }
@@ -79,9 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(String kakaoId) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+    public void deleteUser(User user) {
         userProfileService.deleteUserProfile(user.getUserProfile());
         user.updateIsDeleted();
         userRepository.save(user);

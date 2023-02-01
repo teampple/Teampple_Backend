@@ -10,13 +10,13 @@ import java.util.Date;
 
 
 public interface UserService {
-    void saveUserProfile(UserProfile userProfile, String kakaoId);
+    void saveUserProfile(UserProfile userProfile, User user);
 
-    void updateUserRefreshToken(String kakaoId, String refreshToken, Date expRT);
+    void updateUserRefreshToken(User user, String refreshToken, Date expRT);
 
     void deleteUserRefreshToken(User user);
 
-    void deleteUser(String kakaoId);
+    void deleteUser(User user);
 
     GetUserTasksDto getUserTasks(String authUser);
 

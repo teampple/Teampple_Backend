@@ -2,6 +2,7 @@ package Backend.teampple.domain.auth;
 
 import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
+import Backend.teampple.domain.users.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
     ResponseJwtTokenDto login();
 
-    void logout(Authentication authentication);
+    void logout(User user);
 
     ResponseJwtTokenDto join();
 
-    void withdrawal(Authentication authentication);
+    void withdrawal(User user);
 
     ResponseJwtTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto);
 }
