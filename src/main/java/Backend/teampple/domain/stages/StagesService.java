@@ -5,7 +5,6 @@ import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -47,7 +46,7 @@ public class StagesService {
         Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. stage sequenceNum 검사
-        for (int i = 1; i<=postStageDto.getStages().size();i++) {
+        for (int i = 1; i <= postStageDto.getStages().size(); i++) {
             if (postStageDto.getStages().get(i - 1).getSequenceNum() != i) {
                 throw new BadRequestException(ErrorCode.STAGE_SEQUENCE_DUPLICATE.getMessage());
             }

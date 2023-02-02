@@ -29,6 +29,7 @@ public class StagesController {
     public CommonResponse<List<StageDto>> getStage(@AuthenticationPrincipal User authUser,
                                                    @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 단계 조회");
+        log.info("{}", authUser);
 
         List<StageDto> stageDtos = stagesService.getStage(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), stageDtos);
@@ -40,9 +41,10 @@ public class StagesController {
                                             @Valid @RequestBody PostStageDto postStageDto,
                                             @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
+        log.info("{}", authUser);
 
         stagesService.postStage(authUser, postStageDto, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
+        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @PutMapping(value = "")
@@ -50,7 +52,8 @@ public class StagesController {
     public CommonResponse<String> putStage(@AuthenticationPrincipal User authUser,
                                            @Valid @RequestBody PutStageDto putStageDto,
                                            @RequestParam("teamId") Long teamId) {
-        log.info("[api-post] 단계 추가");
+        log.info("[api-put] 단계 수정");
+        log.info("{}", authUser);
 
         stagesService.putStage(authUser, putStageDto, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
