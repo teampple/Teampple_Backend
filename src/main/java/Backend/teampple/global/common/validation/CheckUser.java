@@ -49,34 +49,34 @@ public class CheckUser {
 
 
     public void checkIsUserCanPostFeedback(User authUser, Team team) {
-        // 1. teammate + user
-        teammateRepository.findAllByTeamAndUserWithUser(authUser, team)
+        // 1. teammate
+        teammateRepository.findAllByTeamAndUser(authUser, team)
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
     }
 
-    public Feedback checkIsUserCanModifyFeedback(String authUser, Long feedbackId) {
+    public Feedback checkIsUserCanModifyFeedback(User authUser, Long feedbackId) {
         // 1. feedback + task + stage + team
         Feedback feedback = feedbackRepository.findByIdWithTaskAndStage(feedbackId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.FEEDBACK_NOT_FOUND.getMessage()));
 
-        // 2. teammate + user
+        // 2. teammate
         teammateRepository.findByTeamAndUser(authUser, feedback.getTask().getStage().getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
         return feedback;
     }
 
-    public UserTaskDto checkIsUserHaveAuthForTask(String authUser, Long taskId) {
+    public UserTaskDto checkIsUserHaveAuthForTask(User authUser, Long taskId) {
         // 1. task + stage
         Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 2. teammate + user
-        Teammate teammate = teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
+        teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
 
         return UserTaskDto.builder()
-                .user(teammate.getUser())
+                .user(authUser)
                 .task(task)
                 .build();
     }

@@ -1,6 +1,5 @@
 package Backend.teampple.domain.feedbacks;
 
-import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.feedbacks.dto.request.PostFeedbackDto;
 import Backend.teampple.domain.feedbacks.dto.request.PutFeedbackDto;
 import Backend.teampple.domain.users.entity.User;
@@ -11,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 @Slf4j
@@ -25,24 +22,25 @@ import javax.validation.Valid;
 public class FeedbacksController {
     private final FeedbacksService feedbacksService;
 
-    private final EntityManager em;
-
     @PostMapping(value = "")
     @Operation(summary = "피드백 생성", description = "피드백 생성 API 입니다.")
     public CommonResponse<String> getFile(@AuthenticationPrincipal User authUser,
                                           @Valid @RequestBody PostFeedbackDto postFeedbackDto,
                                           @RequestParam("taskId") Long taskId) {
         log.info("[api-post] 피드백 생성");
+        log.info("{}", authUser);
+
         feedbacksService.postFeedback(authUser, postFeedbackDto, taskId);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @PutMapping(value = "")
     @Operation(summary = "피드백 수정", description = "피드백 수정 API 입니다.")
-    public CommonResponse<String> putFile(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> putFile(@AuthenticationPrincipal User authUser,
                                           @Valid @RequestBody PutFeedbackDto putFeedbackDto,
                                           @RequestParam("feedbackId") Long feedbackId) {
         log.info("[api-put] 피드백 수정");
+        log.info("{}", authUser);
 
         feedbacksService.putFeedback(authUser, putFeedbackDto, feedbackId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
@@ -50,10 +48,11 @@ public class FeedbacksController {
 
     @DeleteMapping(value = "")
     @Operation(summary = "피드백 삭제", description = "피드백 삭제 API 입니다.")
-    public CommonResponse<String> deleteFile(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> deleteFile(@AuthenticationPrincipal User authUser,
                                              @RequestParam("feedbackId") Long feedbackId) {
 
         log.info("[api-delete] 피드백 삭제");
+        log.info("{}", authUser);
 
         feedbacksService.deleteFeedback(authUser, feedbackId);
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());

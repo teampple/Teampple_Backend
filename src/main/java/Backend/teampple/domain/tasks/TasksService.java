@@ -52,7 +52,7 @@ public class TasksService {
     private final CheckUser checkUser;
 
     @Transactional
-    public GetTaskDto getTask(String authUser, Long taskId) {
+    public GetTaskDto getTask(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         UserTaskDto userTaskDto = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
         Task task = userTaskDto.getTask();
@@ -132,7 +132,7 @@ public class TasksService {
     }
 
     @Transactional
-    public void putTask(String authUser, TaskDto taskDto, Long taskId) {
+    public void putTask(User authUser, TaskDto taskDto, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 
@@ -188,7 +188,7 @@ public class TasksService {
         tasksRepository.save(task);
     }
 
-    public void deleteTask(String authUser, Long taskId) {
+    public void deleteTask(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 
@@ -201,7 +201,7 @@ public class TasksService {
         stagesRepository.save(stage);
     }
 
-    public void getConvertStatus(String authUser, Long taskId) {
+    public void getConvertStatus(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
 

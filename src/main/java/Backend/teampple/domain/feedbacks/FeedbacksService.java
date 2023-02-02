@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,6 +46,9 @@ public class FeedbacksService {
 
     @Transactional
     public void postFeedback(User authUser, PostFeedbackDto postFeedbackDto, Long taskId) {
+//        User user = userRepository.findById(authUser.getId())
+//                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+//        log.info("{}",user);
         // 1. task 조회
         Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
@@ -74,7 +78,7 @@ public class FeedbacksService {
     }
 
     @Transactional
-    public void putFeedback(String authUser, PutFeedbackDto putFeedbackDto, Long feedbackId) {
+    public void putFeedback(User authUser, PutFeedbackDto putFeedbackDto, Long feedbackId) {
         // 1. 피드백 조회 및 권한 확인
         Feedback feedback = checkUser.checkIsUserCanModifyFeedback(authUser, feedbackId);
 
@@ -84,7 +88,7 @@ public class FeedbacksService {
     }
 
     @Transactional
-    public void deleteFeedback(String authUser, Long feedbackId) {
+    public void deleteFeedback(User authUser, Long feedbackId) {
         // 1. 피드백 조회 및 권한 확인
         Feedback feedback = checkUser.checkIsUserCanModifyFeedback(authUser, feedbackId);
 
