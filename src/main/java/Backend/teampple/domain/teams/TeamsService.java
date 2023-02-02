@@ -186,18 +186,23 @@ public class TeamsService{
 
         // 3. 팀메이트 dto 생성
         List<TeammateDto> teammateDtoList = new ArrayList<>();
-        teammates.forEach(teammate -> {
-            if (!Objects.equals(teammate.getId(), authUser.getId())) {
-                TeammateDto converted = TeammateDto.builder()
-                        .teammateId(teammate.getId())
-                        .name(teammate.getUserProfile().getName())
-                        .schoolName(teammate.getUserProfile().getSchoolName())
-                        .major(teammate.getUserProfile().getMajor())
-                        .build();
-                teammateDtoList.add(converted);
-
-            }
+        teammates.stream()
+                .filter(teammate -> !teammate.getUser().equals(authUser))
+                .forEach(teammate -> {
+                    if (!Objects.equals(teammate.getId(), authUser.getId())) {
+                        TeammateDto converted = TeammateDto.builder()
+                                .teammateId(teammate.getId())
+                                .name(teammate.getUserProfile().getName())
+                                .schoolName(teammate.getUserProfile().getSchoolName())
+                                .major(teammate.getUserProfile().getMajor())
+                                .build();
+                        teammateDtoList.add(converted);
+                    }
         });
+        Teammate userTeammate = teammates.stream()
+                .filter(teammate -> teammate.getUser().equals(authUser))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
 
         return GetTeammateDto.builder()
                 .name(authUser.getUserProfile().getName())

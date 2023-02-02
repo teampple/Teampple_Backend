@@ -10,6 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class GetTeammateDto {
+    @ApiModelProperty(value = "본인 고유번호", example = "1", required = true)
+    private Long teammateId;
+
     @ApiModelProperty(value = "본인 이름", example = "이름", required = true)
     private String name;
 
@@ -23,7 +26,8 @@ public class GetTeammateDto {
     private List<TeammateDto> teammates;
 
     @Builder
-    public GetTeammateDto(String name, String schoolName, String major, List<TeammateDto> teammates) {
+    public GetTeammateDto(Long teammateId, String name, String schoolName, String major, List<TeammateDto> teammates) {
+        this.teammateId = teammateId;
         this.name = name;
         this.schoolName = schoolName;
         this.major = major;

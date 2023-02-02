@@ -56,4 +56,7 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
             " join fetch u.userProfile" +
             " where tm.team = :team and tm.user = :user")
     Optional<Teammate> findAllByTeamAndUserWithUserAndUserProfile(@Param("user") String User, @Param("team") Team team);
+
+    @Query("select distinct tm from Teammate tm where tm.id in :id order by tm.user.id")
+    List<Teammate> findAllByIdOrderByUserId(@Param("id") List<Long> id);
 }

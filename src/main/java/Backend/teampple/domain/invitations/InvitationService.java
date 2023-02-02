@@ -38,9 +38,9 @@ public class InvitationService {
     private final CheckUser checkUser;
 
     @Transactional
-    public GetInvitationDto getInvitation(User authUser, Long teamId) {
-        // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
+    public GetInvitationDto getInvitation(User authUser, Long teamId, String referer, String host) {
+        // 1. 유저 체크
+        checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 코드 생성
         String code = UUID.randomUUID().toString() // 10자리
@@ -57,7 +57,15 @@ public class InvitationService {
         invitationRepository.save(invitation);
 
         // 5. 주소로 변환
-        String link = "www.teampple.com/login/" + code;
+        String link;
+        if (referer.contains(host)) {
+            // www.teampple.site
+            // www.teampple.com
+            link = String.format("https://%s/login/", host) + code;
+        } else {
+            // localhost:3000
+            link = referer + code;
+        }
 
         // 6. return
         return GetInvitationDto.builder()
@@ -65,26 +73,30 @@ public class InvitationService {
                 .build();
     }
 
-    public void postInvitation(String authUser, Long teamId) {
-        // 1. 팀 조회
-        Team team = teamsRepository.findById(teamId)
+    public void postInvitation(User authUser, String code) {
+        // 1. 초대장 찾기
+        Invitation invite = invitationRepository.findByCode(code);
+
+        // 1.2 초대장 없으면 return
+        if (invite == null) {
+            throw new BadRequestException(ErrorCode.NOT_VALID_INVITATION.getMessage());
+        }
+
+        // 2. 팀 조회
+        Team team = teamsRepository.findById(invite.getTeamId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
 
-        // 2. 이미 존재하는 팀원인지 체크
+        // 3. 이미 존재하는 팀원인지 체크
         List<Teammate> teammates = teammateRepository.findAllByTeamWithUser(team);
         teammates.forEach(teammate -> {
-                    if(Objects.equals(teammate.getUser().getKakaoId(), authUser))
+                    if(authUser.equals(teammate.getUser()))
                         throw new BadRequestException(ErrorCode.TEAMMATE_ALREADY_EXIST.getMessage());
                 });
 
-        // 3. 유저 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-
-        // 4. 팀원 생성
+        // 3. 팀원 생성
         Teammate teammate = Teammate.builder()
-                .user(user)
-                .userProfile(user.getUserProfile())
+                .user(authUser)
+                .userProfile(authUser.getUserProfile())
                 .team(team)
                 .build();
         teammateRepository.save(teammate);

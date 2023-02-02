@@ -15,6 +15,8 @@ import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.teams.entity.Teammate;
+import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -46,6 +48,8 @@ public class TasksService {
     private final FeedbackOwnerRespository feedbackOwnerRespository;
 
     private final StagesRepository stagesRepository;
+
+    private final TeammateRepository teammateRepository;
 
     private final UserRepository userRepository;
 
@@ -106,21 +110,14 @@ public class TasksService {
         tasksRepository.save(task);
 
         // 3. operator user 불러오기
-        List<User> users = new ArrayList<>();
-        taskDto.getOperators()
-                .forEach(opId -> {
-                    User user = userRepository.findByIdWithUserProfile(opId)
-                            .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
-                    users.add(user);
-                });
-
+        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
 
         // 4. operator 생성
-        users.forEach(user -> {
+        teammates.forEach(teammate -> {
             Operator operator = Operator.builder()
                     .task(task)
-                    .user(user)
-                    .userProfile(user.getUserProfile())
+                    .user(teammate.getUser())
+                    .userProfile(teammate.getUserProfile())
                     .build();
             operatorRepository.save(operator);
         });
@@ -138,50 +135,31 @@ public class TasksService {
 
         // 2. operator 조회
         List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
+        List<User> curUsers = operators.stream()
+                .map(Operator::getUser)
+                .collect(Collectors.toList());
 
-        // 3. operator taskDto 비교후 변경
-        List<Long> operatorId = taskDto.getOperators();
-        int i = 0, j = 0;
-        for (; i < operatorId.size() && j < operators.size(); i++) {
-            Long id = operatorId.get(i);
-            Long op = operators.get(j).getUser().getId();
-            if (id.equals(op)) {
-                i++; j++;
-                continue;
-            }
-            if (id > op) {
-                operatorRepository.delete(operators.get(j));
-                j++;
-            }
-            if (id < op) {
-                Operator operator = Operator.builder()
-                        .user(operators.get(j).getUser())
-                        .userProfile(operators.get(j).getUserProfile())
-                        .task(task)
-                        .build();
-                operatorRepository.save(operator);
-                i++;
-            }
-        }
-        if (operatorId.size() > operators.size()) {
-            while (i < operatorId.size()) {
-                User user = userRepository.findById(operatorId.get(i))
-                        .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
-                Operator operator = Operator.builder()
-                        .user(user)
-                        .userProfile(user.getUserProfile())
-                        .task(task)
-                        .build();
-                operatorRepository.save(operator);
-                i++;
-            }
-        } else {
-            while (j < operators.size()) {
-                operatorRepository.delete(operators.get(j));
-                j++;
-            }
+        // 3. taskDto
+        List<Teammate> teammates = teammateRepository.findAllByIdOrderByUserId(taskDto.getOperators());
+        List<User> newUsers = teammates.stream()
+                .map(Teammate::getUser)
+                .collect(Collectors.toList());
 
-        }
+        // 3.1 삭제
+        operators.stream()
+                .filter(operator -> !newUsers.contains(operator.getUser()))
+                .forEach(operatorRepository::delete);
+        // 3.2 추가
+        newUsers.stream()
+                .filter(newUser -> !curUsers.contains(newUser))
+                .forEach(newUser -> {
+                    Operator operator = Operator.builder()
+                            .user(newUser)
+                            .userProfile(newUser.getUserProfile())
+                            .task(task)
+                            .build();
+                    operatorRepository.save(operator);
+                });
 
         // 4. task update
         task.update(taskDto);

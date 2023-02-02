@@ -21,22 +21,27 @@ public class InvitationController {
     private final InvitationService invitationService;
 
     @GetMapping(value = "")
-    @Operation(summary = "초대 링크 조회", description = "초대 링크 API 입니다.")
+    @Operation(summary = "초대 링크 조회", description = "초대 링크 API 입니다." +
+            "스웨거 테스트시 referer, host 입력 안해도 됩니다.")
     public CommonResponse<GetInvitationDto> getInvitation(@AuthenticationPrincipal User authUser,
-                                                          @RequestParam("teamId") Long teamId) {
+                                                          @RequestParam("teamId") Long teamId,
+                                                          @RequestHeader(value = "referer", required = false) String referer,
+                                                          @RequestHeader(value = "host", required = false) String host) {
         log.info("[api-get] 초대 링크 ");
+        log.info("{}", authUser);
 
-        GetInvitationDto getInvitationDto = invitationService.getInvitation(authUser, teamId);
+        GetInvitationDto getInvitationDto = invitationService.getInvitation(authUser, teamId, referer, host);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getInvitationDto);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "유저 초대", description = "유저 초대 API 입니다.")
-    public CommonResponse<String> postInvitation(@AuthenticationPrincipal String authUser,
-                                                 @RequestParam("teamId") Long teamId) {
-        log.info("[api-get] 초대 코드 검증 ");
+    public CommonResponse<String> postInvitation(@AuthenticationPrincipal User authUser,
+                                                 @RequestParam("code") String code) {
+        log.info("[api-post] 유저 초대");
+        log.info("{}", authUser);
 
-        invitationService.postInvitation(authUser, teamId);
+        invitationService.postInvitation(authUser, code);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
