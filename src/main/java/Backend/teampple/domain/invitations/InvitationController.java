@@ -2,6 +2,7 @@ package Backend.teampple.domain.invitations;
 
 import Backend.teampple.domain.invitations.dto.response.GetInvitationDto;
 import Backend.teampple.domain.invitations.dto.response.GetInvitationValidationDto;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,7 @@ public class InvitationController {
 
     @GetMapping(value = "")
     @Operation(summary = "초대 링크 조회", description = "초대 링크 API 입니다.")
-    public CommonResponse<GetInvitationDto> getInvitation(@AuthenticationPrincipal String authUser,
+    public CommonResponse<GetInvitationDto> getInvitation(@AuthenticationPrincipal User authUser,
                                                           @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 초대 링크 ");
 

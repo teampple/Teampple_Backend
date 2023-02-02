@@ -3,6 +3,7 @@ package Backend.teampple.domain.teams;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.*;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class TeamsController {
     @GetMapping(value = "")
     @Operation(summary = "팀플 상세 정보 조회", description = "팀플 상세 정보 조회 API 입니다.\n"
             + "팀플 화면 헤더에 쓰일 정보를 조회합니다.")
-    public CommonResponse<GetTeamDetailDto> getTeamDetail(@AuthenticationPrincipal String authUser,
+    public CommonResponse<GetTeamDetailDto> getTeamDetail(@AuthenticationPrincipal User authUser,
                                                           @Valid @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀 상세 정보 가져오기");
 
@@ -47,7 +48,7 @@ public class TeamsController {
 
     @PutMapping(value = "")
     @Operation(summary = "팀플 정보 수정", description = "팀플 정보 수정 API 입니다.")
-    public CommonResponse<String> putTeam(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> putTeam(@AuthenticationPrincipal User authUser,
                                           @Valid @RequestBody PutTeamDto putTeamDto,
                                           @RequestParam("teamId") Long teamId) {
         log.info("[api-put] 팀 정보 수정");
@@ -58,7 +59,7 @@ public class TeamsController {
 
     @PostMapping(value = "schedules")
     @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.")
-    public CommonResponse<String> postSchedule(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> postSchedule(@AuthenticationPrincipal User authUser,
                                                @Valid @RequestBody ScheduleDto scheduleDto,
                                                @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
@@ -70,7 +71,7 @@ public class TeamsController {
     @GetMapping(value = "schedules")
     @Operation(summary = "팀플 일정 조회", description = "팀플 일정 조회 API 입니다."
             + "name 과 duedate는 팀의 이름과 마감일이고, schedule은 팀의 일정입니다.")
-    public CommonResponse<GetScheduleDto> getSchedule(@AuthenticationPrincipal String authUser,
+    public CommonResponse<GetScheduleDto> getSchedule(@AuthenticationPrincipal User authUser,
                                                       @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
 
@@ -80,7 +81,7 @@ public class TeamsController {
 
     @GetMapping(value = "tasks")
     @Operation(summary = "팀플 할 일 정보 조회", description = "팀플 할 일 정보 조회 API 입니다.")
-    public CommonResponse<List<GetTeamTasksDto>> getTeamTasks(@AuthenticationPrincipal String authUser,
+    public CommonResponse<List<GetTeamTasksDto>> getTeamTasks(@AuthenticationPrincipal User authUser,
                                                               @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀 할 일 정보 조회");
 
@@ -91,7 +92,7 @@ public class TeamsController {
     @GetMapping(value = "teammates")
     @Operation(summary = "팀원 정보 조회", description = "팀원 정보 조회 API 입니다."
             + "리스트가 아닌 값들은 '나'의 정보이고, 리스트는 '나'를 제외한 팀원입니다.")
-    public CommonResponse<GetTeammateDto> getTeammate(@AuthenticationPrincipal String authUser,
+    public CommonResponse<GetTeammateDto> getTeammate(@AuthenticationPrincipal User authUser,
                                                       @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀원 정보 조회");
 
@@ -101,7 +102,7 @@ public class TeamsController {
 
     @DeleteMapping(value = "teammates")
     @Operation(summary = "팀원 삭제", description = "팀원 삭제 API 입니다.")
-    public CommonResponse<String> deleteTeammate(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> deleteTeammate(@AuthenticationPrincipal User authUser,
                                                  @Valid @RequestBody DeleteTeammateDto deleteTeammateDto,
                                                  @RequestParam("teamId") Long teamId) {
         log.info("[api-delete] 팀원 삭제");

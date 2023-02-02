@@ -33,20 +33,19 @@ public class CheckUser {
 
     private final UserRepository userRepository;
 
-    /*
-    해당 유저가 팀에 속한지 검사하는 method
-    */
-    public UserTeamDto checkIsUserInTeam(String authUser, Long teamid) {
-        // 1. teammate + user
-        Teammate teammate = teammateRepository.findAllByTeamIdAndUserWithTeamAndUser(authUser, teamid)
-                .orElseThrow(() -> new NotFoundException(ErrorCode._BAD_REQUEST.getMessage()));
+    public Team checkIsUserInTeamId(User authUser, Long teamid) {
+        // 1. teammate
+        Teammate teammate = teammateRepository.findAllByTeamIdAndUserWithTeam(authUser, teamid)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
 
-        return UserTeamDto.builder()
-                .user(teammate.getUser())
-                .team(teammate.getTeam())
-                .build();
+        return teammate.getTeam();
     }
 
+    public void checkIsUserInTeam(User authUser, Team team) {
+        // 1. teammate
+        teammateRepository.findAllByTeamAndUser(authUser, team)
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
+    }
 
     public void checkIsUserCanPostFeedback(User authUser, Team team) {
         // 1. teammate

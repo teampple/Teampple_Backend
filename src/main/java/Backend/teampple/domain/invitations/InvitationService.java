@@ -38,9 +38,9 @@ public class InvitationService {
     private final CheckUser checkUser;
 
     @Transactional
-    public GetInvitationDto getInvitation(String authUser, Long teamId) {
+    public GetInvitationDto getInvitation(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 코드 생성
         String code = UUID.randomUUID().toString() // 10자리

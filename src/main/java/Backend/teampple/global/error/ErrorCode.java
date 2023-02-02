@@ -51,6 +51,7 @@ public enum ErrorCode {
 
     /* Task */
     TASK_NOT_FOUND(BAD_REQUEST, "TK001", "해당 할 일이 존재하지 않습니다."),
+    MISMATCH_TASK(BAD_REQUEST, "TASK400-2","팀에 속하지 않은 할 일 입니다."),
 
     /* User */
     USER_NOT_FOUND(BAD_REQUEST, "U001", "해당 유저가 존재하지 않습니다."),
