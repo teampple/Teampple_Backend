@@ -1,7 +1,9 @@
 package Backend.teampple.domain.feedbacks;
 
+import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.feedbacks.dto.request.PostFeedbackDto;
 import Backend.teampple.domain.feedbacks.dto.request.PutFeedbackDto;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 @Slf4j
@@ -21,13 +25,14 @@ import javax.validation.Valid;
 public class FeedbacksController {
     private final FeedbacksService feedbacksService;
 
+    private final EntityManager em;
+
     @PostMapping(value = "")
     @Operation(summary = "피드백 생성", description = "피드백 생성 API 입니다.")
-    public CommonResponse<String> getFile(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> getFile(@AuthenticationPrincipal User authUser,
                                           @Valid @RequestBody PostFeedbackDto postFeedbackDto,
                                           @RequestParam("taskId") Long taskId) {
         log.info("[api-post] 피드백 생성");
-
         feedbacksService.postFeedback(authUser, postFeedbackDto, taskId);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }

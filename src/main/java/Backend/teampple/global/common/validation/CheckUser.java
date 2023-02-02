@@ -48,12 +48,10 @@ public class CheckUser {
     }
 
 
-    public User checkIsUserCanPostFeedback(String authUser, Team team) {
+    public void checkIsUserCanPostFeedback(User authUser, Team team) {
         // 1. teammate + user
-        Teammate teammate = teammateRepository.findAllByTeamAndUserWithUser(authUser, team)
+        teammateRepository.findAllByTeamAndUserWithUser(authUser, team)
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
-
-        return teammate.getUser();
     }
 
     public Feedback checkIsUserCanModifyFeedback(String authUser, Long feedbackId) {
