@@ -23,6 +23,7 @@ import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.common.validation.dto.UserStageDto;
 import Backend.teampple.global.common.validation.dto.UserTaskDto;
 import Backend.teampple.global.error.ErrorCode;
+import Backend.teampple.global.error.exception.BadRequestException;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,25 +59,26 @@ public class TasksService {
     @Transactional
     public GetTaskDto getTask(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        UserTaskDto userTaskDto = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
-        Task task = userTaskDto.getTask();
-        User user = userTaskDto.getUser();
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. file 조회
         List<GetFileInfoDto> getFileInfoDtos = filesRepository.findAllByTaskOrderByUpdatedAt(task).stream()
-                .map(GetFileInfoDto::new).collect(Collectors.toList());
+                .map(GetFileInfoDto::new)
+                .collect(Collectors.toList());
 
         // 3. operator 조회 유저 프로파일 패치조인
         List<String> operators = operatorRepository.findAllByTaskWithUserProfile(task).stream()
-                .map(o -> o.getUserProfile().getName()).collect(Collectors.toList());
+                .map(o -> o.getUserProfile().getName())
+                .collect(Collectors.toList());
 
         // 4. feedback + adviser + adviserProfile
         List<Feedback> feedbacks = feedbackRepository.findByTaskWithUserAndUserProfile(task);
         List<GetFeedbackDto> getFeedbackDtos = feedbacks.stream()
-                .map(GetFeedbackDto::new).collect(Collectors.toList());
+                .map(GetFeedbackDto::new)
+                .collect(Collectors.toList());
 
         // 5. feedbackOwner ischecked update
-        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserAndFeedback(user, feedbacks);
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserAndFeedback(authUser, feedbacks);
         feedbackOwners.stream()
                 .filter(feedbackOwner -> !feedbackOwner.isChecked())
                 .forEach(FeedbackOwner::updateCheckStatus);
@@ -96,21 +98,23 @@ public class TasksService {
     };
 
     @Transactional
-    public void postTask(String authUser, TaskDto taskDto, Long stageId) {
+    public void postTask(User authUser, TaskDto taskDto, Long stageId) {
         // 1. stage + user + 유저 검증
-        UserStageDto userStageDto = checkUser.checkIsUserCanPostTask(authUser, stageId);
+        Stage stage = checkUser.checkIsUserCanPostTask(authUser, stageId);
 
-        // 2. Task 생성
+        // 2. operator user 불러오기
+        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
+        if (teammates.size() != taskDto.getOperators().size())
+            throw new BadRequestException(ErrorCode.NOT_TEAMMATE.getMessage());
+
+        // 3. Task 생성
         Task task = Task.builder()
                 .name(taskDto.getName())
                 .startDate(taskDto.getStartDate())
                 .dueDate(taskDto.getDueDate())
-                .stage(userStageDto.getStage())
+                .stage(stage)
                 .build();
         tasksRepository.save(task);
-
-        // 3. operator user 불러오기
-        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
 
         // 4. operator 생성
         teammates.forEach(teammate -> {
@@ -123,7 +127,6 @@ public class TasksService {
         });
 
         // 5. stage total 늘리기
-        Stage stage = userStageDto.getStage();
         stage.increaseTotalTask(1);
         stagesRepository.save(stage);
     }
@@ -131,7 +134,7 @@ public class TasksService {
     @Transactional
     public void putTask(User authUser, TaskDto taskDto, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. operator 조회
         List<Operator> operators = operatorRepository.findAllByTaskWithUserOrderByUserId(task);
@@ -144,6 +147,8 @@ public class TasksService {
         List<User> newUsers = teammates.stream()
                 .map(Teammate::getUser)
                 .collect(Collectors.toList());
+        if (teammates.size() != taskDto.getOperators().size())
+            throw new BadRequestException(ErrorCode.NOT_TEAMMATE.getMessage());
 
         // 3.1 삭제
         operators.stream()
@@ -168,20 +173,23 @@ public class TasksService {
 
     public void deleteTask(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. 삭제
         tasksRepository.delete(task);
 
-        // 3. stage totaltask 변경
+        // 3. stage totaltask, achievement 변경
         Stage stage = task.getStage();
+        if (task.taskDoneStatus()) {
+            stage.decreaseAchievement(1);
+        }
         stage.decreaseTotalTask(1);
         stagesRepository.save(stage);
     }
 
     public void getConvertStatus(User authUser, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
-        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId).getTask();
+        Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. task status convert
         task.convertStatus();
