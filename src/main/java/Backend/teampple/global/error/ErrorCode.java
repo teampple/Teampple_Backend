@@ -48,6 +48,7 @@ public enum ErrorCode {
     /* Stage */
     STAGE_SEQUENCE_DUPLICATE(BAD_REQUEST, "STAGE400-1", "단계 순서가 중복되었습니다."),
     STAGE_NOT_FOUND(BAD_REQUEST, "STAGE400-2", "해당 단계가 존재하지 않습니다."),
+    NEED_STAGE(BAD_REQUEST, "STAGE400-3", "최소 하나의 단계가 존재해야합니다."),
 
     /* Task */
     TASK_NOT_FOUND(BAD_REQUEST, "TASK400-1", "해당 할 일이 존재하지 않습니다."),
