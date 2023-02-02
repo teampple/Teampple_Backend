@@ -48,9 +48,9 @@ public class TeamsService{
     private final CheckUser checkUser;
 
     @Transactional
-    public GetTeamDetailDto getTeamDetail(String authUser, Long teamId) {
+    public GetTeamDetailDto getTeamDetail(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 팀원 조회
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
@@ -112,9 +112,9 @@ public class TeamsService{
     }
 
     @Transactional
-    public void putTeam(String authUser, PutTeamDto putTeamDto, Long teamId) {
+    public void putTeam(User authUser, PutTeamDto putTeamDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 수정 후 저장
         team.update(putTeamDto);
@@ -122,9 +122,9 @@ public class TeamsService{
     }
 
     @Transactional
-    public GetScheduleDto getSchedule(String authUser, Long teamId) {
+    public GetScheduleDto getSchedule(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 스케줄 조회
         List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
@@ -147,9 +147,9 @@ public class TeamsService{
     }
 
     @Transactional
-    public void postSchedule(String authUser, ScheduleDto scheduleDto, Long teamId) {
+    public void postSchedule(User authUser, ScheduleDto scheduleDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 일정 생성
         Schedule schedule = Schedule.builder()
@@ -163,9 +163,9 @@ public class TeamsService{
     }
 
     @Transactional
-    public List<GetTeamTasksDto> getTeamTasks(String authUser, Long teamId) {
+    public List<GetTeamTasksDto> getTeamTasks(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 단계 불러오기
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
@@ -177,44 +177,48 @@ public class TeamsService{
     }
 
     @Transactional
-    public GetTeammateDto getTeammate(String authUser, Long teamId) {
+    public GetTeammateDto getTeammate(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 팀원 조회
-        List<Teammate> teammates = teammateRepository.findAllByTeam(userTeamDto.getTeam());
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. 팀메이트 dto 생성
-        User user = userTeamDto.getUser();
         List<TeammateDto> teammateDtoList = new ArrayList<>();
-        teammates.forEach(teammate -> {
-            if (!Objects.equals(teammate.getId(), user.getId())) {
-                TeammateDto converted = TeammateDto.builder()
-                        .teammateId(teammate.getId())
-                        .name(teammate.getUserProfile().getName())
-                        .schoolName(teammate.getUserProfile().getSchoolName())
-                        .major(teammate.getUserProfile().getMajor())
-                        .build();
-                teammateDtoList.add(converted);
-
-            }
+        teammates.stream()
+                .filter(teammate -> !teammate.getUser().equals(authUser))
+                .forEach(teammate -> {
+                    if (!Objects.equals(teammate.getId(), authUser.getId())) {
+                        TeammateDto converted = TeammateDto.builder()
+                                .teammateId(teammate.getId())
+                                .name(teammate.getUserProfile().getName())
+                                .schoolName(teammate.getUserProfile().getSchoolName())
+                                .major(teammate.getUserProfile().getMajor())
+                                .build();
+                        teammateDtoList.add(converted);
+                    }
         });
+        Teammate userTeammate = teammates.stream()
+                .filter(teammate -> teammate.getUser().equals(authUser))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
 
         return GetTeammateDto.builder()
-                .name(user.getUserProfile().getName())
-                .schoolName(user.getUserProfile().getSchoolName())
-                .major(user.getUserProfile().getMajor())
+                .name(authUser.getUserProfile().getName())
+                .schoolName(authUser.getUserProfile().getSchoolName())
+                .major(authUser.getUserProfile().getMajor())
                 .teammates(teammateDtoList)
                 .build();
     }
 
     @Transactional
-    public void deleteTeammate(String authUser, DeleteTeammateDto deleteTeammateDto, Long teamId) {
+    public void deleteTeammate(User authUser, DeleteTeammateDto deleteTeammateDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 팀원 조회
-        List<Teammate> teammates = teammateRepository.findAllByTeam(userTeamDto.getTeam());
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. Teammate 삭제
         boolean isConducted = false;

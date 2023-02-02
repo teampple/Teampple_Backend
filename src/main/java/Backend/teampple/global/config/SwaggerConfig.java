@@ -32,6 +32,7 @@ public class SwaggerConfig {
                 .securityContexts(List.of(securityContext()))
                 .securitySchemes(List.of(apiKey()))
                 .ignoredParameterTypes(AuthenticationPrincipal.class)
+                .useDefaultResponseMessages(false)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(swaggerInfo()).select()

@@ -3,6 +3,7 @@ package Backend.teampple.domain.stages;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +26,7 @@ public class StagesController {
 
     @GetMapping(value = "")
     @Operation(summary = "단계 조회", description = "단계 조회 API 입니다.")
-    public CommonResponse<List<StageDto>> getStage(@AuthenticationPrincipal String authUser,
+    public CommonResponse<List<StageDto>> getStage(@AuthenticationPrincipal User authUser,
                                                    @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 단계 조회");
 
@@ -35,7 +36,7 @@ public class StagesController {
 
     @PostMapping(value = "")
     @Operation(summary = "단계 추가", description = "단계 추가 API 입니다.")
-    public CommonResponse<String> postStage(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> postStage(@AuthenticationPrincipal User authUser,
                                             @Valid @RequestBody PostStageDto postStageDto,
                                             @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
@@ -46,7 +47,7 @@ public class StagesController {
 
     @PutMapping(value = "")
     @Operation(summary = "단계 수정", description = "단계 수정 API 입니다.")
-    public CommonResponse<String> putStage(@AuthenticationPrincipal String authUser,
+    public CommonResponse<String> putStage(@AuthenticationPrincipal User authUser,
                                            @Valid @RequestBody PutStageDto putStageDto,
                                            @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
