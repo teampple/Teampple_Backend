@@ -1,5 +1,8 @@
 package Backend.teampple.domain.auth.jwt;
 
+import Backend.teampple.domain.auth.security.CustomUserDetails;
+import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = parseBearerToken(request);
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                User principal = (User) authentication.getPrincipal();
+                if (principal.getUserProfile() != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         } catch (Exception e) {
             log.error("Could not set user authentication in security context", e);
+            setResponse(response, ErrorCode.USER_NOT_FOUND);
         }
         chain.doFilter(request, response);
     }
@@ -45,5 +52,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return bearerToken;
+    }
+
+    /**
+     * 스프링 시큐티리 예외 커스텀을 위한 함수
+     */
+    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().print(CommonResponse.jsonOf(errorCode));
     }
 }

@@ -12,6 +12,7 @@ import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
 import Backend.teampple.global.common.response.CommonResponse;
+import Backend.teampple.infra.auth.resolver.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class UserController {
 
     @PostMapping("/userprofiles")
     @Operation(summary = "프로필 생성 요청", description = "프로필 생성 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> postProfile(@AuthenticationPrincipal User user, @RequestBody PostUserProfileDto postUserProfileDto) {
+    public CommonResponse<GetUserProfileDto> postProfile(@AuthUser User user, @RequestBody PostUserProfileDto postUserProfileDto) {
         UserProfile userProfile = userProfileService.createProfile(postUserProfileDto);
         userService.saveUserProfile(userProfile, user);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserProfileMapper.toDto(userProfile));
@@ -42,14 +43,14 @@ public class UserController {
 
     @GetMapping("/userprofiles")
     @Operation(summary = "프로필 요청", description = "프로필 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> getProfiles(@AuthenticationPrincipal User user) {
+    public CommonResponse<GetUserProfileDto> getProfiles(@AuthUser User user) {
         GetUserProfileDto userProfile = userProfileService.getUserProfile(user);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }
 
     @PutMapping("/userprofiles")
     @Operation(summary = "프로필 수정 요청", description = "프로필 수정 API 입니다.")
-    public CommonResponse<GetUserProfileDto> updateProfile(@AuthenticationPrincipal User user, @RequestBody PutUserProfileDto putUserProfileDto) {
+    public CommonResponse<GetUserProfileDto> updateProfile(@AuthUser User user, @RequestBody PutUserProfileDto putUserProfileDto) {
         GetUserProfileDto userProfile = userProfileService.updateUserProfile(user, putUserProfileDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
     }

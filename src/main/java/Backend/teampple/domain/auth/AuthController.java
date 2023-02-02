@@ -4,11 +4,11 @@ import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
 import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
+import Backend.teampple.infra.auth.resolver.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 요청", description = "로그아웃 요청 API 입니다.")
-    public CommonResponse<String> logout(@AuthenticationPrincipal User user) {
+    public CommonResponse<String> logout(@AuthUser User user) {
         authService.logout(user);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }

@@ -3,6 +3,7 @@ package Backend.teampple.domain.auth.jwt;
 import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
 import Backend.teampple.domain.auth.security.CustomUserDetails;
+import Backend.teampple.domain.auth.security.UserAdapter;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -105,7 +106,7 @@ public class JwtTokenProvider {
 
         log.info(claims.getSubject());
         /**userDetails 반환*/
-        CustomUserDetails userDetails = (CustomUserDetails) customUserDetailService
+        UserAdapter userDetails = (UserAdapter) customUserDetailService
                 .loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails.getUser(), userDetails.getPassword(),
                 userDetails.getAuthorities());
