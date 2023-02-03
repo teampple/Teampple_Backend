@@ -42,10 +42,6 @@ public class User extends UserBaseEntity {
     }
 
     /**서비스 로직*/
-    public void saveUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
-
     public void updateRefreshToken(String refreshToken, Date expRT) {
         this.refreshToken = refreshToken;
         this.expRT = expRT;

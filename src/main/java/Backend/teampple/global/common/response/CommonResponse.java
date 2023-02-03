@@ -4,7 +4,6 @@ import Backend.teampple.global.error.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.json.JSONObject;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
  * api 공통 응답 형식입니다.
  */
 @Getter
-public class CommonResponse <T> {
+public class CommonResponse<T> {
     @JsonProperty("status")
     private int code;
 
@@ -54,7 +53,9 @@ public class CommonResponse <T> {
                 .build();
     }
 
-    //filter chain 을 위한 JSON 생성자
+    /**
+     * filter chain 을 위한 JSON 생성자
+     */
     public static JSONObject jsonOf(ErrorCode errorCode) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("timestamp", LocalDateTime.now());

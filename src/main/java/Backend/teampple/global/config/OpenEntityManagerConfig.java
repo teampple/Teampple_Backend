@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 public class OpenEntityManagerConfig {
-    // security filter가 OSIV interceptor보다 먼저 실행되어 영속성 컨텍스트가 종료된 상황인 @AuthenticationPrincipal이
-    // 작동될 때, User 객체가 준영속 상태임 => filter interceptor 순서 변경으로 해결
-    // interceptor를 filter로 동작할 수 있게 함
+    /** security filter 가 OSIV interceptor 보다 먼저 실행되어
+     * 영속성 컨텍스트가 종료된 상황인 @AuthenticationPrincipal 이 작동될 때,
+     * User 객체가 준영속 상태
+     * => filter interceptor 순서 변경으로 해결 interceptor 를 filter 로 동작할 수 있게 함
+     */
     @Bean
     public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilter() {
         FilterRegistrationBean<OpenEntityManagerInViewFilter> filterFilterRegistrationBean = new FilterRegistrationBean<>();

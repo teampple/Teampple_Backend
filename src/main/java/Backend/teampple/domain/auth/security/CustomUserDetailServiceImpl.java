@@ -27,7 +27,6 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
         User user = userRepository.findByKakaoId(username)
                 .orElseThrow(() -> new NotFoundException("[" + username + "] 사용자를 찾을 수 없습니다."));
 //        return new CustomUserDetails(user,Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
-//        log.info("프로파일: "+user.getUserProfile());
         return new UserAdapter(user);
     }
 }

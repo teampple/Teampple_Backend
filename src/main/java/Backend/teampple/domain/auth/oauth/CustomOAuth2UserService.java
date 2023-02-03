@@ -22,6 +22,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+//TODO: 자동화 및 provider 처리 필요
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserService userService;
     private final UserProfileService userProfileService;
@@ -29,12 +30,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("엥");
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        log.info("{}",userRequest.getClientRegistration());
-        log.info("{}",userRequest.getAccessToken().getTokenValue());
-        log.info("{}",userRequest.getAdditionalParameters());
         log.info(String.valueOf(oAuth2User));
         Map<String, Object> attributes = oAuth2User.getAttributes();
         /**provider 정보*/
@@ -56,7 +53,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
             UserProfile profile = userProfileService.createProfile((String) kakaoAccount.get("nickname"));
             user = userService.createUser(profile, oAuth2User.getName());
-        } else{
+        } else {
             user = userRepository.findByKakaoId(oAuth2User.getName()).orElseThrow();
         }
 
@@ -74,6 +71,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
 //        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
-    return new CustomUserDetails(user,attributes,Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        return new CustomUserDetails(user, attributes, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }

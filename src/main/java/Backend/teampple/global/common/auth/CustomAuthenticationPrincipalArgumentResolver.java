@@ -39,6 +39,10 @@ public class CustomAuthenticationPrincipalArgumentResolver implements HandlerMet
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
+            /**
+             * 기존 값 = return null;
+             * Error 반환 하기 위해 커스텀
+             * */
             throw new UnauthorizedException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
         }
         Object principal = authentication.getPrincipal();
