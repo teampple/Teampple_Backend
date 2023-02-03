@@ -46,7 +46,7 @@ spring:
         default_batch_fetch_size: 1000
   sql:
     init:
-#      mode: always
+      mode: always
   security:
     oauth2:
       client:

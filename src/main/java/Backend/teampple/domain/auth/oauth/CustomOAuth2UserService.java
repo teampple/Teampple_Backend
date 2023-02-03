@@ -48,6 +48,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
          * */
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 
+        log.info((String) kakaoAccount.get("nickname"));
+
         User user = null;
         /**회원 가입 여부 확인 및 RefreshToken update*/
         if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
