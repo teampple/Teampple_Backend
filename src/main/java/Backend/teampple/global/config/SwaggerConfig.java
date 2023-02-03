@@ -1,5 +1,6 @@
 package Backend.teampple.global.config;
 
+import Backend.teampple.infra.auth.resolver.AuthUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +32,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(List.of(securityContext()))
                 .securitySchemes(List.of(apiKey()))
-                .ignoredParameterTypes(AuthenticationPrincipal.class)
+                .ignoredParameterTypes(AuthUser.class)
                 .useDefaultResponseMessages(false)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())

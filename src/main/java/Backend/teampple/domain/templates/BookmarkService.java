@@ -25,20 +25,16 @@ public class BookmarkService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void postBookmark(String authUser, PostBookmarkDto postBookmarkDto) {
+    public void postBookmark(User authUser, PostBookmarkDto postBookmarkDto) {
         // 1. template 조회
         Template template = templateRespository.findById(postBookmarkDto.getId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TEMPLATE_NOT_FOUND.getMessage()));
 
-        // 2. user 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage()));
-
-        // 3. bookmark 생성
-        Bookmark bookmark = bookmarkRepository.findByUserAndTemplate(user, template);
+        // 2. bookmark 생성
+        Bookmark bookmark = bookmarkRepository.findByUserAndTemplate(authUser, template);
         if (bookmark == null) {
             Bookmark newBookmark = Bookmark.builder()
-                    .user(user)
+                    .user(authUser)
                     .template(template)
                     .build();
             bookmarkRepository.save(newBookmark);
