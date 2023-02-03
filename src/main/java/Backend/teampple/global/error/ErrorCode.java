@@ -28,6 +28,7 @@ public enum ErrorCode {
     FORBIDDEN_USER(FORBIDDEN, "AUTH007", "권한이 없는 유저입니다"),
     LOGIN_FAILED(UNAUTHORIZED, "AUTH008", "로그인에 실패했습니다"),
     INVALID_TOKEN(BAD_REQUEST, "AUTH009", "유효하지 않은 토큰입니다"),
+    INVALID_PRINCIPAL(BAD_REQUEST, "AUTH010", "인증정보가 존재하지 않습니다"),
 
     /* OAuth */
     INVALID_PROVIDER(BAD_REQUEST, "OAUTH001", "서비스에서 제공하지 않는 제공자 입니다."),
@@ -52,7 +53,7 @@ public enum ErrorCode {
 
     /* Task */
     TASK_NOT_FOUND(BAD_REQUEST, "TASK400-1", "해당 할 일이 존재하지 않습니다."),
-    MISMATCH_TASK(BAD_REQUEST, "TASK400-2","팀에 속하지 않은 할 일 입니다."),
+    MISMATCH_TASK(BAD_REQUEST, "TASK400-2", "팀에 속하지 않은 할 일 입니다."),
     NOT_TEAMMATE(BAD_REQUEST, "TASK400-3", "팀원이 아닌 유저입니다."),
 
     /* User */
@@ -72,7 +73,7 @@ public enum ErrorCode {
 
     /* Template */
     TEMPLATE_NOT_FOUND(BAD_REQUEST, "TEMPLATE400-1", "탬플릿이 존재하지 않습니다."),
-    
+
     /* S3 */
     S3_SERVER_ERROR(BAD_REQUEST, "S3400-1", "Amazon S3가 처리할 수 없는 요청입니다."),
     S3_CONNECTION_ERROR(BAD_REQUEST, "S3400-2", "Amazon S3에 연결할 수 없습니다.");

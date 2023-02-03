@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth.jwt;
 
-import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.error.ErrorCode;
+import static Backend.teampple.global.error.FilterExceptionHandler.setResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -46,14 +46,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return bearerToken;
-    }
-
-    /**
-     * 스프링 시큐티리 예외 커스텀을 위한 함수
-     */
-    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().print(CommonResponse.jsonOf(errorCode));
     }
 }

@@ -1,5 +1,6 @@
 package Backend.teampple.global.common.auth;
 
+import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -27,16 +28,18 @@ public class CustomAuthenticationPrincipalArgumentResolver implements HandlerMet
 
     private BeanResolver beanResolver;
 
+    /**받아온 파라미터 타입이 설정한 타입과 같을 경우 true 반환*/
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return findMethodAnnotation(AuthenticationPrincipal.class, parameter) != null;
+        return findMethodAnnotation(AuthUser.class, parameter) != null;
     }
 
+    /**실제 바인딩할 객체를 만들어 반환*/
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new UnauthorizedException("Not Authenticated");
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
         }
         Object principal = authentication.getPrincipal();
         AuthUser annotation = findMethodAnnotation(AuthUser.class, parameter);
@@ -53,7 +56,7 @@ public class CustomAuthenticationPrincipalArgumentResolver implements HandlerMet
             if (annotation.errorOnInvalidType()) {
                 throw new ClassCastException(principal + " is not assignable to " + parameter.getParameterType());
             }
-            throw new UnauthorizedException("Not Authenticated");
+            throw new UnauthorizedException(ErrorCode.INVALID_PRINCIPAL, ErrorCode.INVALID_PRINCIPAL.getMessage());
         }
         return principal;
     }
