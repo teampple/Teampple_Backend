@@ -29,10 +29,10 @@ public class UserProfile extends UserBaseEntity {
     @Column(nullable = false)
     private String profileImage;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String schoolName;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String major;
 
     @Column(length = 25)
