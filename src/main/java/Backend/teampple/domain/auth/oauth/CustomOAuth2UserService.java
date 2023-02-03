@@ -2,7 +2,9 @@ package Backend.teampple.domain.auth.oauth;
 
 import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
+import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.Map;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserService userService;
+    private final UserProfileService userProfileService;
     private final UserRepository userRepository;
 
     @Override
@@ -40,16 +43,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         /**userInfoEndPoint*/
         ClientRegistration.ProviderDetails.UserInfoEndpoint userInfoEndpoint = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint();
 
-        OAuth2Attribute oAuth2Attribute =
-                OAuth2Attribute.of(registrationId, userInfoEndpoint.getUserNameAttributeName(), oAuth2User.getAttributes());
+//        OAuth2Attribute oAuth2Attribute =
+//                OAuth2Attribute.of(registrationId, userInfoEndpoint.getUserNameAttributeName(), oAuth2User.getAttributes());
 
-        User user;
+        /**oauth 속 개인정보
+         * 추후 변경 예정 -> attribute
+         * */
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+
+        User user = null;
         /**회원 가입 여부 확인 및 RefreshToken update*/
         if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
-            user = User.builder()
-                    .kakaoId(oAuth2User.getName())
-                    .build();
-            userRepository.save(user);
+            UserProfile profile = userProfileService.createProfile((String) kakaoAccount.get("nickname"));
+            user = userService.createUser(profile, oAuth2User.getName());
         } else{
             user = userRepository.findByKakaoId(oAuth2User.getName()).orElseThrow();
         }

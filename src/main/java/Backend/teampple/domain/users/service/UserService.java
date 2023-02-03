@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 public interface UserService {
-    void saveUserProfile(UserProfile userProfile, User user);
+    User createUser(UserProfile userProfile, String kakaoId);
 
     void updateUserRefreshToken(User user, String refreshToken, Date expRT);
 
