@@ -1,10 +1,7 @@
 package Backend.teampple.domain.auth.jwt;
 
-import Backend.teampple.domain.auth.security.CustomUserDetails;
-import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -31,10 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = parseBearerToken(request);
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                User principal = (User) authentication.getPrincipal();
-                if (principal.getUserProfile() != null) {
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
             log.error("Could not set user authentication in security context", e);
