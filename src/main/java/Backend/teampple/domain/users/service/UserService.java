@@ -6,19 +6,21 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 
+import java.util.Date;
+
 
 public interface UserService {
-    void createUser(UserProfile userProfile, String kakaoId, String refreshToken);
+    User createUser(UserProfile userProfile, String kakaoId);
 
-    void updateUserRefreshToken(String kakaoId, String refreshToken);
+    void updateUserRefreshToken(User user, String refreshToken, Date expRT);
 
     void deleteUserRefreshToken(User user);
 
-    void deleteUser(String kakaoId);
+    void deleteUser(User user);
 
-    GetUserTasksDto getUserTasks(String authUser);
+    GetUserTasksDto getUserTasks(User authUser);
 
-    GetUserTeamsDto getUserTeams(String authUser, boolean isActive);
+    GetUserTeamsDto getUserTeams(User authUser, boolean isActive);
 
-    GetUserFeedbacksDto getUserFeedbacks(String authUser);
+    GetUserFeedbacksDto getUserFeedbacks(User authUser);
 }

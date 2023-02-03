@@ -1,6 +1,10 @@
 package Backend.teampple.domain.auth.security;
 
 import Backend.teampple.domain.auth.jwt.JwtAuthenticationFilter;
+//import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
+//import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
+import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
+import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +33,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuthSuccessHandler oauthSuccessHandler;
 
 //    @Bean
 //    public WebSecurityCustomizer configure() {
@@ -40,15 +46,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().configurationSource(corsConfigurationSource())
+        http.cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
-                .and()
-                .sessionManagement()
+                .accessDeniedHandler(jwtAccessDeniedHandler);
+
+        http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic().disable()
@@ -58,15 +63,25 @@ public class SecurityConfig {
                 .antMatchers(SwaggerPatterns).permitAll()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/auth/login", "/auth/info").permitAll()
-                .antMatchers("/example/**").permitAll()
+                .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/invitations/validation").permitAll() // 초대 코드 검증
-//                .antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll() // 초대 코드 검증
                 /**인증 된 사용자만 사용 가능*/
-                .anyRequest().authenticated()
-                .and()
-                .headers().frameOptions().disable();
+                .anyRequest().authenticated();
 
-        http.logout().invalidateHttpSession(true).deleteCookies("JSESSIONID");
+        /**oauth login 로직*/
+        http.oauth2Login()
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .successHandler(oauthSuccessHandler);
+
+        http.headers()
+                .frameOptions().disable();
+
+        http.logout()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
+
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

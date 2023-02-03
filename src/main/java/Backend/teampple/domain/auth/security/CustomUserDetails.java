@@ -1,22 +1,32 @@
 package Backend.teampple.domain.auth.security;
 
-import lombok.Builder;
+import Backend.teampple.domain.users.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
+/**
+ * customUserDetail -> Authentication 내부에 들어있는 User 객체 값
+ */
 @Getter
-public class CustomUserDetails implements UserDetails {
-    private String kakaoId;
-    private boolean isDeleted;
-    private Collection<GrantedAuthority> authorities;
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
-    @Builder
-    public CustomUserDetails(String kakaoId, boolean isDeleted, Collection<GrantedAuthority> authorities) {
-        this.kakaoId = kakaoId;
-        this.isDeleted = isDeleted;
+    private final User user;
+    private final Collection<GrantedAuthority> authorities;
+    private Map<String, Object> attributes;
+
+    public CustomUserDetails(User user, Collection<GrantedAuthority> authorities) {
+        this.user = user;
+        this.authorities = authorities;
+    }
+
+    public CustomUserDetails(User user, Map<String, Object> attributes, Collection<GrantedAuthority> authorities) {
+        this.user = user;
+        this.attributes = attributes;
         this.authorities = authorities;
     }
 
@@ -27,12 +37,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return "user.password";
     }
 
     @Override
     public String getUsername() {
-        return kakaoId;
+        return user.getKakaoId();
     }
 
     @Override
@@ -42,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isDeleted;
+        return !user.isDeleted();
     }
 
     @Override
@@ -52,6 +62,19 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isDeleted;
+        return !user.isDeleted();
+    }
+
+    /**
+     * OAuth
+     */
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(attributes.get("id"));
     }
 }

@@ -1,7 +1,9 @@
 package Backend.teampple.domain.auth.jwt;
 
-import Backend.teampple.domain.auth.dto.response.ResponseTokenDto;
+import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
+import Backend.teampple.domain.auth.security.CustomUserDetails;
+import Backend.teampple.domain.auth.security.UserAdapter;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -32,9 +33,13 @@ public class JwtTokenProvider {
     /**
      * 토큰 유효 시간
      */
-    /**60분*/
+    /**
+     * 60분
+     */
     private static final long JWT_EXPIRATION_TIME = 1000L * 60 * 60;
-    /**2주*/
+    /**
+     * 2주
+     */
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 14;
 
     private static final String AUTHORITIES_KEY = "auth";
@@ -46,12 +51,13 @@ public class JwtTokenProvider {
     /**
      * 토큰 생성
      */
-    public ResponseTokenDto generateToken(Authentication authentication)
+    public JwtTokenDto generateToken(Authentication authentication)
             throws HttpServerErrorException.InternalServerError {
         final Date now = new Date();
-        return ResponseTokenDto.builder()
+        return JwtTokenDto.builder()
                 .jwtAccessToken(generateAccessToken(authentication, now))
                 .jwtRefreshToken(generateRefreshToken(now))
+                .expRT(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .build();
     }
 
@@ -98,10 +104,11 @@ public class JwtTokenProvider {
             throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
         }
 
+        log.info(claims.getSubject());
         /**userDetails 반환*/
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(
-                claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), "",
+        UserAdapter userDetails = (UserAdapter) customUserDetailService
+                .loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails.getUser(), userDetails.getPassword(),
                 userDetails.getAuthorities());
     }
 

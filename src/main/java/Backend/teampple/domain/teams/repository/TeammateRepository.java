@@ -28,16 +28,14 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
     Optional<Teammate> findByUserIdAndTeam(@Param("user") String user, @Param("team") Team team);
 
     @Query("select tm from Teammate tm" +
-            " join fetch tm.user" +
             " join fetch tm.team" +
-            " where tm.team.id = :teamId and tm.user.kakaoId = :user")
-    Optional<Teammate> findAllByTeamIdAndUserWithTeamAndUser(@Param("user") String user, @Param("teamId") Long teamId);
+            " where tm.team.id = :teamId and tm.user = :user")
+    Optional<Teammate> findAllByTeamIdAndUserWithTeam(@Param("user") User user, @Param("teamId") Long teamId);
 
     @Query("select tm from Teammate tm " +
-            " join fetch tm.user u" +
             " join fetch tm.team" +
-            " where u.kakaoId = :user")
-    List<Teammate> findAllByUserWithUserAndTeam(@Param("user") String user);
+            " where tm.user = :user")
+    List<Teammate> findAllByUserWithTeam(@Param("user") User user);
 
     @Query("select tm from Teammate tm " +
             " join fetch tm.user" +
@@ -45,19 +43,12 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
     List<Teammate> findAllByTeamWithUser(@Param("team") Team team);
 
     @Query("select tm from Teammate tm" +
-            " join fetch tm.user" +
-            " where tm.team = :team and tm.user.kakaoId = :user")
-    Optional<Teammate> findAllByTeamAndUserWithUser(@Param("user") String User, @Param("team") Team team);
+            " where tm.team = :team and tm.user = :user")
+    Optional<Teammate> findAllByTeamAndUser(@Param("user") User User, @Param("team") Team team);
 
     @Query("select tm from Teammate tm" +
-            " where tm.team = :team and tm.user.kakaoId = :user")
-    Optional<Teammate> findByTeamAndUser(@Param("user") String User, @Param("team") Team team);
-
-    @Query("select tm from Teammate tm" +
-            " join fetch tm.user u" +
-            " join fetch u.userProfile" +
-            " where tm.team = :team and tm.user.kakaoId = :user")
-    Optional<Teammate> findAllByTeamAndUserWithUserAndUserProfile(@Param("user") String User, @Param("team") Team team);
+            " where tm.team = :team and tm.user = :user")
+    Optional<Teammate> findByTeamAndUser(@Param("user") User user, @Param("team") Team team);
 
     @Query("select distinct tm from Teammate tm where tm.id in :id order by tm.user.id")
     List<Teammate> findAllByIdOrderByUserId(@Param("id") List<Long> id);

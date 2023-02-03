@@ -10,7 +10,6 @@ import Backend.teampple.domain.users.repository.UserProfileRepository;
 import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserProfileServiceImpl implements UserProfileService {
-    private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
     private final GetUserProfileMapper getUserProfileMapper;
@@ -27,24 +25,22 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     @Transactional
-    public UserProfile createProfile(UserProfile userProfile) {
+    public UserProfile createProfile(String name) {
+        UserProfile userProfile = UserProfile.builder()
+                .name(name)
+                .profileImage(String.valueOf((int) (Math.random() * 12) + 1))
+                .build();
         return userProfileRepository.save(userProfile);
     }
 
     @Override
-    public GetUserProfileDto getUserProfile(Authentication authentication) {
-        User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-
+    public GetUserProfileDto getUserProfile(User user) {
         return getUserProfileMapper.toDto(user.getUserProfile());
     }
 
     @Override
     @Transactional
-    public GetUserProfileDto updateUserProfile(Authentication authentication, PutUserProfileDto putUserProfileDto) {
-        User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-
+    public GetUserProfileDto updateUserProfile(User user, PutUserProfileDto putUserProfileDto) {
         UserProfile userProfile = user.getUserProfile();
 
         putUserProfileMapper.updateFromDto(putUserProfileDto, userProfile);

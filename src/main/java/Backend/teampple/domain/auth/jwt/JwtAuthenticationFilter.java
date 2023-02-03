@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth.jwt;
 
 import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.UnauthorizedException;
+import static Backend.teampple.global.error.FilterExceptionHandler.setResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             log.error("Could not set user authentication in security context", e);
+            setResponse(response, ErrorCode.USER_NOT_FOUND);
         }
         chain.doFilter(request, response);
     }

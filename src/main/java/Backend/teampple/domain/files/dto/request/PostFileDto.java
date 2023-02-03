@@ -24,6 +24,6 @@ public class PostFileDto {
 
     @NotNull
     @Positive
-    @ApiModelProperty(notes = "파일 갯수", example = "12", required = true)
+    @ApiModelProperty(notes = "파일 크기", example = "12", required = true)
     private Long size;
 }

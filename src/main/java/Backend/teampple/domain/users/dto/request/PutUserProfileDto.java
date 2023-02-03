@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PutUserProfileDto {
+    @ApiModelProperty(value = "사용자 이름", example = "U12345")
+    private String name;
+    @ApiModelProperty(value = "사용자 이메일 주소", example = "U12345@")
+    private String email;
     @ApiModelProperty(value = "학교 이름", example = "schoolU1x")
     private String schoolName;
     @ApiModelProperty(value = "전공 이름", example = "majorU1x")

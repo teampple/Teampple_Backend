@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    @Query("select b from Bookmark b join fetch b.template t where b.user.kakaoId = :user order by t.id")
-    List<Bookmark> findAllByUserWithTemplateOrderById(@Param("user") String user);
+    @Query("select b from Bookmark b join fetch b.template t where b.user = :user order by t.id")
+    List<Bookmark> findAllByUserWithTemplateOrderById(@Param("user") User user);
 
     @Query("select b from Bookmark b where b.user = :user and b.template = :template")
     Bookmark findByUserAndTemplate(@Param("user") User user, @Param("template") Template template);

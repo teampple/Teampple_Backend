@@ -21,7 +21,6 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.InternalServerException;
 import Backend.teampple.global.error.exception.NotFoundException;
@@ -30,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +39,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
+
     private final TeamsRepository teamsRepository;
     private final StagesRepository stagesRepository;
     private final TeammateRepository teammateRepository;
@@ -49,24 +50,18 @@ public class UserServiceImpl implements UserService {
     private final TasksRepository tasksRepository;
 
     @Override
-    @Transactional
-    public void createUser(UserProfile userProfile, String kakaoId, String refreshToken) {
+    public User createUser(UserProfile userProfile, String kakaoId) {
         User user = User.builder()
-                .userProfile(userProfile)
-                .refreshToken(refreshToken)
-                //TODO: 시간 주입 방식 변경 필요
-                .expRT(LocalDateTime.now().plusWeeks(2L))
                 .kakaoId(kakaoId)
+                .userProfile(userProfile)
                 .build();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUserRefreshToken(String kakaoId, String refreshToken) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저 입니다"));
-        user.updateRefreshToken(refreshToken, LocalDateTime.now().plusWeeks(2L));
+    public void updateUserRefreshToken(User user, String refreshToken, Date expRT) {
+        user.updateRefreshToken(refreshToken, expRT);
         userRepository.save(user);
     }
 
@@ -80,9 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(String kakaoId) {
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+    public void deleteUser(User user) {
         userProfileService.deleteUserProfile(user.getUserProfile());
         user.updateIsDeleted();
         userRepository.save(user);
@@ -90,9 +83,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserTasksDto getUserTasks(String authUser) {
-        // 1. 팀원 조회 + 유저 + 팀
-        List<Teammate> teammates = teammateRepository.findAllByUserWithUserAndTeam(authUser);
+    public GetUserTasksDto getUserTasks(User authUser) {
+        // 1. 팀원 + 팀
+        List<Teammate> teammates = teammateRepository.findAllByUserWithTeam(authUser);
 
         // 2. team 리스트로
         List<Team> teams = teammates.stream()
@@ -102,7 +95,7 @@ public class UserServiceImpl implements UserService {
         // 3. task 조회
         List<Stage> stages = stagesRepository.findAllByTeamsOrderByTeamId(teams);
         List<Task> tasks = tasksRepository.findAllByStagesOrderByStageId(stages);
-//
+
         List<GetTeamStageDto> getTeamStageDtos = teams.stream()
                 .map(team -> {
                     List<GetTaskBriefDto> getTaskBriefDtos = new ArrayList<>();
@@ -132,20 +125,16 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public GetUserTeamsDto getUserTeams(String authUser, boolean isActive) {
-        // 1. user 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
-
-        // 2. teammate 조회하면서 team까지
+    public GetUserTeamsDto getUserTeams(User authUser, boolean isActive) {
+        // 1. teammate 조회하면서 team까지
         List<Teammate> teammates;
         if (isActive) {
-            teammates = teammateRepository.findAllByUserWithTeamAfterNow(user);
+            teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser);
         } else {
-            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(user);
+            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(authUser);
         }
 
-        // 3. dto 생성
+        // 2. dto 생성
         List<GetTeamDto> getTeamDtos = teammates.stream()
                 .map(teammate -> GetTeamDto.builder()
                         .name(teammate.getTeam().getName())
@@ -158,15 +147,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public GetUserFeedbacksDto getUserFeedbacks(String authUser) {
-        // 1. user 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+    public GetUserFeedbacksDto getUserFeedbacks(User authUser) {
+        // 1. feedback owner 조회
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackOrderByUpdatedAt(authUser);
 
-        // 2. feedback owner 조회
-        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackOrderByUpdatedAt(user);
-
-        // 3. task + stage + team
+        // 2. task + stage + team
         List<Long> tasksId = feedbackOwners.stream()
                 .map(feedbackOwner -> feedbackOwner.getFeedback().getTask().getId())
                 .collect(Collectors.toList());
