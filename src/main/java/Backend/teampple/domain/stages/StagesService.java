@@ -5,8 +5,8 @@ import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.teams.entity.Team;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
@@ -28,9 +28,9 @@ public class StagesService {
     private final CheckUser checkUser;
 
     @Transactional
-    public List<StageDto> getStage(String authUser, Long teamId) {
+    public List<StageDto> getStage(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. stages 조회
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
@@ -41,12 +41,12 @@ public class StagesService {
     }
 
     @Transactional
-    public void postStage(String authUser, PostStageDto postStageDto, Long teamId) {
+    public void postStage(User authUser, PostStageDto postStageDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. stage sequenceNum 검사
-        for (int i = 1; i<=postStageDto.getStages().size();i++) {
+        for (int i = 1; i <= postStageDto.getStages().size(); i++) {
             if (postStageDto.getStages().get(i - 1).getSequenceNum() != i) {
                 throw new BadRequestException(ErrorCode.STAGE_SEQUENCE_DUPLICATE.getMessage());
             }
@@ -69,9 +69,9 @@ public class StagesService {
     }
 
     @Transactional
-    public void putStage(String authUser, PutStageDto putStageDto, Long teamId) {
+    public void putStage(User authUser, PutStageDto putStageDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. stage sequenceNum 검사
         for (int i = 1; i<=putStageDto.getStages().size();i++) {

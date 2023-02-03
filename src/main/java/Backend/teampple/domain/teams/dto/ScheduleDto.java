@@ -1,5 +1,6 @@
 package Backend.teampple.domain.teams.dto;
 
+import Backend.teampple.domain.teams.entity.Schedule;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -24,5 +25,10 @@ public class ScheduleDto {
     public ScheduleDto(String name, LocalDateTime dueDate) {
         this.name = name;
         this.dueDate = dueDate;
+    }
+
+    public ScheduleDto(Schedule schedule) {
+        this.name = schedule.getName();
+        this.dueDate = schedule.getDueDate();
     }
 }

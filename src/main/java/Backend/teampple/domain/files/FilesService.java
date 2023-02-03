@@ -7,6 +7,7 @@ import Backend.teampple.domain.files.entity.File;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
@@ -35,9 +36,9 @@ public class FilesService {
     private final CheckUser checkUser;
 
     @Transactional
-    public List<GetFileDto> getFile(String authUser, Long teamId) {
+    public List<GetFileDto> getFile(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. file 조회
         List<File> files = filesRepository.findAllByTeamWithTaskAndUserAndUserProfile(team);
@@ -48,17 +49,17 @@ public class FilesService {
     }
 
     @Transactional
-    public void postFile(String authUser, PostFileDto postFileDto, Long taskId, Long teamId) {
+    public void postFile(User authUser, PostFileDto postFileDto, Long taskId, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        UserTeamDto userTeamDto = checkUser.checkIsUserInTeam(authUser, teamId);
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. task 조회
         Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
         // 3. team에 속하는 task 이어야 함
-        if(task.getStage().getTeam() != userTeamDto.getTeam())
-            throw new NotFoundException(ErrorCode._BAD_REQUEST.getMessage());
+        if(task.getStage().getTeam() != team)
+            throw new NotFoundException(ErrorCode.MISMATCH_TASK.getMessage());
 
         // 4. file 생성
         File file = File.builder()
@@ -66,29 +67,28 @@ public class FilesService {
                 .filename(postFileDto.getFileName())
                 .size(postFileDto.getSize())
                 .task(task)
-                .team(userTeamDto.getTeam())
-                .user(userTeamDto.getUser())
+                .team(team)
+                .user(authUser)
                 .build();
         filesRepository.save(file);
     }
 
     @Transactional
-    public void deleteFile(String authUser, Long fileId) {
+    public void deleteFile(User authUser, Long fileId) {
         // 1. file 조회
         File file = filesRepository.findById(fileId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.FILE_NOT_FOUND.getMessage()));
 
-        // 2. 팀메이트에서 유저까지 해서 없으면 에러
-        teammateRepository.findByUserIdAndTeam(authUser, file.getTeam())
-                .orElseThrow(() -> new ForbiddenException(ErrorCode.FORBIDDEN_USER.getMessage()));
+        // 2. 유저 체크
+        checkUser.checkIsUserInTeam(authUser,file.getTeam());
 
         filesRepository.delete(file);
     }
 
     @Transactional
-    public GetFileBriefDto getFileBrief(String authUser, Long teamId) {
+    public GetFileBriefDto getFileBrief(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
-        Team team = checkUser.checkIsUserInTeam(authUser, teamId).getTeam();
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. file 조회
         List<File> files = filesRepository.findAllByTeam(team);

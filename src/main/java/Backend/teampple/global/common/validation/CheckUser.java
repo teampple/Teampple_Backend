@@ -33,70 +33,60 @@ public class CheckUser {
 
     private final UserRepository userRepository;
 
-    /*
-    해당 유저가 팀에 속한지 검사하는 method
-    */
-    public UserTeamDto checkIsUserInTeam(String authUser, Long teamid) {
-        // 1. teammate + user
-        Teammate teammate = teammateRepository.findAllByTeamIdAndUserWithTeamAndUser(authUser, teamid)
-                .orElseThrow(() -> new NotFoundException(ErrorCode._BAD_REQUEST.getMessage()));
+    public Team checkIsUserInTeamId(User authUser, Long teamid) {
+        // 1. teammate
+        Teammate teammate = teammateRepository.findAllByTeamIdAndUserWithTeam(authUser, teamid)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
 
-        return UserTeamDto.builder()
-                .user(teammate.getUser())
-                .team(teammate.getTeam())
-                .build();
+        return teammate.getTeam();
     }
 
-
-    public User checkIsUserCanPostFeedback(String authUser, Team team) {
-        // 1. teammate + user
-        Teammate teammate = teammateRepository.findAllByTeamAndUserWithUser(authUser, team)
+    public void checkIsUserInTeam(User authUser, Team team) {
+        // 1. teammate
+        teammateRepository.findAllByTeamAndUser(authUser, team)
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
-
-        return teammate.getUser();
     }
 
-    public Feedback checkIsUserCanModifyFeedback(String authUser, Long feedbackId) {
+    public void checkIsUserCanPostFeedback(User authUser, Team team) {
+        // 1. teammate
+        teammateRepository.findAllByTeamAndUser(authUser, team)
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.MISMATCH_TEAM.getMessage()));
+    }
+
+    public Feedback checkIsUserCanModifyFeedback(User authUser, Long feedbackId) {
         // 1. feedback + task + stage + team
         Feedback feedback = feedbackRepository.findByIdWithTaskAndStage(feedbackId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.FEEDBACK_NOT_FOUND.getMessage()));
 
-        // 2. teammate + user
+        // 2. teammate
         teammateRepository.findByTeamAndUser(authUser, feedback.getTask().getStage().getTeam())
-                .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.MISMATCH_TEAM.getMessage()));
 
         return feedback;
     }
 
-    public UserTaskDto checkIsUserHaveAuthForTask(String authUser, Long taskId) {
+    public Task checkIsUserHaveAuthForTask(User authUser, Long taskId) {
         // 1. task + stage
         Task task = tasksRepository.findByIdWithStage(taskId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
-        // 2. teammate + user
-        Teammate teammate = teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
-                .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
+        // 2. teammate
+        teammateRepository.findByTeamAndUser(authUser, task.getStage().getTeam())
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.MISMATCH_TEAM.getMessage()));
 
-        return UserTaskDto.builder()
-                .user(teammate.getUser())
-                .task(task)
-                .build();
+        return task;
     }
 
 
-    public UserStageDto checkIsUserCanPostTask(String authUser, Long stageId) {
+    public Stage checkIsUserCanPostTask(User authUser, Long stageId) {
         // 1. stage
         Stage stage = stagesRepository.findById(stageId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
 
-        // 2. teammate + user + userprofile
-        Teammate teammate = teammateRepository.findAllByTeamAndUserWithUserAndUserProfile(authUser, stage.getTeam())
-                .orElseThrow(() -> new UnauthorizedException(ErrorCode.FORBIDDEN_USER.getMessage()));
+        // 2. teammate
+        teammateRepository.findAllByTeamAndUser(authUser, stage.getTeam())
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.MISMATCH_TEAM.getMessage()));
 
-        return UserStageDto.builder()
-                .stage(stage)
-                .user(teammate.getUser())
-                .userProfile(teammate.getUserProfile())
-                .build();
+        return stage;
     }
 }

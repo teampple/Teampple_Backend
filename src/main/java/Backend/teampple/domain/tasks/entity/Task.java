@@ -54,6 +54,10 @@ public class Task extends PeriodBaseEntity {
         init(taskDto.getStartDate(), taskDto.getDueDate());
     }
 
+    public boolean taskDoneStatus() {
+        return this.isDone;
+    }
+
     public void convertStatus(){
         this.isDone = !this.isDone;
     }
