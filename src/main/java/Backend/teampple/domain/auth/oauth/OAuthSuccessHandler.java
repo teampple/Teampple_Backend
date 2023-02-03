@@ -43,9 +43,11 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         }
 
         log.info(setRedirectUrl(request.getRequestURL().toString()));
+        log.info(request.getServerName());
 
         /**JwtToken 과 함께 리다이렉트*/
-        String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrl(request.getRequestURL().toString()))
+//        String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrl(request.getRequestURL().toString()))
+        String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrlSub(request.getServerName()))
                 .queryParam("jwtAccessToken", jwtTokenDto.getJwtAccessToken())
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -60,6 +62,19 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 //            redirect_url = "http://localhost:3000/api/oauth/kakao/success/ing";
         }
         if(url.startsWith("https://teampple.com/")) redirect_url="https://www.teampple.com/oauth/kakao/success/ing";
+
+        return redirect_url;
+    }
+
+    /**Redirect url set*/
+    private String setRedirectUrlSub(String url){
+        String redirect_url = null;
+        if(url.equals("localhost")) redirect_url="http://localhost:8080/api/oauth/kakao/success";
+        if(url.equals("teampple.site")) {
+            redirect_url = "https://teampple.site/api/oauth/kakao/success";
+//            redirect_url = "http://localhost:3000/api/oauth/kakao/success/ing";
+        }
+        if(url.equals("teampple.com")) redirect_url="https://www.teampple.com/oauth/kakao/success/ing";
 
         return redirect_url;
     }
