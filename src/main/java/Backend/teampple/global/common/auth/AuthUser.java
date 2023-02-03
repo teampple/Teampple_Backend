@@ -1,4 +1,4 @@
-package Backend.teampple.infra.auth.resolver;
+package Backend.teampple.global.common.auth;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

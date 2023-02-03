@@ -1,7 +1,6 @@
-package Backend.teampple.infra.auth.resolver;
+package Backend.teampple.global.common.auth;
 
 import Backend.teampple.global.error.exception.UnauthorizedException;
-import Backend.teampple.infra.auth.resolver.AuthUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.BeanResolver;
@@ -12,7 +11,6 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.reactive.result.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;

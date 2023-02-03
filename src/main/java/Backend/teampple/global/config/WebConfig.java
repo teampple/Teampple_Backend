@@ -1,6 +1,6 @@
 package Backend.teampple.global.config;
 
-import Backend.teampple.infra.auth.resolver.CustomAuthenticationPrincipalArgumentResolver;
+import Backend.teampple.global.common.auth.CustomAuthenticationPrincipalArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
