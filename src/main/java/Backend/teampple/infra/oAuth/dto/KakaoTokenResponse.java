@@ -1,4 +1,4 @@
-package Backend.teampple.infra.auth.oauth.dto;
+package Backend.teampple.infra.oAuth.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

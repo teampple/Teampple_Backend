@@ -12,13 +12,12 @@ import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
 import Backend.teampple.global.common.response.CommonResponse;
-import Backend.teampple.infra.auth.resolver.AuthUser;
+import Backend.teampple.global.common.auth.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package Backend.teampple.infra.auth.oauth;
+package Backend.teampple.infra.oAuth;
 
 
 import Backend.teampple.domain.auth.oauth.dto.KakaoTokenDto;
