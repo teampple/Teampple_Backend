@@ -6,7 +6,6 @@ import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.TeammateDto;
 import Backend.teampple.domain.teams.dto.response.*;
-import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.entity.Schedule;
 import Backend.teampple.domain.teams.entity.Team;
@@ -15,11 +14,9 @@ import Backend.teampple.domain.teams.repository.ScheduleRepository;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
-import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,8 +40,6 @@ public class TeamsService{
 
     private final ScheduleRepository scheduleRepository;
 
-    private final UserRepository userRepository;
-
     private final CheckUser checkUser;
 
     @Transactional
@@ -56,10 +51,9 @@ public class TeamsService{
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. 팀원 관련 정보 변환
-        List<String> teammatesImages = new ArrayList<>();
-        teammates.forEach(teammate -> {
-            teammatesImages.add(teammate.getUserProfile().getProfileImage());
-        });
+        List<String> teammatesImages = teammates.stream()
+                .map(teammate -> teammate.getUserProfile().getProfileImage())
+                .collect(toList());
 
         return GetTeamDetailDto.builder()
                 .name(team.getName())
@@ -72,28 +66,26 @@ public class TeamsService{
     }
 
     @Transactional
-    public PostTeamResDto createTeam(String authUser, PostTeamDto postTeamDto) {
-        // 1. 팀 생성
-        Team team = Team.builder()
-                .name(postTeamDto.getName())
-                .goal(postTeamDto.getGoal())
-                .startDate(postTeamDto.getStartDate())
-                .dueDate(postTeamDto.getDueDate())
-                .build();
+    public PostTeamResDto createTeam(User authUser, PostTeamDto postTeamDto) {
+        // 1. 단계 request
+        List<StageDto> stages = postTeamDto.getStages();
+        if (stages == null) {
+            throw new BadRequestException(ErrorCode.NEED_STAGE.getMessage());
+        }
+
+        // 2. 팀 생성
+        Team team = new Team(postTeamDto);
         teamsRepository.save(team);
 
-        // 2. 팀 생성한 사람 팀원으로 추가
-        User user = userRepository.findByKakaoIdWithUserProfile(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+        // 3. 팀 생성한 사람 팀원으로 추가
         Teammate teammate = Teammate.builder()
                 .team(team)
-                .user(user)
-                .userProfile(user.getUserProfile())
+                .user(authUser)
+                .userProfile(authUser.getUserProfile())
                 .build();
         teammateRepository.save(teammate);
 
-        // 3. 단계 생성 및 저장
-        List<StageDto> stages = postTeamDto.getStages();
+        // 4. 단계 생성 및 저장
         stages.forEach(StageDto ->
                 {
                     Stage stage = Stage.builder()
@@ -130,14 +122,9 @@ public class TeamsService{
         List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
 
         // 3. 스케줄 dto 생성
-        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
-        schedules.forEach(schedule -> {
-            ScheduleDto converted = ScheduleDto.builder()
-                    .name(schedule.getName())
-                    .dueDate(schedule.getDueDate())
-                    .build();
-            scheduleDtoList.add(converted);
-        });
+        List<ScheduleDto> scheduleDtoList = schedules.stream()
+                .map(ScheduleDto::new)
+                .collect(toList());
 
         return GetScheduleDto.builder()
                 .name(team.getName())
@@ -157,8 +144,6 @@ public class TeamsService{
                 .dueDate(scheduleDto.getDueDate())
                 .team(team)
                 .build();
-
-        // 3. 일정 저장
         scheduleRepository.save(schedule);
     }
 
@@ -185,24 +170,16 @@ public class TeamsService{
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. 팀메이트 dto 생성
-        List<TeammateDto> teammateDtoList = new ArrayList<>();
-        teammates.stream()
+        List<TeammateDto> teammateDtoList = teammates.stream()
                 .filter(teammate -> !teammate.getUser().equals(authUser))
-                .forEach(teammate -> {
-                    if (!Objects.equals(teammate.getId(), authUser.getId())) {
-                        TeammateDto converted = TeammateDto.builder()
+                .map(teammate ->
+                         TeammateDto.builder()
                                 .teammateId(teammate.getId())
                                 .name(teammate.getUserProfile().getName())
                                 .schoolName(teammate.getUserProfile().getSchoolName())
                                 .major(teammate.getUserProfile().getMajor())
-                                .build();
-                        teammateDtoList.add(converted);
-                    }
-        });
-        Teammate userTeammate = teammates.stream()
-                .filter(teammate -> teammate.getUser().equals(authUser))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(ErrorCode.INVALID_TEAMMATE.getMessage()));
+                                .build())
+                .collect(toList());
 
         return GetTeammateDto.builder()
                 .name(authUser.getUserProfile().getName())

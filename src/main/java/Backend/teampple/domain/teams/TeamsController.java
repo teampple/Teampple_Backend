@@ -25,11 +25,11 @@ public class TeamsController {
     private final TeamsService teamsService;
 
     @GetMapping(value = "")
-    @Operation(summary = "팀플 상세 정보 조회", description = "팀플 상세 정보 조회 API 입니다.\n"
-            + "팀플 화면 헤더에 쓰일 정보를 조회합니다.")
+    @Operation(summary = "팀플 상세 정보 조회", description = "팀플 상세 정보 조회 API 입니다.")
     public CommonResponse<GetTeamDetailDto> getTeamDetail(@AuthenticationPrincipal User authUser,
                                                           @Valid @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀 상세 정보 가져오기");
+        log.info("{}", authUser);
 
         GetTeamDetailDto teamDetail = teamsService.getTeamDetail(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), teamDetail);
@@ -37,10 +37,11 @@ public class TeamsController {
 
     @PostMapping(value = "")
     @Operation(summary = "팀플 생성", description = "팀플 생성 API 입니다.\n"
-            + "팀과 팀의 단계를 생성합니다. stage가 없어도 []를 보내줘야 합니다.")
-    public CommonResponse<PostTeamResDto> postTeam(@AuthenticationPrincipal String authUser,
+            + "stage가 없어도 []를 보내줘야 합니다.")
+    public CommonResponse<PostTeamResDto> postTeam(@AuthenticationPrincipal User authUser,
                                                    @Valid @RequestBody PostTeamDto postTeamDto) {
         log.info("[api-post] 팀 생성");
+        log.info("{}", authUser);
 
         PostTeamResDto postTeamResDto = teamsService.createTeam(authUser, postTeamDto);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value(), postTeamResDto);
@@ -52,6 +53,7 @@ public class TeamsController {
                                           @Valid @RequestBody PutTeamDto putTeamDto,
                                           @RequestParam("teamId") Long teamId) {
         log.info("[api-put] 팀 정보 수정");
+        log.info("{}", authUser);
 
         teamsService.putTeam(authUser, putTeamDto, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
@@ -63,6 +65,7 @@ public class TeamsController {
                                                @Valid @RequestBody ScheduleDto scheduleDto,
                                                @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
+        log.info("{}", authUser);
 
         teamsService.postSchedule(authUser, scheduleDto, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
@@ -74,6 +77,7 @@ public class TeamsController {
     public CommonResponse<GetScheduleDto> getSchedule(@AuthenticationPrincipal User authUser,
                                                       @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
+        log.info("{}", authUser);
 
         GetScheduleDto schedules = teamsService.getSchedule(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
@@ -84,6 +88,7 @@ public class TeamsController {
     public CommonResponse<List<GetTeamTasksDto>> getTeamTasks(@AuthenticationPrincipal User authUser,
                                                               @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀 할 일 정보 조회");
+        log.info("{}", authUser);
 
         List<GetTeamTasksDto> teamTasks = teamsService.getTeamTasks(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), teamTasks);
@@ -95,6 +100,7 @@ public class TeamsController {
     public CommonResponse<GetTeammateDto> getTeammate(@AuthenticationPrincipal User authUser,
                                                       @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 팀원 정보 조회");
+        log.info("{}", authUser);
 
         GetTeammateDto schedules = teamsService.getTeammate(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), schedules);
@@ -106,6 +112,7 @@ public class TeamsController {
                                                  @Valid @RequestBody DeleteTeammateDto deleteTeammateDto,
                                                  @RequestParam("teamId") Long teamId) {
         log.info("[api-delete] 팀원 삭제");
+        log.info("{}", authUser);
 
         teamsService.deleteTeammate(authUser, deleteTeammateDto, teamId);
         return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
