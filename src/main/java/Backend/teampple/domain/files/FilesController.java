@@ -4,13 +4,13 @@ import Backend.teampple.domain.files.dto.request.PostFileDto;
 import Backend.teampple.domain.files.dto.response.GetFileBriefDto;
 import Backend.teampple.domain.files.dto.response.GetFileDto;
 import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.global.common.auth.AuthUser;
 import Backend.teampple.global.common.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class FilesController {
 
     @GetMapping(value = "")
     @Operation(summary = "파일 목록 조회", description = "파일 목록 조회 API 입니다.")
-    public CommonResponse<List<GetFileDto>> getFile(@AuthenticationPrincipal User authUser,
+    public CommonResponse<List<GetFileDto>> getFile(@AuthUser User authUser,
                                                     @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 목록 조회");
         log.info("{}", authUser);
@@ -38,7 +38,7 @@ public class FilesController {
 
     @PostMapping(value = "")
     @Operation(summary = "파일 등록", description = "파일 등록 API 입니다.")
-    public CommonResponse<String> postFile(@AuthenticationPrincipal User authUser,
+    public CommonResponse<String> postFile(@AuthUser User authUser,
                                            @Valid @RequestBody PostFileDto postFileDto,
                                            @RequestParam("taskId") Long taskId,
                                            @RequestParam("teamId") Long teamId) {
@@ -51,7 +51,7 @@ public class FilesController {
 
     @DeleteMapping(value = "")
     @Operation(summary = "파일 삭제", description = "파일 삭제 API 입니다.")
-    public CommonResponse<String> deleteFile(@AuthenticationPrincipal User authUser,
+    public CommonResponse<String> deleteFile(@AuthUser User authUser,
                                              @RequestParam("fileId") Long fileId) {
         log.info("[api-delete] 파일 삭제");
         log.info("{}", authUser);
@@ -62,7 +62,7 @@ public class FilesController {
 
     @GetMapping(value = "info")
     @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.")
-    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthenticationPrincipal User authUser,
+    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthUser User authUser,
                                                         @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 갯수 조회");
         log.info("{}", authUser);

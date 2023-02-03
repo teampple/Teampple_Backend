@@ -3,8 +3,8 @@ package Backend.teampple.domain.templates;
 import Backend.teampple.domain.templates.dto.request.PostBookmarkDto;
 import Backend.teampple.domain.templates.dto.response.GetTemplateDto;
 import Backend.teampple.domain.users.entity.User;
+import Backend.teampple.global.common.auth.AuthUser;
 import Backend.teampple.global.common.response.CommonResponse;
-import Backend.teampple.infra.auth.resolver.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,7 @@ public class TemplatesController {
     @Operation(summary = "탬플릿 조회", description = "탬플릿 조회 API 입니다.")
     public CommonResponse<List<GetTemplateDto>> getTemplate(@AuthUser User authUser) {
         log.info("[api-get] 탬플릿 조회");
+        log.info("{}", authUser);
 
         List<GetTemplateDto> getTemplateDtos = templatesService.getTemplate(authUser);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getTemplateDtos);
@@ -39,6 +40,7 @@ public class TemplatesController {
     public CommonResponse<String> postBookmark(@AuthUser User authUser,
                                                @Valid @RequestBody PostBookmarkDto postBookmarkDto) {
         log.info("[api-post] 탬플릿 즐겨찾기");
+        log.info("{}", authUser);
 
         bookmarkService.postBookmark(authUser, postBookmarkDto);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
