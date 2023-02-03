@@ -1,13 +1,11 @@
 package Backend.teampple.domain.users;
 
-import Backend.teampple.domain.users.dto.request.PostUserProfileDto;
 import Backend.teampple.domain.users.dto.request.PutUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserProfileDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
@@ -29,16 +27,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserProfileService userProfileService;
     private final UserService userService;
-
-    private final GetUserProfileMapper getUserProfileMapper;
-
-    @PostMapping("/userprofiles")
-    @Operation(summary = "프로필 생성 요청", description = "프로필 생성 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> postProfile(@AuthUser User user, @RequestBody PostUserProfileDto postUserProfileDto) {
-        UserProfile userProfile = userProfileService.createProfile(postUserProfileDto);
-        userService.saveUserProfile(userProfile, user);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserProfileMapper.toDto(userProfile));
-    }
 
     @GetMapping("/userprofiles")
     @Operation(summary = "프로필 요청", description = "프로필 요청 API 입니다.")

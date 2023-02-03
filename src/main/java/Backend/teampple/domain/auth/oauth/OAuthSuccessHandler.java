@@ -45,14 +45,9 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             userService.updateUserRefreshToken(oAuth2User.getUser(), jwtTokenDto.getJwtRefreshToken(), jwtTokenDto.getExpRT());
         }
 
-        /**최초 가입자 확인*/
-        final boolean isNewUser = oAuth2User.getUser().getUserProfile() == null;
-
         /**JwtToken 과 함께 리다이렉트*/
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/api/oauth/kakao/success")
                 .queryParam("jwtAccessToken", jwtTokenDto.getJwtAccessToken())
-                .queryParam("jwtRefreshToken", jwtTokenDto.getJwtRefreshToken())
-                .queryParam("isNewUser", isNewUser)
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }

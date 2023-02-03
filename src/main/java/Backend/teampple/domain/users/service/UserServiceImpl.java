@@ -50,10 +50,12 @@ public class UserServiceImpl implements UserService {
     private final TasksRepository tasksRepository;
 
     @Override
-    @Transactional
-    public void saveUserProfile(UserProfile userProfile, User user) {
-        user.saveUserProfile(userProfile);
-        userRepository.save(user);
+    public User createUser(UserProfile userProfile, String kakaoId) {
+        User user = User.builder()
+                .kakaoId(kakaoId)
+                .userProfile(userProfile)
+                .build();
+        return userRepository.save(user);
     }
 
     @Override
