@@ -55,8 +55,8 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     private String setRedirectUrl(String url){
         String redirect_url = null;
         if(url.startsWith("http://localhost:8080/")) redirect_url="http://localhost:8080/api/oauth/kakao/success";
-        if(url.startsWith("https://www.teampple.site/")) redirect_url="http://localhost:3000/api/oauth/kakao/success/ing";
-        if(url.startsWith("https://www.teampple.com/")) redirect_url="https://www.teampple.com/oauth/kakao/success/ing";
+        if(url.startsWith("https://teampple.site/")) redirect_url="http://localhost:3000/api/oauth/kakao/success/ing";
+        if(url.startsWith("https://teampple.com/")) redirect_url="https://www.teampple.com/oauth/kakao/success/ing";
 
         return redirect_url;
     }
