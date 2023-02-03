@@ -46,13 +46,13 @@ spring:
         default_batch_fetch_size: 1000
   sql:
     init:
-      mode: always
+#      mode: always
   security:
     oauth2:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_REST_API_KEY}
+            client-id: e9f9ce49598e79b7a92e4138653e34c8
             redirect-uri: ${KAKAO_REDIRECT_URL}
             authorization-grant-type: authorization_code
             client-authentication-method: POST

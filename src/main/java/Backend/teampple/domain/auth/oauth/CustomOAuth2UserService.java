@@ -46,14 +46,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         /**oauth 속 개인정보
          * 추후 변경 예정 -> attribute
          * */
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-
-        log.info((String) kakaoAccount.get("nickname"));
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        log.info((String) properties.get("nickname"));
 
         User user = null;
         /**회원 가입 여부 확인 및 RefreshToken update*/
         if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
-            UserProfile profile = userProfileService.createProfile((String) kakaoAccount.get("nickname"));
+            UserProfile profile = userProfileService.createProfile((String)  properties.get("nickname"));
             user = userService.createUser(profile, oAuth2User.getName());
         } else {
             user = userRepository.findByKakaoId(oAuth2User.getName()).orElseThrow();
