@@ -56,8 +56,9 @@ public class UserController {
 
     @GetMapping(value = "tasks")
     @Operation(summary = "유저 할 일 정보 조회", description = "유저 할 일 정보 조회 API 입니다.")
-    public CommonResponse<GetUserTasksDto> getUserTasks(@AuthenticationPrincipal String authUser) {
+    public CommonResponse<GetUserTasksDto> getUserTasks(@AuthUser User authUser) {
         log.info("[api-get] 유저 할 일 정보 조회");
+        log.info("{}", authUser);
 
         GetUserTasksDto getUserTasksDto = userService.getUserTasks(authUser);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserTasksDto);
@@ -65,9 +66,10 @@ public class UserController {
 
     @GetMapping(value = "teams")
     @Operation(summary = "유저 팀플 정보 조회", description = "유저 팀플 정보 조회 API 입니다.")
-    public CommonResponse<GetUserTeamsDto> getUserTeams(@AuthenticationPrincipal String authUser,
+    public CommonResponse<GetUserTeamsDto> getUserTeams(@AuthUser User authUser,
                                                         @RequestParam("active") boolean isActive ) {
         log.info("[api-get] 유저 팀플 정보 조회");
+        log.info("{}", authUser);
 
         GetUserTeamsDto getUserTeamsDto = userService.getUserTeams(authUser, isActive);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserTeamsDto);
@@ -75,8 +77,9 @@ public class UserController {
 
     @GetMapping(value = "feedbacks")
     @Operation(summary = "유저 피드백 정보 조회", description = "팀플 피드백 정보 조회 API 입니다.")
-    public CommonResponse<GetUserFeedbacksDto> getUserFeedbacks(@AuthenticationPrincipal String authUser) {
+    public CommonResponse<GetUserFeedbacksDto> getUserFeedbacks(@AuthUser User authUser) {
         log.info("[api-get] 유저 피드백 정보 조회");
+        log.info("{}", authUser);
 
         GetUserFeedbacksDto getUserFeedbacksDto = userService.getUserFeedbacks(authUser);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getUserFeedbacksDto);

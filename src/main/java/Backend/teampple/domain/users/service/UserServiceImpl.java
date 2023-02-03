@@ -81,9 +81,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserTasksDto getUserTasks(String authUser) {
-        // 1. 팀원 조회 + 유저 + 팀
-        List<Teammate> teammates = teammateRepository.findAllByUserWithUserAndTeam(authUser);
+    public GetUserTasksDto getUserTasks(User authUser) {
+        // 1. 팀원 + 팀
+        List<Teammate> teammates = teammateRepository.findAllByUserWithTeam(authUser);
 
         // 2. team 리스트로
         List<Team> teams = teammates.stream()
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         // 3. task 조회
         List<Stage> stages = stagesRepository.findAllByTeamsOrderByTeamId(teams);
         List<Task> tasks = tasksRepository.findAllByStagesOrderByStageId(stages);
-//
+
         List<GetTeamStageDto> getTeamStageDtos = teams.stream()
                 .map(team -> {
                     List<GetTaskBriefDto> getTaskBriefDtos = new ArrayList<>();
@@ -123,20 +123,16 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public GetUserTeamsDto getUserTeams(String authUser, boolean isActive) {
-        // 1. user 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
-
-        // 2. teammate 조회하면서 team까지
+    public GetUserTeamsDto getUserTeams(User authUser, boolean isActive) {
+        // 1. teammate 조회하면서 team까지
         List<Teammate> teammates;
         if (isActive) {
-            teammates = teammateRepository.findAllByUserWithTeamAfterNow(user);
+            teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser);
         } else {
-            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(user);
+            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(authUser);
         }
 
-        // 3. dto 생성
+        // 2. dto 생성
         List<GetTeamDto> getTeamDtos = teammates.stream()
                 .map(teammate -> GetTeamDto.builder()
                         .name(teammate.getTeam().getName())
@@ -149,15 +145,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public GetUserFeedbacksDto getUserFeedbacks(String authUser) {
-        // 1. user 조회
-        User user = userRepository.findByKakaoId(authUser)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+    public GetUserFeedbacksDto getUserFeedbacks(User authUser) {
+        // 1. feedback owner 조회
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackOrderByUpdatedAt(authUser);
 
-        // 2. feedback owner 조회
-        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserWithFeedbackOrderByUpdatedAt(user);
-
-        // 3. task + stage + team
+        // 2. task + stage + team
         List<Long> tasksId = feedbackOwners.stream()
                 .map(feedbackOwner -> feedbackOwner.getFeedback().getTask().getId())
                 .collect(Collectors.toList());

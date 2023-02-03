@@ -18,9 +18,9 @@ public interface UserService {
 
     void deleteUser(User user);
 
-    GetUserTasksDto getUserTasks(String authUser);
+    GetUserTasksDto getUserTasks(User authUser);
 
-    GetUserTeamsDto getUserTeams(String authUser, boolean isActive);
+    GetUserTeamsDto getUserTeams(User authUser, boolean isActive);
 
-    GetUserFeedbacksDto getUserFeedbacks(String authUser);
+    GetUserFeedbacksDto getUserFeedbacks(User authUser);
 }
