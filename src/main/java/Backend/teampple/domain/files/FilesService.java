@@ -8,12 +8,9 @@ import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.global.common.validation.dto.UserTeamDto;
 import Backend.teampple.domain.teams.entity.Team;
-import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
-import Backend.teampple.global.error.exception.ForbiddenException;
 import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +27,6 @@ public class FilesService {
     private final FilesRepository filesRepository;
 
     private final TasksRepository tasksRepository;
-
-    private final TeammateRepository teammateRepository;
 
     private final CheckUser checkUser;
 
