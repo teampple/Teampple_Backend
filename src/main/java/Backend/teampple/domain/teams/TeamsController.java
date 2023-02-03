@@ -59,6 +59,17 @@ public class TeamsController {
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
+    @DeleteMapping(value = "")
+    @Operation(summary = "팀플 삭제", description = "팀플 삭제 API 입니다.")
+    public CommonResponse<String> putTeam(@AuthUser User authUser,
+                                          @RequestParam("teamId") Long teamId) {
+        log.info("[api-delete] 팀 삭제");
+        log.info("{}", authUser);
+
+        teamsService.deleteTeam(authUser, teamId);
+        return CommonResponse.onSuccess(HttpStatus.OK.value());
+    }
+
     @PostMapping(value = "schedules")
     @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.")
     public CommonResponse<String> postSchedule(@AuthUser User authUser,

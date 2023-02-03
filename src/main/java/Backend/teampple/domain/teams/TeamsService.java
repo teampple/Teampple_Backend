@@ -114,6 +114,19 @@ public class TeamsService{
     }
 
     @Transactional
+    public void deleteTeam(User authUser, Long teamId) {
+        // 1. 유저 체크 및 team 정보 불러오기
+        Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
+
+        // 2. 팀원 삭제
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
+        teammateRepository.deleteAll(teammates);
+
+        // 3. 삭제
+        teamsRepository.delete(team);
+    }
+
+    @Transactional
     public GetScheduleDto getSchedule(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
         Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
@@ -208,4 +221,5 @@ public class TeamsService{
         if(!isConducted)
             throw new BadRequestException(ErrorCode.INVALID_TEAMMATE.getMessage());
     }
+
 }
