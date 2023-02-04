@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
                 }).collect(Collectors.toList());
 
         return GetUserTasksDto.builder()
-                .username(teammates.get(0).getUser().getUserProfile().getName())
+                .username(authUser.getUserProfile().getName())
                 .teams(getTeamStageDtos)
                 .build();
     }
