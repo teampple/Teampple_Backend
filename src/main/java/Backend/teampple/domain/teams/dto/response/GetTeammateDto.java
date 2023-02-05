@@ -22,15 +22,19 @@ public class GetTeammateDto {
     @ApiModelProperty(value = "본인 전공", example = "찌리리공", required = true)
     private String major;
 
+    @ApiModelProperty(value = "본인 이미지", example = "1", required = true)
+    private String image;
+
     @ApiModelProperty(value = "나머지 팀원", required = true)
     private List<TeammateDto> teammates;
 
     @Builder
-    public GetTeammateDto(Long teammateId, String name, String schoolName, String major, List<TeammateDto> teammates) {
+    public GetTeammateDto(Long teammateId, String name, String schoolName, String major, String image, List<TeammateDto> teammates) {
         this.teammateId = teammateId;
         this.name = name;
         this.schoolName = schoolName;
         this.major = major;
+        this.image = image;
         this.teammates = teammates;
     }
 }

@@ -40,6 +40,7 @@ public enum ErrorCode {
     /* Team */
     TEAM_NOT_FOUND(BAD_REQUEST, "TEAM400-1", "해당 팀플이 존재하지 않습니다."),
     TEAM_NOT_VALID(BAD_REQUEST, "TEAM400-2", "유효하지 않은 팀플입니다."),
+    TEAM_INVALID_DURATION(BAD_REQUEST, "TEAM400-3", "팀플 시작일이 마감일보다 앞서야 합니다."),
 
     /* Teammate */
     TEAMMATE_NOT_FOUND(BAD_REQUEST, "TEAMMATE400-1", "해당 팀원이 존재하지 않습니다."),
