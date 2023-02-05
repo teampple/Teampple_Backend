@@ -68,6 +68,10 @@ public class TeamsService{
 
     @Transactional
     public PostTeamResDto createTeam(User authUser, PostTeamDto postTeamDto) {
+        if (!postTeamDto.getStartDate().isAfter(postTeamDto.getDueDate())) {
+            throw new BadRequestException(ErrorCode.TEAM_INVALID_DURATION.getMessage());
+        }
+
         // 1. 단계 request
         List<StageDto> stages = postTeamDto.getStages();
         if (stages == null) {
