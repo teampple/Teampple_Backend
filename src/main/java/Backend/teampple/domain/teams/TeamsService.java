@@ -191,11 +191,12 @@ public class TeamsService{
         List<TeammateDto> teammateDtoList = teammates.stream()
                 .filter(teammate -> !teammate.getUser().equals(authUser))
                 .map(teammate ->
-                         TeammateDto.builder()
+                        TeammateDto.builder()
                                 .teammateId(teammate.getId())
                                 .name(teammate.getUserProfile().getName())
                                 .schoolName(teammate.getUserProfile().getSchoolName())
                                 .major(teammate.getUserProfile().getMajor())
+                                .image(teammate.getUserProfile().getProfileImage())
                                 .build())
                 .collect(toList());
 
@@ -209,6 +210,7 @@ public class TeamsService{
                 .name(authUser.getUserProfile().getName())
                 .schoolName(authUser.getUserProfile().getSchoolName())
                 .major(authUser.getUserProfile().getMajor())
+                .image(authUser.getUserProfile().getProfileImage())
                 .teammates(teammateDtoList)
                 .build();
     }
