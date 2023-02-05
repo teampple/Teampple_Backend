@@ -61,11 +61,10 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         if (url.equals("localhost")) {
             redirect_url = "http://localhost:8080/api/oauth/kakao/success";
         }
-        if (url.equals("backend-dev") ||url.equals("teampple.site")) {
+        if (url.equals("teampple.site")) {
             redirect_url = "http://localhost:3000/oauth/kakao/success/ing";
         }
-//      teampple.com
-        if (url.equals("backend-prod") || url.equals("teampple.com")) {
+        if (url.equals("teampple.com")) {
             redirect_url = "https://www.teampple.com/oauth/kakao/success/ing";
         }
 
