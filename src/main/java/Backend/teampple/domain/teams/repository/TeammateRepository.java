@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,13 +17,13 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
 
     @Query("select tm from Teammate tm " +
             "join fetch tm.team t " +
-            "where tm.user = :user and t.dueDate >= current_time")
-    List<Teammate> findAllByUserWithTeamAfterNow(@Param("user") User user);
+            "where tm.user = :user and t.dueDate >= :now")
+    List<Teammate> findAllByUserWithTeamAfterNow(@Param("user") User user, @Param("now") LocalDateTime now);
 
     @Query("select tm from Teammate tm " +
             "join fetch tm.team t " +
-            "where tm.user = :user and t.dueDate < current_time")
-    List<Teammate> findAllByUserWithTeamBeforeNow(@Param("user") User user);
+            "where tm.user = :user and t.dueDate < :now")
+    List<Teammate> findAllByUserWithTeamBeforeNow(@Param("user") User user, @Param("now") LocalDateTime now);
 
     @Query("select tm from Teammate tm " +
             "where tm.user.kakaoId = :user and tm.team = :team")

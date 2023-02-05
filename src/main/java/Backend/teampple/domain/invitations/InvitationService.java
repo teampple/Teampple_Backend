@@ -64,7 +64,7 @@ public class InvitationService {
             link = String.format("https://%s/login/", host) + code;
         } else {
             // localhost:3000
-            link = referer + code;
+            link = referer + "login/" + code;
         }
 
         // 6. return

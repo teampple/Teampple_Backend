@@ -17,6 +17,7 @@ import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
+import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,10 @@ public class TeamsService{
 
     @Transactional
     public PostTeamResDto createTeam(User authUser, PostTeamDto postTeamDto) {
+        if (!postTeamDto.getStartDate().isAfter(postTeamDto.getDueDate())) {
+            throw new BadRequestException(ErrorCode.TEAM_INVALID_DURATION.getMessage());
+        }
+
         // 1. 단계 request
         List<StageDto> stages = postTeamDto.getStages();
         if (stages == null) {
@@ -186,18 +191,26 @@ public class TeamsService{
         List<TeammateDto> teammateDtoList = teammates.stream()
                 .filter(teammate -> !teammate.getUser().equals(authUser))
                 .map(teammate ->
-                         TeammateDto.builder()
+                        TeammateDto.builder()
                                 .teammateId(teammate.getId())
                                 .name(teammate.getUserProfile().getName())
                                 .schoolName(teammate.getUserProfile().getSchoolName())
                                 .major(teammate.getUserProfile().getMajor())
+                                .image(teammate.getUserProfile().getProfileImage())
                                 .build())
                 .collect(toList());
 
+        Teammate me = teammates.stream()
+                .filter(teammate -> teammate.getUser().equals(authUser))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
+
         return GetTeammateDto.builder()
+                .teammateId(me.getId())
                 .name(authUser.getUserProfile().getName())
                 .schoolName(authUser.getUserProfile().getSchoolName())
                 .major(authUser.getUserProfile().getMajor())
+                .image(authUser.getUserProfile().getProfileImage())
                 .teammates(teammateDtoList)
                 .build();
     }

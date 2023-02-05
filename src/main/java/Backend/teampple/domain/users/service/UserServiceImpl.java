@@ -29,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 }).collect(Collectors.toList());
 
         return GetUserTasksDto.builder()
-                .username(teammates.get(0).getUser().getUserProfile().getName())
+                .username(authUser.getUserProfile().getName())
                 .teams(getTeamStageDtos)
                 .build();
     }
@@ -129,10 +132,11 @@ public class UserServiceImpl implements UserService {
     public GetUserTeamsDto getUserTeams(User authUser, boolean isActive) {
         // 1. teammate 조회하면서 team까지
         List<Teammate> teammates;
+        LocalDateTime curTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0));
         if (isActive) {
-            teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser);
+            teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser, curTime);
         } else {
-            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(authUser);
+            teammates = teammateRepository.findAllByUserWithTeamBeforeNow(authUser, curTime);
         }
 
         // 2. dto 생성
