@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/reIssuance")
     @Operation(summary = "JWT access 토큰 재발급 요청", description = "JWT access 토큰 재발급 요청 API 입니다.")
     public CommonResponse<ResponseJwtTokenDto> reIssuance(@AuthUser User user, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
-        ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(requestJwtTokenDto);
+        ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(user, requestJwtTokenDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), responseJwtTokenDto);
     }
 }

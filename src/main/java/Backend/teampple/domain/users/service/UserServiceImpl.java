@@ -54,9 +54,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserProfile userProfile, String kakaoId) {
+    public User createUser(UserProfile userProfile, String authKey) {
         User user = User.builder()
-                .kakaoId(kakaoId)
+                .authKey(authKey)
                 .userProfile(userProfile)
                 .build();
         return userRepository.save(user);

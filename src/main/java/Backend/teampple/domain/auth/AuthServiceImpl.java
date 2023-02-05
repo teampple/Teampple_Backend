@@ -62,17 +62,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseJwtTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto) {
+    public ResponseJwtTokenDto reIssuance(User user, RequestJwtTokenDto requestJwtTokenDto) {
         /**refreshToken 유효성 확인*/
         if (!jwtTokenProvider.validateToken(requestJwtTokenDto.getJwtRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_TOKEN.getMessage());
         }
         /** userDetails 조회*/
         Authentication authentication = jwtTokenProvider.getAuthentication(requestJwtTokenDto.getJwtAccessToken());
-
-        /**해당 유저 조회*/
-        Backend.teampple.domain.users.entity.User user = userRepository.findByKakaoId(authentication.getName())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         /** 로그아웃 확인 */
         if (user.getRefreshToken() == null) {

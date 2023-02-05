@@ -32,7 +32,7 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             throws IOException {
         /**인증에 성공한 사용자*/
         CustomUserDetails oAuth2User = (CustomUserDetails) authentication.getPrincipal();
-        log.info("Principal 에서 꺼낸 OAuth2User = {}", oAuth2User.getUser().getKakaoId());
+        log.info("Principal 에서 꺼낸 OAuth2User = {}", oAuth2User.getUser().getAuthKey());
 
         /**JwtToken 생성*/
         JwtTokenDto jwtTokenDto = jwtTokenProvider.generateToken(authentication);

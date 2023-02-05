@@ -16,5 +16,5 @@ public interface AuthService {
 
     void withdrawal(User user);
 
-    ResponseJwtTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto);
+    ResponseJwtTokenDto reIssuance(User user, RequestJwtTokenDto requestJwtTokenDto);
 }

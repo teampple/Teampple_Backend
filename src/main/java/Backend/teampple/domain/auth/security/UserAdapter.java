@@ -12,7 +12,7 @@ public class UserAdapter extends CustomUserDetails {
     private final UserProfile userProfile;
 
     public UserAdapter(User user) {
-        super(user, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        super(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getRole())));
         this.userProfile = user.getUserProfile();
     }
 }
