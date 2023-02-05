@@ -43,6 +43,7 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         }
 
         log.info(request.getServerName());
+        log.info(setRedirectUrl(request.getServerName()));
 
         /**JwtToken 과 함께 리다이렉트*/
         String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrl(request.getServerName()))
