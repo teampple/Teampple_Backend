@@ -68,7 +68,8 @@ public class TeamsService{
 
     @Transactional
     public PostTeamResDto createTeam(User authUser, PostTeamDto postTeamDto) {
-        if (!postTeamDto.getStartDate().isAfter(postTeamDto.getDueDate())) {
+        log.info("{} {}",postTeamDto.getDueDate(),postTeamDto.getStartDate());
+        if (postTeamDto.getStartDate().isAfter(postTeamDto.getDueDate())) {
             throw new BadRequestException(ErrorCode.TEAM_INVALID_DURATION.getMessage());
         }
 
