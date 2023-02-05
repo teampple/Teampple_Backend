@@ -1,7 +1,7 @@
 server:
   port: ${PORT:8080}
   servlet:
-    context-path: ${BASE_URL}
+    context-path: /api
 
 cloud:
   aws:
@@ -46,7 +46,7 @@ spring:
         default_batch_fetch_size: 1000
   sql:
     init:
-#      mode: always
+  #      mode: always
   security:
     oauth2:
       client:
@@ -72,7 +72,7 @@ spring:
       location: classpath:teampple.png
       width: 125
       height: 10
-      
+
 token:
   secret: ${JWT_SECRET}
 
