@@ -1,5 +1,6 @@
 package Backend.teampple.domain.auth.oauth;
 
+import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.auth.AuthUser;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -25,8 +26,12 @@ public class Oauth2Controller {
     }
     @GetMapping("/oauth/kakao/success")
     @Operation(summary = "개발용 회원가입입니다 클라이언트가 몰라도 됩니다.")
-    public CommonResponse<String> developUserSign(@RequestParam(value = "jwtAccessToken") String jwtAccessToken) {
-        return CommonResponse.onSuccess(HttpStatus.OK.value(),jwtAccessToken);
+    public CommonResponse<JwtTokenDto> developUserSign(@RequestParam(value = "jwtAccessToken") String jwtAccessToken, @RequestParam(value = "jwtRefreshToken") String jwtRefreshToken) {
+        JwtTokenDto jwtTokenDto = JwtTokenDto.builder()
+                .jwtAccessToken(jwtAccessToken)
+                .jwtRefreshToken(jwtRefreshToken)
+                .build();
+        return CommonResponse.onSuccess(HttpStatus.OK.value(),jwtTokenDto);
     }
 
     @GetMapping("/login/oauth2/test")

@@ -38,9 +38,7 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         JwtTokenDto jwtTokenDto = jwtTokenProvider.generateToken(authentication);
 
         /**RefreshToken update*/
-        if (oAuth2User.getUser().getRefreshToken() == null) {
-            userService.updateUserRefreshToken(oAuth2User.getUser(), jwtTokenDto.getJwtRefreshToken(), jwtTokenDto.getExpRT());
-        }
+        userService.updateUserRefreshToken(oAuth2User.getUser(), jwtTokenDto.getJwtRefreshToken(), jwtTokenDto.getExpRT());
 
         log.info(request.getServerName());
         log.info(setRedirectUrl(request.getServerName()));
