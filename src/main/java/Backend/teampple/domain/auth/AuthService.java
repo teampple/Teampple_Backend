@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
     ResponseJwtTokenDto login();
 
-    void logout(User user);
+    void logout(User user, RequestJwtTokenDto requestJwtTokenDto);
 
     ResponseJwtTokenDto join();
 
     void withdrawal(User user);
 
-    ResponseJwtTokenDto reIssuance(RequestJwtTokenDto requestJwtTokenDto);
+    ResponseJwtTokenDto reIssuance(User user, RequestJwtTokenDto requestJwtTokenDto);
 }

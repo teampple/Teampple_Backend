@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findById(Long id);
 
-    Optional<User> findByKakaoId(String kakaoId);
+    Optional<User> findByAuthKey(String authKey);
 
-    boolean existsByKakaoId(String kakaoId);
+    boolean existsByAuthKey(String authKey);
 
     @Query("select u from User u where u = :user")
     Optional<User> findByUserWithUserProfile(@Param("user") User user);
@@ -22,6 +22,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select u from User u join fetch u.userProfile where u.id = :id")
     Optional<User> findByIdWithUserProfile(@Param("id") Long id);
 
-    @Query("select u from User u join fetch u.userProfile where u.kakaoId = :id")
+    @Query("select u from User u join fetch u.userProfile where u.authKey = :id")
     Optional<User> findByKakaoIdWithUserProfile(@Param("id") String id);
 }
