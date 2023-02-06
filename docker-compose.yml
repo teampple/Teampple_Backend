@@ -1,9 +1,5 @@
 version: "3"
 
-networks:
-  redis-network:
-    driver: bridge
-
 services:
   redis:
     image: 'redis:alpine'
