@@ -86,7 +86,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public GetUserTasksDto getUserTasks(User authUser) {
         // 1. 팀원 + 팀
-        List<Teammate> teammates = teammateRepository.findAllByUserWithTeam(authUser);
+        LocalDateTime curTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0));
+        List<Teammate> teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser, curTime);
 
         // 2. team 리스트로
         List<Team> teams = teammates.stream()
