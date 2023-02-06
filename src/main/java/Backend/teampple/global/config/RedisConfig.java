@@ -33,10 +33,10 @@ public class RedisConfig {
             .sentinel("127.0.0.1",26380)
             .sentinel("127.0.0.1",26381);
 
-        LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
-                .build();
+//        LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
+//                .build();
 
-        return new LettuceConnectionFactory(redisSentinelConfiguration, lettucePoolingClientConfiguration);
+        return new LettuceConnectionFactory(redisSentinelConfiguration);
     }
 
     // RedisConnection에서 넘겨준 byte 값을 객체 직렬화
