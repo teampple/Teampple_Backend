@@ -1,5 +1,6 @@
 package Backend.teampple.domain.auth.jwt;
 
+import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.global.error.ErrorCode;
 import static Backend.teampple.global.error.FilterExceptionHandler.setResponse;
 import lombok.RequiredArgsConstructor;

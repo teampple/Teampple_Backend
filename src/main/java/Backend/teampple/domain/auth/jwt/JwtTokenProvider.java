@@ -4,6 +4,7 @@ import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
 import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.auth.security.UserAdapter;
+import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -103,11 +104,12 @@ public class JwtTokenProvider {
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
         }
-
+        ;
         log.info(claims.getSubject());
         /**userDetails 반환*/
         UserAdapter userDetails = (UserAdapter) customUserDetailService
                 .loadUserByUsername(claims.getSubject());
+
         return new UsernamePasswordAuthenticationToken(userDetails.getUser(), userDetails.getPassword(),
                 userDetails.getAuthorities());
     }
