@@ -21,17 +21,15 @@ public class RedisConfig {
     @Value("${spring.redis.host}")
     private String host;
 
-    @Value("${spring.redis.port}")
-    private int port;
 
     // redis와 connection을 생성
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
             .master("redis-master")
-            .sentinel("127.0.0.1",26379)
-            .sentinel("127.0.0.1",26380)
-            .sentinel("127.0.0.1",26381);
+            .sentinel(host,26379)
+            .sentinel(host,26380)
+            .sentinel(host,26381);
 
 //        LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
 //                .build();
