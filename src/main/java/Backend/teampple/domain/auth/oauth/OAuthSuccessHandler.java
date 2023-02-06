@@ -2,9 +2,8 @@ package Backend.teampple.domain.auth.oauth;
 
 import Backend.teampple.domain.auth.dto.JwtTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
+import Backend.teampple.domain.auth.inmemory.service.RefreshTokenService;
 import Backend.teampple.domain.auth.security.CustomUserDetails;
-import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -24,8 +23,7 @@ import java.io.IOException;
 @Component
 public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
-    private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -38,7 +36,7 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         JwtTokenDto jwtTokenDto = jwtTokenProvider.generateToken(authentication);
 
         /**RefreshToken update*/
-        userService.updateUserRefreshToken(oAuth2User.getUser(), jwtTokenDto.getJwtRefreshToken(), jwtTokenDto.getExpRT());
+        refreshTokenService.saveRefreshToken(jwtTokenDto.getJwtRefreshToken(),oAuth2User.getUser().getAuthKey());
 
         log.info(request.getServerName());
         log.info(setRedirectUrl(request.getServerName()));
