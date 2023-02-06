@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -21,20 +20,21 @@ public class RedisConfig {
     @Value("${spring.redis.host}")
     private String host;
 
+    @Value("${spring.redis.port}")
+    private int port;
 
     // redis와 connection을 생성
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
-            .master("redis-master")
-            .sentinel(host,26379)
-            .sentinel(host,26380)
-            .sentinel(host,26381);
+        RedisStandaloneConfiguration redisConfig =
+                new RedisStandaloneConfiguration(host, port);
 
-//        LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
-//                .build();
-
-        return new LettuceConnectionFactory(redisSentinelConfiguration);
+        LettuceClientConfiguration clientConfig =
+                LettuceClientConfiguration.builder()
+                        .commandTimeout(Duration.ofSeconds(1))
+                        .shutdownTimeout(Duration.ZERO)
+                        .build();
+        return new LettuceConnectionFactory(redisConfig, clientConfig);
     }
 
     // RedisConnection에서 넘겨준 byte 값을 객체 직렬화
