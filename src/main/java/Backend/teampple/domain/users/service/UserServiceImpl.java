@@ -21,9 +21,7 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.repository.UserRepository;
-import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.InternalServerException;
-import Backend.teampple.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,20 +59,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    @Transactional
-    public void updateUserRefreshToken(User user, String refreshToken, Date expRT) {
-        user.updateRefreshToken(refreshToken, expRT);
-        userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUserRefreshToken(User user) {
-        user.deleteRefreshToken();
-        User save = userRepository.save(user);
-        log.info(save.getRefreshToken() + save.getExpRT());
-    }
+//    @Override
+//    @Transactional
+//    public void updateUserRefreshToken(User user, String refreshToken, Date expRT) {
+//        user.updateRefreshToken(refreshToken, expRT);
+//        userRepository.save(user);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void deleteUserRefreshToken(User user) {
+//        user.deleteRefreshToken();
+//        User save = userRepository.save(user);
+//        log.info(save.getRefreshToken() + save.getExpRT());
+//    }
 
     @Override
     @Transactional
