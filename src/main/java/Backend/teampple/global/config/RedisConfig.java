@@ -28,10 +28,10 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
-            .master("mymaster")
-            .sentinel("127.0.0.1",16379)
-            .sentinel("127.0.0.1",16380)
-            .sentinel("127.0.0.1",16381);
+            .master("redis-master")
+            .sentinel("127.0.0.1",26379)
+            .sentinel("127.0.0.1",26380)
+            .sentinel("127.0.0.1",26381);
 
         LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
                 .build();
