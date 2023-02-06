@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 @Configuration
 @EnableRedisRepositories
@@ -22,7 +27,16 @@ public class RedisConfig {
     // redis와 connection을 생성
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
+            .master("mymaster")
+            .sentinel("127.0.0.1",16379)
+            .sentinel("127.0.0.1",16380)
+            .sentinel("127.0.0.1",16381);
+
+        LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder()
+                .build();
+
+        return new LettuceConnectionFactory(redisSentinelConfiguration, lettucePoolingClientConfiguration);
     }
 
     // RedisConnection에서 넘겨준 byte 값을 객체 직렬화
