@@ -3,6 +3,8 @@ package Backend.teampple.domain.teams.entity;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public class Schedule extends PeriodBaseEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id")
     private Team team;
 

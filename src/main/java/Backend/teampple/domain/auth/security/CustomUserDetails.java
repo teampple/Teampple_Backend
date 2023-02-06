@@ -37,12 +37,12 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword() {
-        return "user.password";
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getKakaoId();
+        return user.getAuthKey();
     }
 
     @Override

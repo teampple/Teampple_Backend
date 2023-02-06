@@ -4,7 +4,7 @@ import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -23,32 +23,33 @@ public class User extends UserBaseEntity {
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
 
-    @Column
-    private String refreshToken;
-
-    @Column
-    private Date expRT;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(50) default 'ROLE_USER'")
+    private UserRole userRole;
 
     @Column(nullable = false, unique = true)
-    private String kakaoId;
+    private String authKey;
+
+    @Column
+    private String password;
 
     @Builder
-    public User(Long id, UserProfile userProfile, String refreshToken, Date expRT, String kakaoId) {
+    public User(Long id, UserProfile userProfile, UserRole userRole, String authKey, String password) {
         this.id = id;
         this.userProfile = userProfile;
-        this.refreshToken = refreshToken;
-        this.expRT = expRT;
-        this.kakaoId = kakaoId;
+        this.userRole = Objects.requireNonNullElse(userRole,UserRole.ROLE_USER);
+        this.authKey = authKey;
+        this.password = password;
     }
 
-    /**서비스 로직*/
-    public void updateRefreshToken(String refreshToken, Date expRT) {
-        this.refreshToken = refreshToken;
-        this.expRT = expRT;
-    }
-
-    public void deleteRefreshToken() {
-        this.refreshToken = null;
-        this.expRT = null;
-    }
+//    /**서비스 로직*/
+//    public void updateRefreshToken(String refreshToken, Date expRT) {
+//        this.refreshToken = refreshToken;
+//        this.expRT = expRT;
+//    }
+//
+//    public void deleteRefreshToken() {
+//        this.refreshToken = null;
+//        this.expRT = null;
+//    }
 }

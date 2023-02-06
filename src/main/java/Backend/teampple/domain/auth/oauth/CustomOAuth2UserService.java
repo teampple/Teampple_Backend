@@ -49,13 +49,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
         log.info((String) properties.get("nickname"));
 
-        User user = null;
+        User user;
         /**회원 가입 여부 확인 및 RefreshToken update*/
-        if (!userRepository.existsByKakaoId(oAuth2User.getName())) {
+        if (!userRepository.existsByAuthKey(oAuth2User.getName())) {
             UserProfile profile = userProfileService.createProfile((String)  properties.get("nickname"));
             user = userService.createUser(profile, oAuth2User.getName());
         } else {
-            user = userRepository.findByKakaoId(oAuth2User.getName()).orElseThrow();
+            user = userRepository.findByAuthKey(oAuth2User.getName()).orElseThrow();
         }
 
 //        -------------response 값------------
@@ -70,8 +70,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //                is_email_verified=true,
 //                email=wjdtkdgns329@naver.com}}]
 
+        log.info(user.getUserRole().getRole());
 
 //        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
-        return new CustomUserDetails(user, attributes, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        return new CustomUserDetails(user, attributes, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getRole())));
     }
 }

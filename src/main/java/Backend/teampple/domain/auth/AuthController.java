@@ -9,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,8 +26,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 요청", description = "로그아웃 요청 API 입니다.")
-    public CommonResponse<String> logout(@AuthUser User user) {
-        authService.logout(user);
+    public CommonResponse<String> logout(@AuthUser User user, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
+        authService.logout(user, requestJwtTokenDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
@@ -48,7 +47,7 @@ public class AuthController {
     @PostMapping("/reIssuance")
     @Operation(summary = "JWT access 토큰 재발급 요청", description = "JWT access 토큰 재발급 요청 API 입니다.")
     public CommonResponse<ResponseJwtTokenDto> reIssuance(@AuthUser User user, @RequestBody RequestJwtTokenDto requestJwtTokenDto) {
-        ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(requestJwtTokenDto);
+        ResponseJwtTokenDto responseJwtTokenDto = authService.reIssuance(user, requestJwtTokenDto);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), responseJwtTokenDto);
     }
 }
