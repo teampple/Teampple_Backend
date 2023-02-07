@@ -126,7 +126,6 @@ public class TeamsService{
 
         // 2. 팀원 삭제
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
-        teammateRepository.deleteAll(teammates);
 
         // 3. 삭제
         if (teammates.size() == 1) {
