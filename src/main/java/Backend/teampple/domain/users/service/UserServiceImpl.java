@@ -7,7 +7,9 @@ import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
+import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
+import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.dto.response.GetTeamDto;
 import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
@@ -32,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,6 +51,7 @@ public class UserServiceImpl implements UserService {
     private final TeammateRepository teammateRepository;
     private final FeedbackOwnerRespository feedbackOwnerRespository;
     private final TasksRepository tasksRepository;
+    private final OperatorRepository operatorRepository;
 
     @Override
     @Transactional
@@ -86,7 +90,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public GetUserTasksDto getUserTasks(User authUser) {
         // 1. 팀원 + 팀
-        List<Teammate> teammates = teammateRepository.findAllByUserWithTeam(authUser);
+        LocalDateTime curTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0));
+        List<Teammate> teammates = teammateRepository.findAllByUserWithTeamAfterNow(authUser, curTime);
 
         // 2. team 리스트로
         List<Team> teams = teammates.stream()
@@ -96,6 +101,10 @@ public class UserServiceImpl implements UserService {
         // 3. task 조회
         List<Stage> stages = stagesRepository.findAllByTeamsOrderByTeamId(teams);
         List<Task> tasks = tasksRepository.findAllByStagesOrderByStageId(stages);
+        List<Operator> operators = operatorRepository.findAllByUser(authUser);
+        Set<Long> taskIds = operators.stream()
+                .map(operator -> operator.getTask().getId())
+                .collect(Collectors.toSet());
 
         List<GetTeamStageDto> getTeamStageDtos = teams.stream()
                 .map(team -> {
@@ -105,6 +114,7 @@ public class UserServiceImpl implements UserService {
                             .forEach(stage -> {
                                 tasks.stream()
                                         .filter(task -> task.getStage().equals(stage))
+                                        .filter(task -> taskIds.contains(task.getId()))
                                         .forEach(task -> {
                                             getTaskBriefDtos.add(new GetTaskBriefDto(task));
                                         });

@@ -99,7 +99,7 @@ public class TeamsService{
                             .taskName(StageDto.getName())
                             .sequenceNum(StageDto.getSequenceNum())
                             .startDate(StageDto.getStartDate())
-                            .dueDate(postTeamDto.getDueDate())
+                            .dueDate(StageDto.getDueDate())
                             .isDone(false) // 이 부분 분명히 디폴트로 해놨는데 이거 없으면
                             .build();
                     stagesRepository.save(stage);
@@ -126,10 +126,18 @@ public class TeamsService{
 
         // 2. 팀원 삭제
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
-        teammateRepository.deleteAll(teammates);
 
         // 3. 삭제
-        teamsRepository.delete(team);
+        if (teammates.size() == 1) {
+            teammateRepository.deleteAll(teammates);
+            teamsRepository.delete(team);
+        } else {
+            Teammate me = teammates.stream()
+                    .filter(teammate -> teammate.getUser().equals(authUser))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
+            teammateRepository.delete(me);
+        }
     }
 
     @Transactional
