@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URL;
 import java.util.Date;
@@ -28,7 +29,11 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public GetS3UrlDto getS3Url(User authUser, Long taskId) {
+    @Value("${cloud.aws.s3.bucket}")
+    private String accessPointArn;
+
+    @Transactional(readOnly = true)
+    public GetS3UrlDto getPostS3Url(User authUser, Long taskId) {
         // 1. 유저 검증
         checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
@@ -40,13 +45,37 @@ public class S3Service {
         Date expiration = getExpiration();
 
         // url 생성
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = getPostGeneratePresignedUrlRequest(fileName, expiration);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                getPostGeneratePresignedUrlRequest(fileName, expiration);
+
         URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
         // return
         return GetS3UrlDto.builder()
                 .preSignedUrl(url.toExternalForm())
                 .key(fileName)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public GetS3UrlDto getGetS3Url(User authUser, Long taskId, String key) {
+        // 1. 유저 검증
+        checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
+
+        // 2. s3 로직
+        // url 유효기간
+        Date expiration = getExpiration();
+
+        // url 생성
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                getGetGeneratePresignedUrlRequest(key, expiration);
+
+        URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
+
+        // return
+        return GetS3UrlDto.builder()
+                .preSignedUrl(url.toExternalForm())
+                .key(key)
                 .build();
     }
 
@@ -62,6 +91,12 @@ public class S3Service {
         return generatePresignedUrlRequest;
     }
 
+    private GeneratePresignedUrlRequest getGetGeneratePresignedUrlRequest(String key, Date expiration) {
+        return new GeneratePresignedUrlRequest(bucket, key)
+        .withMethod(HttpMethod.GET)
+        .withExpiration(expiration);
+    }
+
     private static Date getExpiration() {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
@@ -69,4 +104,5 @@ public class S3Service {
         expiration.setTime(expTimeMillis);
         return expiration;
     }
+
 }

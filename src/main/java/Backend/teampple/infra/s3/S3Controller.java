@@ -24,14 +24,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class S3Controller {
     private final S3Service s3Service;
 
-    @GetMapping(value = "/url")
-    @Operation(summary = "presigned url 조회", description = "presigned url 조회 API 입니다.")
-    public CommonResponse<GetS3UrlDto> getInvitation(@AuthUser User authUser,
-                                                     @RequestParam Long taskId) {
-        log.info("[api-get] presigned url");
+    @GetMapping(value = "/posturl")
+    @Operation(summary = "post용 presigned url 조회", description = "presigned url 조회 API 입니다.")
+    public CommonResponse<GetS3UrlDto> getPostS3Url(@AuthUser User authUser,
+                                                    @RequestParam Long taskId) {
+        log.info("[api-get] post presigned url");
         log.info("{}", authUser);
 
-        GetS3UrlDto getS3UrlDto = s3Service.getS3Url(authUser, taskId);
+        GetS3UrlDto getS3UrlDto = s3Service.getPostS3Url(authUser, taskId);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), getS3UrlDto);
+    }
+
+    @GetMapping(value = "/geturl")
+    @Operation(summary = "get용 presigned url 조회", description = "presigned url 조회 API 입니다.")
+    public CommonResponse<GetS3UrlDto> getGetS3Url(@AuthUser User authUser,
+                                                   @RequestParam Long taskId,
+                                                   @RequestParam String key) {
+
+        log.info("[api-get] get presigned url");
+        log.info("{}", authUser);
+
+        GetS3UrlDto getS3UrlDto = s3Service.getGetS3Url(authUser, taskId, key);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), getS3UrlDto);
     }
 }
