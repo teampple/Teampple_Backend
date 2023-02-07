@@ -25,10 +25,6 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
             "where tm.user = :user and t.dueDate < :now")
     List<Teammate> findAllByUserWithTeamBeforeNow(@Param("user") User user, @Param("now") LocalDateTime now);
 
-    @Query("select tm from Teammate tm " +
-            "where tm.user.authKey = :user and tm.team = :team")
-    Optional<Teammate> findByUserIdAndTeam(@Param("user") String user, @Param("team") Team team);
-
     @Query("select tm from Teammate tm" +
             " join fetch tm.team" +
             " where tm.team.id = :teamId and tm.user = :user")
