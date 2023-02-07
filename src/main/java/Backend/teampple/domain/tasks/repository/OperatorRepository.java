@@ -18,4 +18,6 @@ public interface OperatorRepository extends JpaRepository<Operator, Long> {
     List<Operator> findAllByTaskWithUserOrderByUserId(@Param("task") Task task);
 
     List<Operator> findAllByTask(@Param("task") Task task);
+
+    List<Operator> findAllByUser(@Param("user") User authUser);
 }
