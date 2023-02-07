@@ -34,8 +34,8 @@ public class GetFileDto {
     @ApiModelProperty(notes = "파일 크기", example = "12345", required = true)
     private Long size;
 
-    @ApiModelProperty(notes = "파일 url", example = "www.naver.com", required = true)
-    private String url;
+    @ApiModelProperty(notes = "파일 key", example = "www.naver.com", required = true)
+    private String key;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @ApiModelProperty(notes = "파일 마지막 수정일", example = "2023-01-01T11:22:33", required = true)
@@ -48,7 +48,7 @@ public class GetFileDto {
         this.route = file.getTask().getName();
         this.uploader = file.getUser().getUserProfile().getName();
         this.size = file.getSize();
-        this.url = file.getUrl();
+        this.key = file.getUrl();
         this.updatedAt = file.getUpdatedAt();
     }
 }

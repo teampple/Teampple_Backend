@@ -19,8 +19,8 @@ public class PostFileDto {
     private String fileName;
 
     @NotNull
-    @ApiModelProperty(notes = "파일 url", example = "spongebob", required = true)
-    private String url;
+    @ApiModelProperty(notes = "파일 key", example = "spongebob", required = true)
+    private String key;
 
     @NotNull
     @Positive
