@@ -99,7 +99,7 @@ public class TeamsService{
                             .taskName(StageDto.getName())
                             .sequenceNum(StageDto.getSequenceNum())
                             .startDate(StageDto.getStartDate())
-                            .dueDate(postTeamDto.getDueDate())
+                            .dueDate(StageDto.getDueDate())
                             .isDone(false) // 이 부분 분명히 디폴트로 해놨는데 이거 없으면
                             .build();
                     stagesRepository.save(stage);
