@@ -60,7 +60,8 @@ public class TeamsController {
     }
 
     @DeleteMapping(value = "")
-    @Operation(summary = "팀플 삭제", description = "팀플 삭제 API 입니다.")
+    @Operation(summary = "팀플 나가기", description = "팀플 삭제 API 입니다." +
+            "팀원이 한 명일 경우, 팀플 삭제됩니다.")
     public CommonResponse<String> putTeam(@AuthUser User authUser,
                                           @RequestParam("teamId") Long teamId) {
         log.info("[api-delete] 팀 삭제");

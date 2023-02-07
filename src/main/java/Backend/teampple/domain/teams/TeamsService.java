@@ -129,7 +129,16 @@ public class TeamsService{
         teammateRepository.deleteAll(teammates);
 
         // 3. 삭제
-        teamsRepository.delete(team);
+        if (teammates.size() == 1) {
+            teammateRepository.deleteAll(teammates);
+            teamsRepository.delete(team);
+        } else {
+            Teammate me = teammates.stream()
+                    .filter(teammate -> teammate.getUser().equals(authUser))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
+            teammateRepository.delete(me);
+        }
     }
 
     @Transactional
