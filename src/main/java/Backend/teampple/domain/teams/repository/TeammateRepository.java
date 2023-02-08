@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TeammateRepository extends JpaRepository<Teammate, Long> {
     List<Teammate> findAllByTeam(Team team);
@@ -54,4 +55,7 @@ public interface TeammateRepository extends JpaRepository<Teammate, Long> {
 
     @Query("select distinct tm from Teammate tm where tm.id in :id order by tm.user.id")
     List<Teammate> findAllByIdOrderByUserId(@Param("id") List<Long> id);
+
+    @Query("select distinct tm from Teammate tm where tm.team = :team and tm.user in :users")
+    List<Teammate> findAllByUserAndTeam(@Param("team") Team team, @Param("users") Set<User> operatorUsers);
 }
