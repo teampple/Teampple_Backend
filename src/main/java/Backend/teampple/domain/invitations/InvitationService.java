@@ -2,6 +2,7 @@ package Backend.teampple.domain.invitations;
 
 import Backend.teampple.domain.invitations.dto.response.GetInvitationDto;
 import Backend.teampple.domain.invitations.dto.response.GetInvitationValidationDto;
+import Backend.teampple.domain.invitations.dto.response.PostInvitationDto;
 import Backend.teampple.domain.invitations.entity.Invitation;
 import Backend.teampple.domain.invitations.repository.InvitationRepository;
 import Backend.teampple.domain.teams.entity.Team;
@@ -73,7 +74,7 @@ public class InvitationService {
                 .build();
     }
 
-    public void postInvitation(User authUser, String code) {
+    public PostInvitationDto postInvitation(User authUser, String code) {
         // 1. 초대장 찾기
         Invitation invite = invitationRepository.findByCode(code);
 
@@ -100,6 +101,8 @@ public class InvitationService {
                 .team(team)
                 .build();
         teammateRepository.save(teammate);
+
+        return PostInvitationDto.from(team);
     }
 
     @Transactional

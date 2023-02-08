@@ -2,6 +2,7 @@ package Backend.teampple.domain.invitations;
 
 import Backend.teampple.domain.invitations.dto.response.GetInvitationDto;
 import Backend.teampple.domain.invitations.dto.response.GetInvitationValidationDto;
+import Backend.teampple.domain.invitations.dto.response.PostInvitationDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.auth.AuthUser;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -36,13 +37,13 @@ public class InvitationController {
 
     @PostMapping(value = "")
     @Operation(summary = "유저 초대", description = "유저 초대 API 입니다.")
-    public CommonResponse<String> postInvitation(@AuthUser User authUser,
+    public CommonResponse<PostInvitationDto> postInvitation(@AuthUser User authUser,
                                                  @RequestParam("code") String code) {
         log.info("[api-post] 유저 초대");
         log.info("{}", authUser);
 
-        invitationService.postInvitation(authUser, code);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
+        PostInvitationDto postInvitationDto = invitationService.postInvitation(authUser, code);
+        return CommonResponse.onSuccess(HttpStatus.OK.value(), postInvitationDto);
     }
 
     @GetMapping(value = "validation")
