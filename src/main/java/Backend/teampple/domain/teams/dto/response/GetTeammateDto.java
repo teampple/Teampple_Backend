@@ -1,6 +1,6 @@
 package Backend.teampple.domain.teams.dto.response;
 
-import Backend.teampple.domain.teams.dto.TeammateDto;
+import Backend.teampple.domain.teams.vo.TeammateInfoVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -26,15 +26,16 @@ public class GetTeammateDto {
     private String image;
 
     @ApiModelProperty(value = "나머지 팀원", required = true)
-    private List<TeammateDto> teammates;
+    private List<TeammateInfoVo> teammateInfoVos;
 
     @Builder
-    public GetTeammateDto(Long teammateId, String name, String schoolName, String major, String image, List<TeammateDto> teammates) {
+    public GetTeammateDto(Long teammateId, String name, String schoolName, String major,
+                          String image, List<TeammateInfoVo> teammateInfoVos) {
         this.teammateId = teammateId;
         this.name = name;
         this.schoolName = schoolName;
         this.major = major;
         this.image = image;
-        this.teammates = teammates;
+        this.teammateInfoVos = teammateInfoVos;
     }
 }
