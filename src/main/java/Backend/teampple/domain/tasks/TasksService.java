@@ -17,6 +17,8 @@ import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
+import Backend.teampple.domain.teams.vo.TeammateInfoVo;
+import Backend.teampple.domain.teams.vo.TeammateNameInfoVo;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,8 +64,11 @@ public class TasksService {
                 .collect(Collectors.toList());
 
         // 3. operator 조회 유저 프로파일 패치조인
-        List<String> operators = operatorRepository.findAllByTaskWithUserProfile(task).stream()
-                .map(o -> o.getUserProfile().getName())
+        Set<User> operatorUsers = operatorRepository.findAllByTask(task).stream()
+                .map(Operator::getUser)
+                .collect(Collectors.toSet());
+        List<TeammateNameInfoVo> operators = teammateRepository.findAllByUserAndTeam(task.getStage().getTeam(), operatorUsers).stream()
+                .map(TeammateNameInfoVo::from)
                 .collect(Collectors.toList());
 
         // 4. feedback + adviser + adviserProfile
@@ -75,7 +81,10 @@ public class TasksService {
         List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUserAndFeedback(authUser, feedbacks);
         feedbackOwners.stream()
                 .filter(feedbackOwner -> !feedbackOwner.isChecked())
-                .forEach(FeedbackOwner::updateCheckStatus);
+                .forEach(feedbackOwner -> {
+                    feedbackOwner.updateCheckStatus();
+                    feedbackOwnerRespository.save(feedbackOwner);
+                });
 
         return GetTaskDto.builder()
                 .taskName(task.getName())

@@ -4,7 +4,6 @@ import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
-import Backend.teampple.domain.teams.dto.TeammateDto;
 import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.entity.Schedule;
@@ -13,6 +12,7 @@ import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.ScheduleRepository;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
+import Backend.teampple.domain.teams.vo.TeammateInfoVo;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
@@ -197,16 +197,9 @@ public class TeamsService{
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
         // 3. 팀메이트 dto 생성
-        List<TeammateDto> teammateDtoList = teammates.stream()
+        List<TeammateInfoVo> teammateInfoVoList = teammates.stream()
                 .filter(teammate -> !teammate.getUser().equals(authUser))
-                .map(teammate ->
-                        TeammateDto.builder()
-                                .teammateId(teammate.getId())
-                                .name(teammate.getUserProfile().getName())
-                                .schoolName(teammate.getUserProfile().getSchoolName())
-                                .major(teammate.getUserProfile().getMajor())
-                                .image(teammate.getUserProfile().getProfileImage())
-                                .build())
+                .map(TeammateInfoVo::from)
                 .collect(toList());
 
         Teammate me = teammates.stream()
@@ -220,7 +213,7 @@ public class TeamsService{
                 .schoolName(authUser.getUserProfile().getSchoolName())
                 .major(authUser.getUserProfile().getMajor())
                 .image(authUser.getUserProfile().getProfileImage())
-                .teammates(teammateDtoList)
+                .teammateInfoVos(teammateInfoVoList)
                 .build();
     }
 

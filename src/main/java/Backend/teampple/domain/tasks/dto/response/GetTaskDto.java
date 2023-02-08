@@ -2,6 +2,8 @@ package Backend.teampple.domain.tasks.dto.response;
 
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
+import Backend.teampple.domain.teams.vo.TeammateInfoVo;
+import Backend.teampple.domain.teams.vo.TeammateNameInfoVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -38,8 +40,8 @@ public class GetTaskDto {
 
     // -----------------------------------
     // operator & user
-    @ApiModelProperty(notes = "담당자 이름", example = "뽀로로, 크롱", required = true)
-    private List<String> operators;
+    @ApiModelProperty(notes = "담당자", example = "뽀로로, 크롱", required = true)
+    private List<TeammateNameInfoVo> operators;
 
     // -----------------------------------
     // file
@@ -54,7 +56,7 @@ public class GetTaskDto {
     @Builder
     public GetTaskDto(String taskName, boolean isDone, LocalDateTime startDate,
                       LocalDateTime dueDate, String stageName, int sequenceNum,
-                      List<String> operators, List<GetFileInfoDto> files, List<GetFeedbackDto> feedbacks) {
+                      List<TeammateNameInfoVo> operators, List<GetFileInfoDto> files, List<GetFeedbackDto> feedbacks) {
         this.taskName = taskName;
         this.isDone = isDone;
         this.startDate = startDate;
