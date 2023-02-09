@@ -20,5 +20,9 @@ public interface FeedbackOwnerRespository extends JpaRepository<FeedbackOwner, L
 
     @Query("select fbo from FeedbackOwner fbo" +
             " where fbo.user = :user and fbo.feedback in :feedbacks")
-    List<FeedbackOwner> findAllByUserAndFeedback(User user, List<Feedback> feedbacks);
+    List<FeedbackOwner> findAllByUserAndFeedback(@Param("user") User user, @Param("feedbacks") List<Feedback> feedbacks);
+
+    @Query("select fbo from FeedbackOwner fbo" +
+            " where fbo.user = :user")
+    List<FeedbackOwner> findAllByUser(@Param("user") User authUser);
 }

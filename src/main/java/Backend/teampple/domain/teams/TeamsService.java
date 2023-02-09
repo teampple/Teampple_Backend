@@ -1,8 +1,12 @@
 package Backend.teampple.domain.teams;
 
+import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
+import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.tasks.entity.Operator;
+import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.domain.teams.dto.request.*;
@@ -40,6 +44,10 @@ public class TeamsService{
     private final TeammateRepository teammateRepository;
 
     private final ScheduleRepository scheduleRepository;
+
+    private final FeedbackOwnerRespository feedbackOwnerRespository;
+
+    private final OperatorRepository operatorRepository;
 
     private final CheckUser checkUser;
 
@@ -127,9 +135,14 @@ public class TeamsService{
         // 2. 팀원 삭제
         List<Teammate> teammates = teammateRepository.findAllByTeam(team);
 
+        List<FeedbackOwner> feedbackOwners = feedbackOwnerRespository.findAllByUser(authUser);
+        List<Operator> operators = operatorRepository.findAllByUser(authUser);
+
         // 3. 삭제
         if (teammates.size() == 1) {
             teammateRepository.deleteAll(teammates);
+            feedbackOwnerRespository.deleteAll(feedbackOwners);
+            operatorRepository.deleteAll(operators);
             teamsRepository.delete(team);
         } else {
             Teammate me = teammates.stream()
@@ -137,6 +150,8 @@ public class TeamsService{
                     .findFirst()
                     .orElseThrow(() -> new NotFoundException(ErrorCode.MISMATCH_TEAM.getMessage()));
             teammateRepository.delete(me);
+            feedbackOwnerRespository.deleteAll(feedbackOwners);
+            operatorRepository.deleteAll(operators);
         }
     }
 
