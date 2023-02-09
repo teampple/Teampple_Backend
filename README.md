@@ -1,5 +1,8 @@
 # Teampple_Backend
-팀플 서비스 팀쁠(teampple) 백엔드 레포지토리 ✨
+팀플 서비스 팀쁠(teampple) 백엔드 레포지토리 ✨    
+
+![웹 썸네일](https://user-images.githubusercontent.com/62806067/217756853-bf1d8264-8d8b-4f68-a5e7-ba2805fd648e.jpg)
+
 
 ## Back-End Developers
 <div align="center"> 
