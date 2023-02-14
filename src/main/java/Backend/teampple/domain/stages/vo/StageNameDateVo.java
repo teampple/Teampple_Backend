@@ -1,19 +1,18 @@
-package Backend.teampple.domain.stages.dto;
-
+package Backend.teampple.domain.stages.vo;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@EqualsAndHashCode
-public class StageDto {
+@Builder
+public class StageNameDateVo {
     @NotNull
     @ApiModelProperty(notes = "단계 명", example = "1단계", required = true)
     private String name;
@@ -33,19 +32,12 @@ public class StageDto {
     @ApiModelProperty(notes = "단계 마감일", example = "2023-01-01T11:22:33", required = true)
     private LocalDateTime dueDate;
 
-    @Builder
-    public StageDto(String name, int sequenceNum, LocalDateTime startDate, LocalDateTime dueDate) {
-        this.name = name;
-        this.sequenceNum = sequenceNum;
-        this.startDate = startDate;
-        this.dueDate = dueDate;
+    public static StageNameDateVo of(Stage stage) {
+        return StageNameDateVo.builder()
+                .name(stage.getTaskName())
+                .sequenceNum(stage.getSequenceNum())
+                .startDate(stage.getStartDate())
+                .dueDate(stage.getDueDate())
+                .build();
     }
-
-    public StageDto(Stage stage) {
-        this.name = stage.getTaskName();
-        this.sequenceNum = stage.getSequenceNum();
-        this.startDate = stage.getStartDate();
-        this.dueDate = stage.getDueDate();
-    }
-
 }

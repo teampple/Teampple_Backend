@@ -1,7 +1,9 @@
 package Backend.teampple.domain.tasks.entity;
 
 import Backend.teampple.domain.stages.entity.Stage;
-import Backend.teampple.domain.tasks.dto.TaskDto;
+import Backend.teampple.domain.tasks.dto.request.PostTaskDto;
+import Backend.teampple.domain.tasks.dto.request.PutTaskDto;
+import Backend.teampple.domain.tasks.vo.TaskNameDateVo;
 import Backend.teampple.global.common.entity.PeriodBaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -49,9 +51,9 @@ public class Task extends PeriodBaseEntity {
         this.isDone = isDone;
     }
 
-    public void update(TaskDto taskDto) {
-        this.name = taskDto.getName();
-        init(taskDto.getStartDate(), taskDto.getDueDate());
+    public void update(PutTaskDto putTaskDto) {
+        this.name = putTaskDto.getName();
+        init(putTaskDto.getStartDate(), putTaskDto.getDueDate());
     }
 
     public boolean taskDoneStatus() {

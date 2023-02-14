@@ -1,10 +1,10 @@
 package Backend.teampple.domain.stages;
 
-import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
+import Backend.teampple.domain.stages.vo.StageNameDateVo;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -28,7 +28,7 @@ public class StagesService {
     private final CheckUser checkUser;
 
     @Transactional
-    public List<StageDto> getStage(User authUser, Long teamId) {
+    public List<StageNameDateVo> getStage(User authUser, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
         Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
@@ -36,7 +36,7 @@ public class StagesService {
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
 
         return stages.stream()
-                .map(StageDto::new)
+                .map(StageNameDateVo::of)
                 .collect(Collectors.toList());
     }
 
@@ -84,8 +84,8 @@ public class StagesService {
         List<Stage> stages = stagesRepository.findAllByTeamOrderBySequenceNum(team);
 
         // 4. stage 업데이트
-        List<StageDto> stageDtos = putStageDto.getStages();
-        ListIterator<StageDto> stageDtoIt = stageDtos.listIterator();
+        List<StageNameDateVo> stageDtos = putStageDto.getStages();
+        ListIterator<StageNameDateVo> stageDtoIt = stageDtos.listIterator();
         ListIterator<Stage> stageIt = stages.listIterator();
         while (stageIt.hasNext()) {
             if (stageDtoIt.hasNext()) { // 기존에 존재하던거 업데이트
@@ -97,7 +97,7 @@ public class StagesService {
             }
         }
         while (stageDtoIt.hasNext()) { // 길면 추가
-            StageDto next = stageDtoIt.next();
+            StageNameDateVo next = stageDtoIt.next();
             Stage stage = Stage.builder()
                     .team(team)
                     .taskName(next.getName())

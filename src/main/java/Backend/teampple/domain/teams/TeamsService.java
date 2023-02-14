@@ -3,8 +3,8 @@ package Backend.teampple.domain.teams;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
+import Backend.teampple.domain.stages.vo.StageNameDateVo;
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.teams.dto.response.*;
@@ -82,7 +82,7 @@ public class TeamsService{
         }
 
         // 1. 단계 request
-        List<StageDto> stages = postTeamDto.getStages();
+        List<StageNameDateVo> stages = postTeamDto.getStages();
         if (stages == null) {
             throw new BadRequestException(ErrorCode.NEED_STAGE.getMessage());
         }
@@ -100,14 +100,14 @@ public class TeamsService{
         teammateRepository.save(teammate);
 
         // 4. 단계 생성 및 저장
-        stages.forEach(StageDto ->
+        stages.forEach(StageNameDateVo ->
                 {
                     Stage stage = Stage.builder()
                             .team(team)
-                            .taskName(StageDto.getName())
-                            .sequenceNum(StageDto.getSequenceNum())
-                            .startDate(StageDto.getStartDate())
-                            .dueDate(StageDto.getDueDate())
+                            .taskName(StageNameDateVo.getName())
+                            .sequenceNum(StageNameDateVo.getSequenceNum())
+                            .startDate(StageNameDateVo.getStartDate())
+                            .dueDate(StageNameDateVo.getDueDate())
                             .isDone(false) // 이 부분 분명히 디폴트로 해놨는데 이거 없으면
                             .build();
                     stagesRepository.save(stage);

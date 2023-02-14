@@ -1,6 +1,7 @@
 package Backend.teampple.domain.tasks;
 
-import Backend.teampple.domain.tasks.dto.TaskDto;
+import Backend.teampple.domain.tasks.dto.request.PostTaskDto;
+import Backend.teampple.domain.tasks.dto.request.PutTaskDto;
 import Backend.teampple.domain.tasks.dto.response.GetTaskDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.auth.AuthUser;
@@ -37,24 +38,24 @@ public class TasksController {
     @PostMapping(value = "")
     @Operation(summary = "할 일 추가", description = "할 일 추가 API 입니다.")
     public CommonResponse<String> postTask(@AuthUser User authUser,
-                                           @Valid @RequestBody TaskDto taskDto,
+                                           @Valid @RequestBody PostTaskDto postTaskDto,
                                            @RequestParam("stageId") Long stageId) {
         log.info("[api-post] 할 일 추가");
         log.info("{}", authUser);
 
-        tasksService.postTask(authUser, taskDto, stageId);
+        tasksService.postTask(authUser, postTaskDto, stageId);
         return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @PutMapping(value = "")
     @Operation(summary = "할 일 수정", description = "할 일 수정 API 입니다.")
     public CommonResponse<String> putTask(@AuthUser User authUser,
-                                          @Valid @RequestBody TaskDto taskDto,
+                                          @Valid @RequestBody PutTaskDto putTaskDto,
                                           @RequestParam("taskId") Long taskId) {
         log.info("[api-put] 할 일 수정");
         log.info("{}", authUser);
 
-        tasksService.putTask(authUser, taskDto, taskId);
+        tasksService.putTask(authUser, putTaskDto, taskId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 

@@ -1,8 +1,8 @@
 package Backend.teampple.domain.stages;
 
-import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.dto.request.PostStageDto;
 import Backend.teampple.domain.stages.dto.request.PutStageDto;
+import Backend.teampple.domain.stages.vo.StageNameDateVo;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.auth.AuthUser;
 import Backend.teampple.global.common.response.CommonResponse;
@@ -26,12 +26,12 @@ public class StagesController {
 
     @GetMapping(value = "")
     @Operation(summary = "단계 조회", description = "단계 조회 API 입니다.")
-    public CommonResponse<List<StageDto>> getStage(@AuthUser User authUser,
-                                                   @RequestParam("teamId") Long teamId) {
+    public CommonResponse<List<StageNameDateVo>> getStage(@AuthUser User authUser,
+                                                          @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 단계 조회");
         log.info("{}", authUser);
 
-        List<StageDto> stageDtos = stagesService.getStage(authUser, teamId);
+        List<StageNameDateVo> stageDtos = stagesService.getStage(authUser, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value(), stageDtos);
     }
 

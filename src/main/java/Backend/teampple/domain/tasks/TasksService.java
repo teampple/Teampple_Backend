@@ -9,7 +9,8 @@ import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.tasks.dto.TaskDto;
+import Backend.teampple.domain.tasks.dto.request.PostTaskDto;
+import Backend.teampple.domain.tasks.dto.request.PutTaskDto;
 import Backend.teampple.domain.tasks.dto.response.GetTaskDto;
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
@@ -17,10 +18,8 @@ import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
-import Backend.teampple.domain.teams.vo.TeammateInfoVo;
 import Backend.teampple.domain.teams.vo.TeammateNameInfoVo;
 import Backend.teampple.domain.users.entity.User;
-import Backend.teampple.domain.users.repository.UserRepository;
 import Backend.teampple.global.common.validation.CheckUser;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.BadRequestException;
@@ -101,20 +100,20 @@ public class TasksService {
     };
 
     @Transactional
-    public void postTask(User authUser, TaskDto taskDto, Long stageId) {
+    public void postTask(User authUser, PostTaskDto postTaskDto, Long stageId) {
         // 1. stage + user + 유저 검증
         Stage stage = checkUser.checkIsUserCanPostTask(authUser, stageId);
 
         // 2. operator user 불러오기
-        List<Teammate> teammates = teammateRepository.findAllById(taskDto.getOperators());
-        if (teammates.size() != taskDto.getOperators().size())
+        List<Teammate> teammates = teammateRepository.findAllById(postTaskDto.getOperators());
+        if (teammates.size() != postTaskDto.getOperators().size())
             throw new BadRequestException(ErrorCode.NOT_TEAMMATE.getMessage());
 
         // 3. Task 생성
         Task task = Task.builder()
-                .name(taskDto.getName())
-                .startDate(taskDto.getStartDate())
-                .dueDate(taskDto.getDueDate())
+                .name(postTaskDto.getName())
+                .startDate(postTaskDto.getStartDate())
+                .dueDate(postTaskDto.getDueDate())
                 .stage(stage)
                 .build();
         tasksRepository.save(task);
@@ -135,7 +134,7 @@ public class TasksService {
     }
 
     @Transactional
-    public void putTask(User authUser, TaskDto taskDto, Long taskId) {
+    public void putTask(User authUser, PutTaskDto putTaskDto, Long taskId) {
         // 1. task 조회 및 유저 관한 확인
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
@@ -145,12 +144,12 @@ public class TasksService {
                 .map(Operator::getUser)
                 .collect(Collectors.toList());
 
-        // 3. taskDto
-        List<Teammate> teammates = teammateRepository.findAllByIdOrderByUserId(taskDto.getOperators());
+        // 3. putTaskDto
+        List<Teammate> teammates = teammateRepository.findAllByIdOrderByUserId(putTaskDto.getOperators());
         List<User> newUsers = teammates.stream()
                 .map(Teammate::getUser)
                 .collect(Collectors.toList());
-        if (teammates.size() != taskDto.getOperators().size())
+        if (teammates.size() != putTaskDto.getOperators().size())
             throw new BadRequestException(ErrorCode.NOT_TEAMMATE.getMessage());
 
         // 3.1 삭제
@@ -170,7 +169,7 @@ public class TasksService {
                 });
 
         // 4. task update
-        task.update(taskDto);
+        task.update(putTaskDto);
         tasksRepository.save(task);
     }
 

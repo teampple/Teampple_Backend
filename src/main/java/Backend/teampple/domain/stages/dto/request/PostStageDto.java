@@ -1,6 +1,6 @@
 package Backend.teampple.domain.stages.dto.request;
 
-import Backend.teampple.domain.stages.dto.StageDto;
+import Backend.teampple.domain.stages.vo.StageNameDateVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -15,5 +15,5 @@ public class PostStageDto {
     @Valid
     @NotNull
     @ApiModelProperty(notes = "단계", required = true)
-    List<StageDto> stages;
+    List<StageNameDateVo> stages;
 }
