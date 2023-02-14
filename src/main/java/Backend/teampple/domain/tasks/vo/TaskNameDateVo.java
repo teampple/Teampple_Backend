@@ -1,19 +1,18 @@
-package Backend.teampple.domain.tasks.dto;
+package Backend.teampple.domain.tasks.vo;
 
+import Backend.teampple.domain.tasks.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Getter
-@NoArgsConstructor
-@EqualsAndHashCode
-public class TaskDto {
+@Builder
+public class TaskNameDateVo {
     @NotNull
     @ApiModelProperty(notes = "할 일 이름", example = "이름", required = true)
     private String name;
@@ -30,5 +29,14 @@ public class TaskDto {
 
     @NotNull
     @ApiModelProperty(notes = "할 일 담당자", required = true)
-    private List<Long> operators;
+    private Set<Long> operators;
+
+    public static TaskNameDateVo from(Task task, Set<Long> operators) {
+        return TaskNameDateVo.builder()
+                .name(task.getName())
+                .startDate(task.getStartDate())
+                .dueDate(task.getDueDate())
+                .operators(operators)
+                .build();
+    }
 }
