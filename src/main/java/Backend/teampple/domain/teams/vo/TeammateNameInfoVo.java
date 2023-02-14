@@ -20,7 +20,7 @@ public class TeammateNameInfoVo {
     @ApiModelProperty(notes = "팀원 고유번호", example = "1", required = true)
     private Long id;
 
-    public static TeammateNameInfoVo from(Teammate teammate) {
+    public static TeammateNameInfoVo of(Teammate teammate) {
         return TeammateNameInfoVo.builder()
                 .name(teammate.getUserProfile().getName())
                 .id(teammate.getId())

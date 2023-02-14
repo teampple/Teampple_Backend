@@ -16,7 +16,6 @@ public class GetTeamStageDto {
     @ApiModelProperty(notes = "팀플 명", example = "teampple", required = true)
     private String name;
 
-    @ApiModelProperty(notes = "할 일", required = true)
     private List<GetTaskBriefDto> tasks;
 
     @ApiModelProperty(notes = "완료된 단계 수", required = true)

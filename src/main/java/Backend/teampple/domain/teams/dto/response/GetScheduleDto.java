@@ -1,6 +1,6 @@
 package Backend.teampple.domain.teams.dto.response;
 
-import Backend.teampple.domain.teams.dto.ScheduleDto;
+import Backend.teampple.domain.teams.vo.ScheduleVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -20,11 +20,10 @@ public class GetScheduleDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime dueDate;
 
-    @ApiModelProperty(value = "일정", required = true)
-    private List<ScheduleDto> schedules = new ArrayList<>();
+    private List<ScheduleVo> schedules = new ArrayList<>();
 
     @Builder
-    public GetScheduleDto(String name, LocalDateTime dueDate, List<ScheduleDto> schedules) {
+    public GetScheduleDto(String name, LocalDateTime dueDate, List<ScheduleVo> schedules) {
         this.name = name;
         this.dueDate = dueDate;
         this.schedules = schedules;

@@ -1,6 +1,5 @@
 package Backend.teampple.domain.teams;
 
-import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.domain.users.entity.User;
@@ -74,12 +73,12 @@ public class TeamsController {
     @PostMapping(value = "schedules")
     @Operation(summary = "팀플 일정 생성", description = "팀플 일정 생성 API 입니다.")
     public CommonResponse<String> postSchedule(@AuthUser User authUser,
-                                               @Valid @RequestBody ScheduleDto scheduleDto,
+                                               @Valid @RequestBody PostScheduleDto postScheduleDto,
                                                @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 팀플 일정 생성");
         log.info("{}", authUser);
 
-        teamsService.postSchedule(authUser, scheduleDto, teamId);
+        teamsService.postSchedule(authUser, postScheduleDto, teamId);
         return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 

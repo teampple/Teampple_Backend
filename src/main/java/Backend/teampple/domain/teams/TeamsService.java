@@ -7,7 +7,6 @@ import Backend.teampple.domain.stages.dto.StageDto;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
-import Backend.teampple.domain.teams.dto.ScheduleDto;
 import Backend.teampple.domain.teams.dto.response.*;
 import Backend.teampple.domain.teams.dto.request.*;
 import Backend.teampple.domain.teams.entity.Schedule;
@@ -16,6 +15,7 @@ import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.ScheduleRepository;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
+import Backend.teampple.domain.teams.vo.ScheduleVo;
 import Backend.teampple.domain.teams.vo.TeammateInfoVo;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.common.validation.CheckUser;
@@ -164,8 +164,8 @@ public class TeamsService{
         List<Schedule> schedules = scheduleRepository.findAllByTeamAndDueDateIsAfterOrderByDueDate(team, LocalDateTime.now());
 
         // 3. 스케줄 dto 생성
-        List<ScheduleDto> scheduleDtoList = schedules.stream()
-                .map(ScheduleDto::new)
+        List<ScheduleVo> scheduleDtoList = schedules.stream()
+                .map(ScheduleVo::of)
                 .collect(toList());
 
         return GetScheduleDto.builder()
@@ -176,14 +176,14 @@ public class TeamsService{
     }
 
     @Transactional
-    public void postSchedule(User authUser, ScheduleDto scheduleDto, Long teamId) {
+    public void postSchedule(User authUser, PostScheduleDto postScheduleDto, Long teamId) {
         // 1. 유저 체크 및 team 정보 불러오기
         Team team = checkUser.checkIsUserInTeamId(authUser, teamId);
 
         // 2. 일정 생성
         Schedule schedule = Schedule.builder()
-                .name(scheduleDto.getName())
-                .dueDate(scheduleDto.getDueDate())
+                .name(postScheduleDto.getScheduleVo().getName())
+                .dueDate(postScheduleDto.getScheduleVo().getDueDate())
                 .team(team)
                 .build();
         scheduleRepository.save(schedule);
@@ -214,7 +214,7 @@ public class TeamsService{
         // 3. 팀메이트 dto 생성
         List<TeammateInfoVo> teammateInfoVoList = teammates.stream()
                 .filter(teammate -> !teammate.getUser().equals(authUser))
-                .map(TeammateInfoVo::from)
+                .map(TeammateInfoVo::of)
                 .collect(toList());
 
         Teammate me = teammates.stream()

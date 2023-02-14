@@ -40,7 +40,6 @@ public class GetTeamTasksDto {
     @ApiModelProperty(value = "끝난 할 일 수", example = "1", required = true)
     private int achievement;
 
-    @ApiModelProperty(value = "할 일", required = true)
     private List<GetTaskBriefDto> tasks;
 
     public GetTeamTasksDto(Stage stage) {

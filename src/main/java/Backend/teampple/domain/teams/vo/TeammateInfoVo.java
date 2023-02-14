@@ -27,9 +27,9 @@ public class TeammateInfoVo {
     @ApiModelProperty(notes = "팀원 이미지", example = "1", required = true)
     private String image;
 
-    public static TeammateInfoVo from(Teammate teammate) {
+    public static TeammateInfoVo of(Teammate teammate) {
         return TeammateInfoVo.builder()
-                .teammateNameInfoVo(TeammateNameInfoVo.from(teammate))
+                .teammateNameInfoVo(TeammateNameInfoVo.of(teammate))
                 .schoolName(teammate.getUserProfile().getSchoolName())
                 .major(teammate.getUserProfile().getMajor())
                 .image(teammate.getUserProfile().getProfileImage())

@@ -68,7 +68,7 @@ public class TasksService {
                 .map(Operator::getUser)
                 .collect(Collectors.toSet());
         List<TeammateNameInfoVo> operators = teammateRepository.findAllByUserAndTeam(task.getStage().getTeam(), operatorUsers).stream()
-                .map(TeammateNameInfoVo::from)
+                .map(TeammateNameInfoVo::of)
                 .collect(Collectors.toList());
 
         // 4. feedback + adviser + adviserProfile
