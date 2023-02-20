@@ -46,7 +46,7 @@
 ![teamplus](https://user-images.githubusercontent.com/62806067/217529697-71435219-1fea-44ea-9ea5-b0638e067d2c.png)
    
    
-## Architecture
+## Architecture of Deploy
 ![Teampple_](https://user-images.githubusercontent.com/62806067/219998175-ca1f9ff6-512d-4ea2-a4fc-42ba710cf9f6.jpg)
 
     
