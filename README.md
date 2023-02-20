@@ -47,8 +47,8 @@
    
    
 ## Architecture
-![depoly](https://user-images.githubusercontent.com/62806067/217534602-0cda05e5-bfd7-4856-9f51-a51c711a3c25.jpeg)
-    
+![Teampple_](https://user-images.githubusercontent.com/62806067/219998175-ca1f9ff6-512d-4ea2-a4fc-42ba710cf9f6.jpg)
+
     
 
 ---
