@@ -64,14 +64,7 @@ public class TeamsService{
                 .map(teammate -> teammate.getUserProfile().getProfileImage())
                 .collect(toList());
 
-        return GetTeamDetailDto.builder()
-                .name(team.getName())
-                .goal(team.getGoal())
-                .startDate(team.getStartDate())
-                .dueDate(team.getDueDate())
-                .teammatesNum(teammates.size())
-                .teammatesImages(teammatesImages)
-                .build();
+        return GetTeamDetailDto.from(team, teammates.size(), teammatesImages);
     }
 
     @Transactional

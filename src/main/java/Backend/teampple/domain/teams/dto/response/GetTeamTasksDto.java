@@ -2,7 +2,9 @@ package Backend.teampple.domain.teams.dto.response;
 
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
+import Backend.teampple.global.common.vo.DurationVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +25,8 @@ public class GetTeamTasksDto {
     @ApiModelProperty(value = "단계 이름", example = "계단", required = true)
     private String stageName;
 
-    @ApiModelProperty(value = "단계 시작일", example = "2023-01-01T11:22:33", required = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
-    private LocalDateTime startDate;
-
-    @ApiModelProperty(value = "단계 마감일", example = "2023-01-01T11:22:33", required = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
-    private LocalDateTime dueDate;
+    @JsonUnwrapped
+    private DurationVo durationVo;
 
     @ApiModelProperty(value = "단계 순서", example = "3", required = true)
     private int sequenceNum;
@@ -45,8 +42,7 @@ public class GetTeamTasksDto {
     public GetTeamTasksDto(Stage stage) {
         stageId = stage.getId();
         stageName = stage.getTaskName();
-        startDate = stage.getStartDate();
-        dueDate = stage.getDueDate();
+        durationVo = DurationVo.of(stage);
         sequenceNum = stage.getSequenceNum();
         totaltask = stage.getTotalTask();
         achievement = stage.getAchievement();

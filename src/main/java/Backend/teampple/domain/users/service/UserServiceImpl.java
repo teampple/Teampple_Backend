@@ -17,6 +17,8 @@ import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
+import Backend.teampple.domain.teams.vo.TeamNameVo;
+import Backend.teampple.domain.teams.vo.TeamVo;
 import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
@@ -147,15 +149,12 @@ public class UserServiceImpl implements UserService {
         }
 
         // 2. dto 생성
-        List<GetTeamDto> getTeamDtos = teammates.stream()
-                .map(teammate -> GetTeamDto.builder()
-                        .name(teammate.getTeam().getName())
-                        .teamId(teammate.getTeam().getId())
-                        .build())
+        List<TeamNameVo> teamVos = teammates.stream()
+                .map(teammate -> TeamNameVo.of(teammate.getTeam()))
                 .collect(Collectors.toList());
 
         return GetUserTeamsDto.builder()
-                .teams(getTeamDtos)
+                .teams(teamVos)
                 .build();
     }
 

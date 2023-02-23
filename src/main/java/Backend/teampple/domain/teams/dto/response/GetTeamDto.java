@@ -1,21 +1,21 @@
 package Backend.teampple.domain.teams.dto.response;
 
+import Backend.teampple.domain.teams.entity.Team;
+import Backend.teampple.domain.teams.vo.TeamNameVo;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor
+@Builder
 @EqualsAndHashCode
 public class GetTeamDto {
-    @ApiModelProperty(notes = "팀플 명", example = "teampple", required = true)
-    private String name;
+    @JsonUnwrapped
+    private TeamNameVo teamNameVo;
 
-    @ApiModelProperty(notes = "팀플 id", example = "1", required = true)
-    private Long teamId;
-
-    @Builder
-    public GetTeamDto(String name, Long teamId) {
-        this.name = name;
-        this.teamId = teamId;
+    public static GetTeamDto of(Team team) {
+        return GetTeamDto.builder()
+                .teamNameVo(TeamNameVo.of(team))
+                .build();
     }
 }
