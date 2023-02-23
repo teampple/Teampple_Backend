@@ -7,6 +7,7 @@ import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.repository.FilesRepository;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
+import Backend.teampple.domain.files.vo.FileInfoVo;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
 import Backend.teampple.domain.tasks.dto.request.PostTaskDto;
@@ -58,8 +59,8 @@ public class TasksService {
         Task task = checkUser.checkIsUserHaveAuthForTask(authUser, taskId);
 
         // 2. file 조회
-        List<GetFileInfoDto> getFileInfoDtos = filesRepository.findAllByTaskOrderByUpdatedAt(task).stream()
-                .map(GetFileInfoDto::new)
+        List<FileInfoVo> getFileInfoDtos = filesRepository.findAllByTaskOrderByUpdatedAt(task).stream()
+                .map(FileInfoVo::of)
                 .collect(Collectors.toList());
 
         // 3. operator 조회 유저 프로파일 패치조인

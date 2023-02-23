@@ -39,7 +39,7 @@ public class FilesService {
         List<File> files = filesRepository.findAllByTeamWithTaskAndUserAndUserProfile(team);
 
         return files.stream()
-                .map(GetFileDto::new)
+                .map(GetFileDto::of)
                 .collect(Collectors.toList());
     }
 

@@ -2,6 +2,7 @@ package Backend.teampple.domain.tasks.dto.response;
 
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackDto;
 import Backend.teampple.domain.files.dto.response.GetFileInfoDto;
+import Backend.teampple.domain.files.vo.FileInfoVo;
 import Backend.teampple.domain.teams.vo.TeammateInfoVo;
 import Backend.teampple.domain.teams.vo.TeammateNameInfoVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -46,7 +47,7 @@ public class GetTaskDto {
     // -----------------------------------
     // file
     @ApiModelProperty(notes = "파일 정보", required = true)
-    private List<GetFileInfoDto> files;
+    private List<FileInfoVo> files;
 
     // -----------------------------------
     // feedback & user
@@ -56,7 +57,7 @@ public class GetTaskDto {
     @Builder
     public GetTaskDto(String taskName, boolean isDone, LocalDateTime startDate,
                       LocalDateTime dueDate, String stageName, int sequenceNum,
-                      List<TeammateNameInfoVo> operators, List<GetFileInfoDto> files, List<GetFeedbackDto> feedbacks) {
+                      List<TeammateNameInfoVo> operators, List<FileInfoVo> files, List<GetFeedbackDto> feedbacks) {
         this.taskName = taskName;
         this.isDone = isDone;
         this.startDate = startDate;
