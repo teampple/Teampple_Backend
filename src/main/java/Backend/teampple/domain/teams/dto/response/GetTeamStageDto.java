@@ -1,6 +1,6 @@
 package Backend.teampple.domain.teams.dto.response;
 
-import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
+import Backend.teampple.domain.tasks.vo.TaskNameVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -16,7 +16,7 @@ public class GetTeamStageDto {
     @ApiModelProperty(notes = "팀플 명", example = "teampple", required = true)
     private String name;
 
-    private List<GetTaskBriefDto> tasks;
+    private List<TaskNameVo> tasks;
 
     @ApiModelProperty(notes = "완료된 단계 수", required = true)
     private Long achievement;
@@ -25,7 +25,7 @@ public class GetTeamStageDto {
     private Long totalStage;
 
     @Builder
-    public GetTeamStageDto(Long teamId, String name, List<GetTaskBriefDto> tasks, Long achievement, Long totalStage) {
+    public GetTeamStageDto(Long teamId, String name, List<TaskNameVo> tasks, Long achievement, Long totalStage) {
         this.teamId = teamId;
         this.name = name;
         this.tasks = tasks;

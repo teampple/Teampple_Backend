@@ -1,15 +1,13 @@
-package Backend.teampple.domain.tasks.dto.response;
+package Backend.teampple.domain.tasks.vo;
 
 import Backend.teampple.domain.tasks.entity.Task;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@EqualsAndHashCode
-@NoArgsConstructor
-public class GetTaskBriefDto{
+@Builder
+public class TaskNameVo {
     @ApiModelProperty(value = "할 일 고유번호", example = "1", required = true)
     private Long taskId;
 
@@ -19,9 +17,11 @@ public class GetTaskBriefDto{
     @ApiModelProperty(value = "할 일 완료 여부", example = "false", required = true)
     private boolean isDone;
 
-    public GetTaskBriefDto(Task task) {
-        this.taskId = task.getId();
-        this.name = task.getName();
-        this.isDone = task.isDone();
+    static public TaskNameVo of(Task task) {
+        return TaskNameVo.builder()
+                .taskId(task.getId())
+                .name(task.getName())
+                .isDone(task.isDone())
+                .build();
     }
 }

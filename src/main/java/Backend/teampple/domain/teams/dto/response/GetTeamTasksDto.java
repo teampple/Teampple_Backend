@@ -1,16 +1,14 @@
 package Backend.teampple.domain.teams.dto.response;
 
 import Backend.teampple.domain.stages.entity.Stage;
-import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
+import Backend.teampple.domain.tasks.vo.TaskNameVo;
 import Backend.teampple.global.common.vo.DurationVo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -37,7 +35,7 @@ public class GetTeamTasksDto {
     @ApiModelProperty(value = "끝난 할 일 수", example = "1", required = true)
     private int achievement;
 
-    private List<GetTaskBriefDto> tasks;
+    private List<TaskNameVo> tasks;
 
     public GetTeamTasksDto(Stage stage) {
         stageId = stage.getId();
@@ -47,7 +45,7 @@ public class GetTeamTasksDto {
         totaltask = stage.getTotalTask();
         achievement = stage.getAchievement();
         tasks = stage.getTasks().stream()
-                .map(task -> new GetTaskBriefDto(task))
+                .map(TaskNameVo::of)
                 .collect(toList());
     }
 }

@@ -3,22 +3,19 @@ package Backend.teampple.domain.users.service;
 import Backend.teampple.domain.feedbacks.dto.response.GetFeedbackBriefDto;
 import Backend.teampple.domain.feedbacks.entity.FeedbackOwner;
 import Backend.teampple.domain.feedbacks.repository.FeedbackOwnerRespository;
-import Backend.teampple.domain.feedbacks.repository.FeedbackRepository;
 import Backend.teampple.domain.stages.entity.Stage;
 import Backend.teampple.domain.stages.repository.StagesRepository;
-import Backend.teampple.domain.tasks.dto.response.GetTaskBriefDto;
 import Backend.teampple.domain.tasks.entity.Operator;
 import Backend.teampple.domain.tasks.entity.Task;
 import Backend.teampple.domain.tasks.repository.OperatorRepository;
 import Backend.teampple.domain.tasks.repository.TasksRepository;
-import Backend.teampple.domain.teams.dto.response.GetTeamDto;
+import Backend.teampple.domain.tasks.vo.TaskNameVo;
 import Backend.teampple.domain.teams.dto.response.GetTeamStageDto;
 import Backend.teampple.domain.teams.entity.Team;
 import Backend.teampple.domain.teams.entity.Teammate;
 import Backend.teampple.domain.teams.repository.TeammateRepository;
 import Backend.teampple.domain.teams.repository.TeamsRepository;
 import Backend.teampple.domain.teams.vo.TeamNameVo;
-import Backend.teampple.domain.teams.vo.TeamVo;
 import Backend.teampple.domain.users.dto.response.GetUserFeedbacksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTasksDto;
 import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
@@ -110,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
         List<GetTeamStageDto> getTeamStageDtos = teams.stream()
                 .map(team -> {
-                    List<GetTaskBriefDto> getTaskBriefDtos = new ArrayList<>();
+                    List<TaskNameVo> taskNameVos = new ArrayList<>();
                     stages.stream()
                             .filter(stage -> stage.getTeam().equals(team))
                             .forEach(stage -> {
@@ -118,15 +115,15 @@ public class UserServiceImpl implements UserService {
                                         .filter(task -> task.getStage().equals(stage))
                                         .filter(task -> taskIds.contains(task.getId()))
                                         .forEach(task -> {
-                                            getTaskBriefDtos.add(new GetTaskBriefDto(task));
+                                            taskNameVos.add(TaskNameVo.of(task));
                                         });
                             });
-                    long achievement = getTaskBriefDtos.stream()
-                            .filter(GetTaskBriefDto::isDone).count();
+                    long achievement = taskNameVos.stream()
+                            .filter(TaskNameVo::isDone).count();
                     return GetTeamStageDto.builder()
                             .teamId(team.getId())
-                            .tasks(getTaskBriefDtos)
-                            .totalStage((long) getTaskBriefDtos.size())
+                            .tasks(taskNameVos)
+                            .totalStage((long) taskNameVos.size())
                             .achievement(achievement)
                             .name(team.getName())
                             .build();
