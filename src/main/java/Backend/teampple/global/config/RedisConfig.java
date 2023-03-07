@@ -23,11 +23,18 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
     // redis와 connection을 생성
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig =
                 new RedisStandaloneConfiguration(host, port);
+
+        if (password != null && !password.isBlank()) {
+            redisConfig.setPassword(password);
+        }
 
         LettuceClientConfiguration clientConfig =
                 LettuceClientConfiguration.builder()
