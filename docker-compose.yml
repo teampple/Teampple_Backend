@@ -50,7 +50,7 @@ services:
     depends_on:
       - redis-master
     ports:
-      - '26379-26381:26379'
+      - '16379-16381:16379'
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
