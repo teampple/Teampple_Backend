@@ -49,9 +49,14 @@ public class RedisConfig {
     public RedisConnectionFactory redisConnectionFactory(){
         RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
                 .master("mymaster")
-                .sentinel("localhost",16379)
-                .sentinel("localhost",16380)
-                .sentinel("localhost",16381);
+                .sentinel(host,16379)
+                .sentinel(host,16380)
+                .sentinel(host,16381);
+
+        if (password != null && !password.isBlank()) {
+            redisSentinelConfiguration.setPassword(password);
+        }
+
         return new LettuceConnectionFactory(redisSentinelConfiguration);
     }
 
