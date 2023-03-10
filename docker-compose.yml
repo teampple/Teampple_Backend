@@ -39,7 +39,7 @@ services:
     depends_on:
       - redis-master
 
-  redis-sentinel:
+  redis-sentinel-1:
     image: bitnami/redis-sentinel:latest
     environment:
       - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
@@ -51,6 +51,44 @@ services:
       - redis-master
     ports:
       - '16379-16381:16379'
+  redis-sentinel-1:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+    ports:
+      - '16379:16379'
+
+  redis-sentinel-2:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+    ports:
+      - '16380:16379'
+
+  redis-sentinel-3:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+    ports:
+      - '16381:16379'
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
