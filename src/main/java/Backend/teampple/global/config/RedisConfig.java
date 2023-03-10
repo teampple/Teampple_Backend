@@ -57,7 +57,12 @@ public class RedisConfig {
             redisSentinelConfiguration.setPassword(password);
         }
 
-        return new LettuceConnectionFactory(redisSentinelConfiguration);
+        LettuceClientConfiguration clientConfig =
+                LettuceClientConfiguration.builder()
+                        .commandTimeout(Duration.ofSeconds(1))
+                        .shutdownTimeout(Duration.ZERO)
+                        .build();
+        return new LettuceConnectionFactory(redisSentinelConfiguration, clientConfig);
     }
 
     // RedisConnection에서 넘겨준 byte 값을 객체 직렬화
