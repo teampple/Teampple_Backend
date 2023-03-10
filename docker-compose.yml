@@ -11,6 +11,7 @@ services:
     image: bitnami/redis:latest
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_MAX_MEMORY=300mb  # 스왑 메모리 설정
       - REDIS_REPLICATION_MODE=master
       - REDIS_MAX_MEMORY_POLICY=allkeys-lru  # 스왑 메모리 정책 설정
@@ -26,6 +27,7 @@ services:
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
 #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
@@ -43,6 +45,7 @@ services:
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
 #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
@@ -59,6 +62,7 @@ services:
     environment:
 #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
 #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_SET=mymaster
@@ -78,6 +82,7 @@ services:
     environment:
 #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
 #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_SET=mymaster
@@ -97,6 +102,7 @@ services:
     environment:
 #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
 #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_SET=mymaster
