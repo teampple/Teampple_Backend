@@ -48,7 +48,7 @@ services:
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=2
     depends_on:
-      - redis
+      - redis-master
     ports:
       - '26379-26381:26379'
 
