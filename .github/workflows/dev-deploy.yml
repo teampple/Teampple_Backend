@@ -51,8 +51,8 @@ jobs:
 #       Copy properties files
       - name: Make .env.ci
         run: |
-          touch ./.env.ci
-          echo "$ENV_CI" > ./.env.ci
+          touch .env.ci
+          echo "$ENV_CI" > .env.ci
         # Make env file
         env:
           ENV_CI: ${{ secrets.ENV_CI }}
@@ -113,4 +113,4 @@ jobs:
             sudo docker rm $(sudo docker ps -a -q)
             sudo docker rmi $(sudo docker images -q)
             sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml pull
-            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml up  --env-file ~/srv/ubuntu/.env.ci --scale redis-sentinel=3 --scale redis-slave=2 --build -d
+            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml --env-file ~/srv/ubuntu/.env.ci up --scale redis-sentinel=3 --scale redis-slave=2 --build -d
