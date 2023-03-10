@@ -55,7 +55,7 @@ jobs:
           echo "$ENV_CI" > ./.env.ci
         # Make env file
         env:
-          PROPERTIES_DEV: ${{ secrets.ENV_CI }}
+          ENV_CI: ${{ secrets.ENV_CI }}
         
       - name: Build with Gradle
         run: ./gradlew build -x test
