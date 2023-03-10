@@ -12,6 +12,8 @@ services:
       - REDIS_MAX_MEMORY_POLICY=allkeys-lru  # 스왑 메모리 정책 설정
     ports:
       - "6379:6379"
+    networks:
+      - redis-network
 
   redis-slave-1:
     hostname: redis-slave-1
@@ -23,9 +25,11 @@ services:
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "6380:6380"
+      - "6380:6379"
     depends_on:
       - redis-master
+    networks:
+      - redis-network
 
   redis-slave-2:
     hostname: redis-slave-2
@@ -37,9 +41,11 @@ services:
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "6381:6381"
+      - "6381:6379"
     depends_on:
       - redis-master
+    networks:
+      - redis-network
 
   redis-sentinel-1:
     image: bitnami/redis-sentinel:latest
@@ -52,7 +58,9 @@ services:
     depends_on:
       - redis-master
     ports:
-      - '16379:16379'
+      - '26379:26379'
+    networks:
+      - redis-network
 
   redis-sentinel-2:
     image: bitnami/redis-sentinel:latest
@@ -65,7 +73,9 @@ services:
     depends_on:
       - redis-master
     ports:
-      - '16380:16380'
+      - '26380:26379'
+    networks:
+      - redis-network
 
   redis-sentinel-3:
     image: bitnami/redis-sentinel:latest
@@ -78,7 +88,9 @@ services:
     depends_on:
       - redis-master
     ports:
-      - '16381:16381'
+      - '26381:26379'
+    networks:
+      - redis-network
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
@@ -96,3 +108,7 @@ services:
       context: ./config/nginx
     ports:
       - "80:80"
+
+networks:
+  redis-network:
+    driver: bridge
