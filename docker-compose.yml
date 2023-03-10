@@ -59,39 +59,41 @@ services:
       - redis-slave-1
       - redis-slave-2
     ports:
-      - '26379-26381:26379'
-#
-#  redis-sentinel-2:
-#    image: bitnami/redis-sentinel:latest
-#    environment:
-#      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
-#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-#      - REDIS_MASTER_HOST=redis-master
-#      - REDIS_MASTER_SET=mymaster
-#      - REDIS_MASTER_PORT_NUMBER=6379
-#      - REDIS_SENTINEL_QUORUM=2
-#    depends_on:
-#      - redis-master
-#      - redis-slave-1
-#      - redis-slave-2
-#    ports:
-#      - '26380:26379'
-#
-#  redis-sentinel-3:
-#    image: bitnami/redis-sentinel:latest
-#    environment:
-#      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
-#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-#      - REDIS_MASTER_HOST=redis-master
-#      - REDIS_MASTER_SET=mymaster
-#      - REDIS_MASTER_PORT_NUMBER=6379
-#      - REDIS_SENTINEL_QUORUM=2
-#    depends_on:
-#      - redis-master
-#      - redis-slave-1
-#      - redis-slave-2
-#    ports:
-#      - '26381:26379'
+      - '26379:26379'
+
+  redis-sentinel-2:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_SET=mymaster
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
+    ports:
+      - '26380:26379'
+
+  redis-sentinel-3:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_SET=mymaster
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
+    ports:
+      - '26381:26379'
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
