@@ -113,4 +113,4 @@ jobs:
             sudo docker rm $(sudo docker ps -a -q)
             sudo docker rmi $(sudo docker images -q)
             sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml pull
-            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml up  --env-file ./.env.ci --scale redis-sentinel=3 --scale redis-slave=2 --build -d
+            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml up  --env-file ~/srv/ubuntu/.env.ci --scale redis-sentinel=3 --scale redis-slave=2 --build -d
