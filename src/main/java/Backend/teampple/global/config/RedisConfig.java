@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -27,21 +28,36 @@ public class RedisConfig {
     private String password;
 
     // redis와 connection을 생성
+//    @Bean
+//    public RedisConnectionFactory redisConnectionFactory() {
+//        RedisStandaloneConfiguration redisConfig =
+//                new RedisStandaloneConfiguration(host, port);
+//
+//        if (password != null && !password.isBlank()) {
+//            redisConfig.setPassword(password);
+//        }
+//
+//        LettuceClientConfiguration clientConfig =
+//                LettuceClientConfiguration.builder()
+//                        .commandTimeout(Duration.ofSeconds(1))
+//                        .shutdownTimeout(Duration.ZERO)
+//                        .build();
+//        return new LettuceConnectionFactory(redisConfig, clientConfig);
+//    }
+
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig =
-                new RedisStandaloneConfiguration(host, port);
+    public RedisConnectionFactory redisConnectionFactory(){
+        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
+                .master("mymaster")
+                .sentinel(host,16379)
+                .sentinel(host,16380)
+                .sentinel(host,16381);
 
         if (password != null && !password.isBlank()) {
-            redisConfig.setPassword(password);
+            redisSentinelConfiguration.setPassword(password);
         }
 
-        LettuceClientConfiguration clientConfig =
-                LettuceClientConfiguration.builder()
-                        .commandTimeout(Duration.ofSeconds(1))
-                        .shutdownTimeout(Duration.ZERO)
-                        .build();
-        return new LettuceConnectionFactory(redisConfig, clientConfig);
+        return new LettuceConnectionFactory(redisSentinelConfiguration);
     }
 
     // RedisConnection에서 넘겨준 byte 값을 객체 직렬화

@@ -1,10 +1,56 @@
 version: "3"
 
 services:
-  redis:
-    image: 'redis:alpine'
+  redis-master:
+    hostname: redis-master
+    container_name: redis-master
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_REPLICATION_MODE=master
     ports:
-      - '6379:6379'
+      - "6379:6379"
+
+  redis-slave-1:
+    hostname: redis-slave-1
+    container_name: redis-slave-1
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MAX_MEMORY=300mb  # 스왑 메모리 설정
+      - REDIS_MAX_MEMORY_POLICY=allkeys-lru  # 스왑 메모리 정책 설정
+    ports:
+      - "6380:6379"
+    depends_on:
+      - redis-master
+
+  redis-slave-2:
+    hostname: redis-slave-2
+    container_name: redis-slave-2
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+    ports:
+      - "6381:6379"
+    depends_on:
+      - redis-master
+
+  redis-sentinel:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis
+    ports:
+      - '26379-26381:26379'
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
