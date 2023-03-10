@@ -49,9 +49,9 @@ public class RedisConfig {
     public RedisConnectionFactory redisConnectionFactory(){
         RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration()
                 .master("mymaster")
-                .sentinel(host,16379)
-                .sentinel(host,16380)
-                .sentinel(host,16381);
+                .sentinel(host,26379)
+                .sentinel(host,26380)
+                .sentinel(host,26381);
 
         if (password != null && !password.isBlank()) {
             redisSentinelConfiguration.setPassword(password);
