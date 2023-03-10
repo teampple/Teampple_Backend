@@ -24,7 +24,7 @@ services:
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "6479:6379"
+      - "6479"
     depends_on:
       - redis-master
 
@@ -39,7 +39,7 @@ services:
       - REDIS_MASTER_HOST=redis-master
       - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "6579:6379"
+      - "6579"
     depends_on:
       - redis-master
       - redis-slave-1
