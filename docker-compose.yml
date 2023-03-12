@@ -14,7 +14,7 @@ services:
 #      - REDIS_MAX_MEMORY=300mb  # 스왑 메모리 설정
 #      - REDIS_MAX_MEMORY_POLICY=allkeys-lru  # 스왑 메모리 정책 설정
     ports:
-      - "6379"
+      - "127.0.0.1:6379:6379"
     networks:
       - redis-network
 
@@ -29,7 +29,7 @@ services:
       # default
 #      - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "6379"
+      - "127.0.0.1:6380-6381:6379"
     depends_on:
       - redis-master
     networks:
@@ -51,7 +51,7 @@ services:
       - redis-master
       - redis-slave
     ports:
-      - '26379-26381'
+      - "127.0.0.1:26379-26381:26379-26381"
     networks:
       - redis-network
 
