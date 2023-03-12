@@ -18,7 +18,7 @@ services:
     networks:
       - redis-network
 
-  redis-slave:
+  redis-slave-1:
     image: bitnami/redis:latest
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
@@ -29,13 +29,30 @@ services:
       # default
 #      - REDIS_MASTER_PORT_NUMBER=6379
     ports:
-      - "127.0.0.1:6380-6381:6379"
+      - "127.0.0.1:6380:6380"
     depends_on:
       - redis-master
     networks:
       - redis-network
 
-  redis-sentinel:
+  redis-slave-2:
+    image: bitnami/redis:latest
+    environment:
+      #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
+      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      # default
+    #      - REDIS_MASTER_PORT_NUMBER=6379
+    ports:
+      - "127.0.0.1:6381:6381"
+    depends_on:
+      - redis-master
+    networks:
+      - redis-network
+
+  redis-sentinel-1:
     image: bitnami/redis-sentinel:latest
     environment:
 #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
@@ -52,6 +69,46 @@ services:
       - redis-slave
     ports:
       - "127.0.0.1:26379-26381:26379-26381"
+    networks:
+      - redis-network
+
+  redis-sentinel-2:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
+      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
+      #      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      # default
+    #      - REDIS_MASTER_SET=mymaster
+    #      - REDIS_MASTER_PORT_NUMBER=6379
+    #      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+      - redis-slave
+    ports:
+      - "127.0.0.1:26380:26380"
+    networks:
+      - redis-network
+
+  redis-sentinel-3:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
+      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
+      - ALLOW_EMPTY_PASSWORD=yes
+      #      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=redis-master
+      # default
+    #      - REDIS_MASTER_SET=mymaster
+    #      - REDIS_MASTER_PORT_NUMBER=6379
+    #      - REDIS_SENTINEL_QUORUM=2
+    depends_on:
+      - redis-master
+      - redis-slave
+    ports:
+      - "127.0.0.1:26381:26381"
     networks:
       - redis-network
 
