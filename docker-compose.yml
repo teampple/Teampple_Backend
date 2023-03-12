@@ -6,8 +6,6 @@ networks:
 
 services:
   redis-master:
-    hostname: redis-master
-    container_name: redis-master
     image: bitnami/redis:latest
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
@@ -21,8 +19,6 @@ services:
       - redis-network
 
   redis-slave:
-    hostname: redis-slave-1
-    container_name: redis-slave-1
     image: bitnami/redis:latest
     environment:
 #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
