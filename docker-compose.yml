@@ -54,6 +54,7 @@ services:
       - "6381:6381"
     depends_on:
       - redis-master
+      - redis-slave-1
     networks:
       - redis-network
     volumes:
@@ -73,9 +74,10 @@ services:
 #      - REDIS_SENTINEL_QUORUM=2
     depends_on:
       - redis-master
-      - redis-slave
+      - redis-slave-1
+      - redis-slave-2
     ports:
-      - "26379-26381:26379-26381"
+      - "26379:26379"
     networks:
       - redis-network
     volumes:
@@ -95,7 +97,8 @@ services:
     #      - REDIS_SENTINEL_QUORUM=2
     depends_on:
       - redis-master
-      - redis-slave
+      - redis-slave-1
+      - redis-slave-2
     ports:
       - "26380:26380"
     networks:
@@ -117,7 +120,8 @@ services:
     #      - REDIS_SENTINEL_QUORUM=2
     depends_on:
       - redis-master
-      - redis-slave
+      - redis-slave-1
+      - redis-slave-2
     ports:
       - "26381:26381"
     networks:
