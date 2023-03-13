@@ -18,7 +18,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/redis_6379.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6379.conf
 #    command: /opt/bitnami/scripts/redis/run.sh --maxmemory 100mb
 
   redis-slave-1:
@@ -38,7 +38,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/redis_6380.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6380.conf
 
   redis-slave-2:
     image: bitnami/redis:latest
@@ -57,7 +57,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/redis_6381.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6381.conf
 
   redis-sentinel-1:
     image: bitnami/redis-sentinel:latest
@@ -79,7 +79,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/sentinel_26379.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26379.conf
 
   redis-sentinel-2:
     image: bitnami/redis-sentinel:latest
@@ -101,7 +101,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/sentinel_26380.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
 
   redis-sentinel-3:
     image: bitnami/redis-sentinel:latest
@@ -123,7 +123,7 @@ services:
     networks:
       - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/resources/sentinel_26381.conf
+      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26381.conf
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
