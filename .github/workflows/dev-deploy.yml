@@ -109,7 +109,7 @@ jobs:
           key: ${{ secrets.KEY_DEV }}
           script: |
             sh ~/srv/ubuntu/config/scripts/deploy.sh
-            sudo rm -rf redis-master/data/ redis-slave1/data/ redis-slave2/data/ sentinel1/ sentinel2/ sentinel3/
+            sudo rm -rf redis-master redis-slave1 redis-slave2 sentinel1/ sentinel2/ sentinel3/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6379.conf redis-master/data/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6380.conf redis-slave1/data/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6381.conf redis-slave2/data/
