@@ -6,128 +6,70 @@ networks:
 
 services:
   redis-master:
-    image: bitnami/redis:latest
-    environment:
-#      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
-      - REDIS_REPLICATION_MODE=master
-      - ALLOW_EMPTY_PASSWORD=yes
-#      - REDIS_MAX_MEMORY=300mb  # 스왑 메모리 설정
-#      - REDIS_MAX_MEMORY_POLICY=allkeys-lru  # 스왑 메모리 정책 설정
+    image: redis
+    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6379.conf
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-master/data:/data
     networks:
       - redis-network
-    volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6379.conf
-#    command: /opt/bitnami/scripts/redis/run.sh --maxmemory 100mb
 
-  redis-slave-1:
-    image: bitnami/redis:latest
-    environment:
-#      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
-#      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
-      - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_REPLICATION_MODE=slave
-      - REDIS_MASTER_HOST=redis-master
-      # default
-#      - REDIS_MASTER_PORT_NUMBER=6379
+  redis-slave1:
+    image: redis
+    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6380.conf
     ports:
       - "6380:6380"
-    depends_on:
-      - redis-master
+    volumes:
+      - ./redis-slave1/data:/data
     networks:
       - redis-network
-    volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6380.conf
 
-  redis-slave-2:
-    image: bitnami/redis:latest
-    environment:
-      #      - REDIS_PASSWORD="${REDIS_PASSWORD}"  # 비밀번호 설정
-      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
-      - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_REPLICATION_MODE=slave
-      - REDIS_MASTER_HOST=redis-master
-      # default
-    #      - REDIS_MASTER_PORT_NUMBER=6379
+  redis-slave2:
+    image: redis
+    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6381.conf
     ports:
       - "6381:6381"
-    depends_on:
-      - redis-master
-      - redis-slave-1
+    volumes:
+      - ./redis-slave2/data:/data
     networks:
       - redis-network
-    volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6381.conf
 
-  redis-sentinel-1:
-    image: bitnami/redis-sentinel:latest
-    environment:
-#      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
-#      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
-      - ALLOW_EMPTY_PASSWORD=yes
-#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-      - REDIS_MASTER_HOST=redis-master
-      # default
-#      - REDIS_MASTER_SET=mymaster
-#      - REDIS_MASTER_PORT_NUMBER=6379
-#      - REDIS_SENTINEL_QUORUM=2
-    depends_on:
-      - redis-master
-      - redis-slave-1
-      - redis-slave-2
+  redis-sentinel1:
+    image: redis
+    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
     ports:
       - "26379:26379"
-    networks:
-      - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26379.conf
-
-  redis-sentinel-2:
-    image: bitnami/redis-sentinel:latest
-    environment:
-      #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
-      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
-      - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-      - REDIS_MASTER_HOST=redis-master
-      # default
-    #      - REDIS_MASTER_SET=mymaster
-    #      - REDIS_MASTER_PORT_NUMBER=6379
-    #      - REDIS_SENTINEL_QUORUM=2
+      - ./sentinel1:/sentinel
     depends_on:
       - redis-master
-      - redis-slave-1
-      - redis-slave-2
+    networks:
+      - redis-network
+
+  redis-sentinel2:
+    image: redis
+    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
     ports:
       - "26380:26380"
-    networks:
-      - redis-network
     volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
-
-  redis-sentinel-3:
-    image: bitnami/redis-sentinel:latest
-    environment:
-      #      - REDIS_SENTINEL_PASSWORD="${REDIS_PASSWORD}"
-      #      - REDIS_MASTER_PASSWORD="${REDIS_PASSWORD}"
-      - ALLOW_EMPTY_PASSWORD=yes
-      #      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-      - REDIS_MASTER_HOST=redis-master
-      # default
-    #      - REDIS_MASTER_SET=mymaster
-    #      - REDIS_MASTER_PORT_NUMBER=6379
-    #      - REDIS_SENTINEL_QUORUM=2
+      - ./sentinel2:/sentinel
     depends_on:
       - redis-master
-      - redis-slave-1
-      - redis-slave-2
-    ports:
-      - "26381:26381"
     networks:
       - redis-network
+
+  redis-sentinel3:
+    image: redis
+    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
+    ports:
+      - "26381:26379"
     volumes:
-      - ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26381.conf
+      - ./sentinel3:/sentinel
+    depends_on:
+      - redis-master
+    networks:
+      - redis-network
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev
