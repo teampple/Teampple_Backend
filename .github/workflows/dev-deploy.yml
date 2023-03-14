@@ -109,6 +109,8 @@ jobs:
           key: ${{ secrets.KEY_DEV }}
           script: |
             sh ~/srv/ubuntu/config/scripts/deploy.sh
+            sudo apt install redis-sentinel
+            sudo apt install redis-server
             sudo docker stop $(sudo docker ps -a -q)
             sudo docker rm $(sudo docker ps -a -q)
             sudo docker rmi $(sudo docker images -q)
