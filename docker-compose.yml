@@ -37,7 +37,7 @@ services:
 
   redis-sentinel1:
     image: redis
-    command: redis-sentinel
+    command: redis-sentinel ./sentinel_26379.conf
     ports:
       - "26379:26379"
     volumes:
@@ -49,7 +49,7 @@ services:
 
   redis-sentinel2:
     image: redis
-    command: redis-sentinel
+    command: redis-sentinel ./sentinel_26380.conf
     ports:
       - "26380:26380"
     volumes:
@@ -61,7 +61,7 @@ services:
 
   redis-sentinel3:
     image: redis
-    command: redis-sentinel
+    command: redis-sentinel ./sentinel_26381.conf
     ports:
       - "26381:26381"
     volumes:
