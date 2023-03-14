@@ -7,7 +7,7 @@ networks:
 services:
   redis-master:
     image: redis
-    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6379.conf
+    command: redis-server
     ports:
       - "6379:6379"
     volumes:
@@ -17,7 +17,7 @@ services:
 
   redis-slave1:
     image: redis
-    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6380.conf
+    command: redis-server
     ports:
       - "6380:6380"
     volumes:
@@ -27,7 +27,7 @@ services:
 
   redis-slave2:
     image: redis
-    command: redis-server ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/redis_6381.conf
+    command: redis-server
     ports:
       - "6381:6381"
     volumes:
@@ -37,7 +37,7 @@ services:
 
   redis-sentinel1:
     image: redis
-    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
+    command: redis-sentinel
     ports:
       - "26379:26379"
     volumes:
@@ -49,7 +49,7 @@ services:
 
   redis-sentinel2:
     image: redis
-    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
+    command: redis-sentinel
     ports:
       - "26380:26380"
     volumes:
@@ -61,9 +61,9 @@ services:
 
   redis-sentinel3:
     image: redis
-    command: redis-sentinel ~/srv/ubuntu/src/main/java/Backend/teampple/global/config/sentinel_26380.conf
+    command: redis-sentinel
     ports:
-      - "26381:26379"
+      - "26381:26381"
     volumes:
       - ./sentinel3:/sentinel
     depends_on:
