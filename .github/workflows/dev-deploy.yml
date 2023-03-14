@@ -108,16 +108,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY_DEV }}
           script: |
-            sudo su
             sh ~/srv/ubuntu/config/scripts/deploy.sh
-            sudo apt install redis-sentinel
-            sudo apt install redis-server
+            sudo rm -rf redis-master/data/ redis-slave1/data/ redis-slave2/data/ sentinel1/ sentinel2/ sentinel3/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6379.conf redis-master/data/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6380.conf redis-slave1/data/
             sudo mv src/main/java/Backend/teampple/global/config/redis_6381.conf redis-slave2/data/
-            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26379.conf sentinel1/data/
-            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26380.conf sentinel2/data/
-            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26381.conf sentinel3/data/
+            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26379.conf sentinel1/
+            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26380.conf sentinel2/
+            sudo mv src/main/java/Backend/teampple/global/config/sentinel_26381.conf sentinel3/
             
             sudo docker stop $(sudo docker ps -a -q)
             sudo docker rm $(sudo docker ps -a -q)
