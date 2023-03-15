@@ -1,4 +1,4 @@
-package Backend.teampple.global.config;
+package Backend.teampple.infra.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -7,7 +7,8 @@ networks:
 services:
   redis-master:
     image: redis
-    command: redis-server
+#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6379.conf
+    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6379.conf
     ports:
       - "6379:6379"
     volumes:
@@ -17,31 +18,34 @@ services:
 
   redis-slave1:
     image: redis
-    command: redis-server
+#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6380.conf
+    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6380.conf
     ports:
       - "6380:6380"
-    volumes:
-      - ./redis-slave1/data:/data
+#    volumes:
+#      - ./redis-slave1/data:/data
     networks:
       - redis-network
 
   redis-slave2:
     image: redis
-    command: redis-server
+#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6381.conf
+    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6381.conf
     ports:
       - "6381:6381"
-    volumes:
-      - ./redis-slave2/data:/data
+#    volumes:
+#      - ./redis-slave2/data:/data
     networks:
       - redis-network
 
   redis-sentinel1:
     image: redis
-    command: redis-sentinel ./sentinel_26379.conf
+#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26379.conf
+    command: redis-sentinel ~/src/main/java/Backend/teampple/infra/redis/sentinel_26379.conf
     ports:
       - "26379:26379"
-    volumes:
-      - ./sentinel1/data:/data
+#    volumes:
+#      - ./sentinel1/data:/data
     depends_on:
       - redis-master
     networks:
@@ -49,11 +53,12 @@ services:
 
   redis-sentinel2:
     image: redis
-    command: redis-sentinel ./sentinel_26380.conf
+#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26380.conf
+    command: redis-sentinel ../../../../../Users/jeongsanghun/Desktop/OTHERS/PROJECTS/Teampple_Backend/src/main/java/Backend/teampple/infra/redis/sentinel_26380.conf
     ports:
       - "26380:26380"
-    volumes:
-      - ./sentinel2/data:/data
+#    volumes:
+#      - ./sentinel2/data:/data
     depends_on:
       - redis-master
     networks:
@@ -61,29 +66,30 @@ services:
 
   redis-sentinel3:
     image: redis
-    command: redis-sentinel ./sentinel_26381.conf
+#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26381.conf
+    command: redis-sentinel ~/src/main/java/Backend/teampple/infra/redis/sentinel_26381.conf
     ports:
       - "26381:26381"
-    volumes:
-      - ./sentinel3/data:/data
+#    volumes:
+#      - ./sentinel3/data:/data
     depends_on:
       - redis-master
     networks:
       - redis-network
 
-  backend-dev:
-    image: squirmm/teampple-server-dev:dev
-    container_name: backend-dev
-    hostname: backend-dev
-    expose:
-      - "8080"
-
-  nginx:
-    depends_on:
-      - backend-dev
-    restart: always
-    build:
-      dockerfile: Dockerfile
-      context: ./config/nginx
-    ports:
-      - "80:80"
+#  backend-dev:
+#    image: squirmm/teampple-server-dev:dev
+#    container_name: backend-dev
+#    hostname: backend-dev
+#    expose:
+#      - "8080"
+#
+#  nginx:
+#    depends_on:
+#      - backend-dev
+#    restart: always
+#    build:
+#      dockerfile: Dockerfile
+#      context: ./config/nginx
+#    ports:
+#      - "80:80"
