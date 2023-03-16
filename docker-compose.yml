@@ -61,7 +61,7 @@ services:
 #      - backend-dev
 #    restart: always
 #    build:
-#      dockerfile: Dockerfile-sentinel1-slave1
+#      dockerfile: Dockerfile
 #      context: ./config/nginx
 #    ports:
 #      - "80:80"
