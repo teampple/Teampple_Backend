@@ -2,4 +2,4 @@ FROM redis:7.0.9
 
 COPY ./26380.conf /etc/redis/26380.conf
 
-CMD ["redis-server", "/etc/redis/26380.conf", "--daemonize", "yes"]
+CMD ["redis-sentinel", "/etc/redis/26380.conf", "--daemonize", "yes"]
