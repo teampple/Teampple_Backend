@@ -82,7 +82,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile-sentinel1-slave1.prod
+          file: ./Dockerfile.prod
           platforms: linux/amd64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
