@@ -1,81 +1,53 @@
 version: "3"
 
-networks:
-  redis-network:
-    driver: bridge
-
 services:
-  redis-master:
-    image: redis
-#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6379.conf
-    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6379.conf
+  redis:
+    build:
+      context: ./config/redis/master
+      dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "6379:6379"
-    volumes:
-      - ./redis-master/data:/data
-    networks:
-      - redis-network
 
-  redis-slave1:
-    image: redis
-#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6380.conf
-    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6380.conf
+  redis-slave-1:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave1
+    restart: unless-stopped
     ports:
       - "6380:6380"
-#    volumes:
-#      - ./redis-slave1/data:/data
-    networks:
-      - redis-network
 
-  redis-slave2:
-    image: redis
-#    command: redis-server /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/redis_6381.conf
-    command: redis-server ~/src/main/java/Backend/teampple/infra/redis/redis_6381.conf
+  redis-slave-2:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave1
+    restart: unless-stopped
     ports:
       - "6381:6381"
-#    volumes:
-#      - ./redis-slave2/data:/data
-    networks:
-      - redis-network
 
-  redis-sentinel1:
-    image: redis
-#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26379.conf
-    command: redis-sentinel ~/src/main/java/Backend/teampple/infra/redis/sentinel_26379.conf
+  sentinel-1:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel1
+    restart: unless-stopped
     ports:
       - "26379:26379"
-#    volumes:
-#      - ./sentinel1/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
-  redis-sentinel2:
-    image: redis
-#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26380.conf
-    command: redis-sentinel ../../../../../Users/jeongsanghun/Desktop/OTHERS/PROJECTS/Teampple_Backend/src/main/java/Backend/teampple/infra/redis/sentinel_26380.conf
+  sentinel-2:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel2
+    restart: unless-stopped
     ports:
       - "26380:26380"
-#    volumes:
-#      - ./sentinel2/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
-  redis-sentinel3:
-    image: redis
-#    command: redis-sentinel /home/ubuntu/srv/ubuntu/src/main/java/Backend/teampple/infra/redis/sentinel_26381.conf
-    command: redis-sentinel ~/src/main/java/Backend/teampple/infra/redis/sentinel_26381.conf
+  sentinel-3:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel3
+    restart: unless-stopped
     ports:
       - "26381:26381"
-#    volumes:
-#      - ./sentinel3/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
 #  backend-dev:
 #    image: squirmm/teampple-server-dev:dev
@@ -89,7 +61,7 @@ services:
 #      - backend-dev
 #    restart: always
 #    build:
-#      dockerfile: Dockerfile
+#      dockerfile: Dockerfile-sentinel1-slave1
 #      context: ./config/nginx
 #    ports:
 #      - "80:80"

@@ -1,0 +1,5 @@
+FROM redis:7.0.9
+
+COPY ./6381.conf /etc/redis/6381.conf
+
+CMD ["redis-server", "/etc/redis/6380.conf", "--daemonize", "yes"]
