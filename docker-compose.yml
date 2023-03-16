@@ -11,7 +11,7 @@ services:
 
   redis-slave-1:
     build:
-      context: ./config/redis/slave
+      context: config/redis/slave
       dockerfile: Dockerfile-slave1
     restart: unless-stopped
     ports:
@@ -19,7 +19,7 @@ services:
 
   redis-slave-2:
     build:
-      context: ./config/redis/slave
+      context: config/redis/slave
       dockerfile: Dockerfile-slave1
     restart: unless-stopped
     ports:
@@ -27,7 +27,7 @@ services:
 
   sentinel-1:
     build:
-      context: ./config/redis/sentinel
+      context: config/redis/sentinel
       dockerfile: Dockerfile-sentinel1
     restart: unless-stopped
     ports:
@@ -35,7 +35,7 @@ services:
 
   sentinel-2:
     build:
-      context: ./config/redis/sentinel
+      context: config/redis/sentinel
       dockerfile: Dockerfile-sentinel2
     restart: unless-stopped
     ports:
@@ -43,7 +43,7 @@ services:
 
   sentinel-3:
     build:
-      context: ./config/redis/sentinel
+      context: config/redis/sentinel
       dockerfile: Dockerfile-sentinel3
     restart: unless-stopped
     ports:
