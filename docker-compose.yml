@@ -1,89 +1,67 @@
 version: "3"
 
-networks:
-  redis-network:
-    driver: bridge
-
 services:
-  redis-master:
-    image: redis
-    command: redis-server
+  redis:
+    build:
+      context: ./config/redis/master
+      dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "6379:6379"
-    volumes:
-      - ./redis-master/data:/data
-    networks:
-      - redis-network
 
-  redis-slave1:
-    image: redis
-    command: redis-server
+  redis-slave-1:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave1
+    restart: unless-stopped
     ports:
       - "6380:6380"
-    volumes:
-      - ./redis-slave1/data:/data
-    networks:
-      - redis-network
 
-  redis-slave2:
-    image: redis
-    command: redis-server
+  redis-slave-2:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave1
+    restart: unless-stopped
     ports:
       - "6381:6381"
-    volumes:
-      - ./redis-slave2/data:/data
-    networks:
-      - redis-network
 
-  redis-sentinel1:
-    image: redis
-    command: redis-sentinel ./sentinel_26379.conf
+  sentinel-1:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel1
+    restart: unless-stopped
     ports:
       - "26379:26379"
-    volumes:
-      - ./sentinel1/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
-  redis-sentinel2:
-    image: redis
-    command: redis-sentinel ./sentinel_26380.conf
+  sentinel-2:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel2
+    restart: unless-stopped
     ports:
       - "26380:26380"
-    volumes:
-      - ./sentinel2/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
-  redis-sentinel3:
-    image: redis
-    command: redis-sentinel ./sentinel_26381.conf
+  sentinel-3:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel3
+    restart: unless-stopped
     ports:
       - "26381:26381"
-    volumes:
-      - ./sentinel3/data:/data
-    depends_on:
-      - redis-master
-    networks:
-      - redis-network
 
-  backend-dev:
-    image: squirmm/teampple-server-dev:dev
-    container_name: backend-dev
-    hostname: backend-dev
-    expose:
-      - "8080"
-
-  nginx:
-    depends_on:
-      - backend-dev
-    restart: always
-    build:
-      dockerfile: Dockerfile
-      context: ./config/nginx
-    ports:
-      - "80:80"
+#  backend-dev:
+#    image: squirmm/teampple-server-dev:dev
+#    container_name: backend-dev
+#    hostname: backend-dev
+#    expose:
+#      - "8080"
+#
+#  nginx:
+#    depends_on:
+#      - backend-dev
+#    restart: always
+#    build:
+#      dockerfile: Dockerfile-sentinel1-slave1
+#      context: ./config/nginx
+#    ports:
+#      - "80:80"
