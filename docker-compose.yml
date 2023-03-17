@@ -1,35 +1,16 @@
 version: "3"
 
 services:
-  redis_container:
-    # 사용할 이미지
-    image: redis:latest
-    # 컨테이너명
-    container_name: redis_test
-    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+  redis:
+    build:
+      context: ./config/redis/master
+      dockerfile: Dockerfile
     ports:
-      - 6379:6379
-    # 스토리지 마운트(볼륨) 설정
-    volumes:
-      - ./redis/data:/data
-      - ./config/redis/master/6379.conf:/usr/local/conf/redis.conf
-    # 컨테이너에 docker label을 이용해서 메타데이터 추가
-    labels:
-      - "name=redis"
-      - "mode=standalone"
-    # 컨테이너 종료시 재시작 여부 설정
-    restart: always
-    command: redis-server /usr/local/conf/redis.conf
-#  redis:
-#    build:
-#      context: ./config/redis/master
-#      dockerfile: Dockerfile
-#    ports:
-#      - "6379:6379"
+      - "6379:6379"
 
   redis-slave-1:
     build:
-      context: config/redis/slave
+      context: ./config/redis/slave
       dockerfile: Dockerfile-slave1
     depends_on:
       - redis
@@ -38,7 +19,7 @@ services:
 
   redis-slave-2:
     build:
-      context: config/redis/slave
+      context: ./config/redis/slave
       dockerfile: Dockerfile-slave1
     depends_on:
       - redis
@@ -48,7 +29,7 @@ services:
 
   sentinel-1:
     build:
-      context: config/redis/sentinel
+      context: ./config/redis/sentinel
       dockerfile: Dockerfile-sentinel1
     depends_on:
       - redis
@@ -59,7 +40,7 @@ services:
 
   sentinel-2:
     build:
-      context: config/redis/sentinel
+      context: ./config/redis/sentinel
       dockerfile: Dockerfile-sentinel2
     depends_on:
       - redis
@@ -70,7 +51,7 @@ services:
 
   sentinel-3:
     build:
-      context: config/redis/sentinel
+      context: ./config/redis/sentinel
       dockerfile: Dockerfile-sentinel3
     depends_on:
       - redis
@@ -79,19 +60,19 @@ services:
     ports:
       - "26381:26381"
 
-#  backend-dev:
-#    image: squirmm/teampple-server-dev:dev
-#    container_name: backend-dev
-#    hostname: backend-dev
-#    expose:
-#      - "8080"
-#
-#  nginx:
-#    depends_on:
-#      - backend-dev
-#    restart: always
-#    build:
-#      dockerfile: Dockerfile
-#      context: ./config/nginx
-#    ports:
-#      - "80:80"
+  backend-dev:
+    image: squirmm/teampple-server-dev:dev
+    container_name: backend-dev
+    hostname: backend-dev
+    expose:
+      - "8080"
+
+  nginx:
+    depends_on:
+      - backend-dev
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./config/nginx
+    ports:
+      - "80:80"
