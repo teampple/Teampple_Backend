@@ -20,7 +20,7 @@ services:
   redis-slave-2:
     build:
       context: ./config/redis/slave
-      dockerfile: Dockerfile-slave1
+      dockerfile: Dockerfile-slave2
     depends_on:
       - redis
       - redis-slave-1

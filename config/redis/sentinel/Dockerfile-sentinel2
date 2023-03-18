@@ -1,5 +1,7 @@
 FROM redis:7.0.9
 
-COPY ./sentinel26380.conf /etc/redis/26380.conf
+EXPOSE 26380
 
-CMD ["redis-sentinel", "/etc/redis/26380.conf", "--daemonize", "yes"]
+COPY ./26380.conf /var/lib/redis/26380.conf
+
+CMD ["redis-sentinel", "/var/lib/redis/26380.conf"]
