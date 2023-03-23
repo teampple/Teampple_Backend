@@ -28,7 +28,7 @@ public class BookmarkService {
     public void postBookmark(User authUser, PostBookmarkDto postBookmarkDto) {
         // 1. template 조회
         Template template = templateRespository.findById(postBookmarkDto.getId())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEMPLATE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TEMPLATE_NOT_FOUND));
 
         // 2. bookmark 생성
         Bookmark bookmark = bookmarkRepository.findByUserAndTemplate(authUser, template);

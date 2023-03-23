@@ -102,7 +102,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_AUTH_TOKEN);
         }
         ;
         log.info(claims.getSubject());

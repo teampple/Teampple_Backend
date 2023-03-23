@@ -11,8 +11,8 @@ public class ForbiddenException extends BaseException {
     public ForbiddenException() {
         super(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS.getMessage());
     }
-    public ForbiddenException(ErrorCode errorCode,String message) {
-        super(errorCode, message);}
+    public ForbiddenException(ErrorCode errorCode) {
+        super(errorCode, errorCode.getMessage());}
     public ForbiddenException(String message) {
         super(ErrorCode.UNAUTHORIZED_ACCESS, message);
     }
