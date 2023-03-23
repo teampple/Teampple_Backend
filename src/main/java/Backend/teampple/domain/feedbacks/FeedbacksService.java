@@ -51,7 +51,7 @@ public class FeedbacksService {
 //        log.info("{}",user);
         // 1. task 조회
         Task task = tasksRepository.findByIdWithStage(taskId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND));
 
         // 2. 유저 체크 및 유저 불러오기
         checkUser.checkIsUserCanPostFeedback(authUser, task.getStage().getTeam());

@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     public void logout(User user, RequestJwtTokenDto requestJwtTokenDto) {
         /**refreshToken 만료 여부 확인*/
         if (!refreshTokenRepository.existsById(requestJwtTokenDto.getJwtRefreshToken())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         refreshTokenRepository.deleteById(requestJwtTokenDto.getJwtRefreshToken());
@@ -64,12 +64,12 @@ public class AuthServiceImpl implements AuthService {
     public ResponseJwtTokenDto reIssuance(User user, RequestJwtTokenDto requestJwtTokenDto) {
         /**refreshToken 유효성 확인*/
         if (!jwtTokenProvider.validateToken(requestJwtTokenDto.getJwtRefreshToken())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN);
         }
 
         /**refreshToken 만료 여부 확인*/
         if (!refreshTokenRepository.existsById(requestJwtTokenDto.getJwtRefreshToken())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         /** accessToken 생성용 Authentication 생성 */

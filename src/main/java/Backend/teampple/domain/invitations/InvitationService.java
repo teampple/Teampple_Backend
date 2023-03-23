@@ -80,18 +80,18 @@ public class InvitationService {
 
         // 1.2 초대장 없으면 return
         if (invite == null) {
-            throw new BadRequestException(ErrorCode.NOT_VALID_INVITATION.getMessage());
+            throw new BadRequestException(ErrorCode.NOT_VALID_INVITATION);
         }
 
         // 2. 팀 조회
         Team team = teamsRepository.findById(invite.getTeamId())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TEAM_NOT_FOUND));
 
         // 3. 이미 존재하는 팀원인지 체크
         List<Teammate> teammates = teammateRepository.findAllByTeamWithUser(team);
         teammates.forEach(teammate -> {
                     if(authUser.equals(teammate.getUser()))
-                        throw new BadRequestException(ErrorCode.TEAMMATE_ALREADY_EXIST.getMessage());
+                        throw new BadRequestException(ErrorCode.TEAMMATE_ALREADY_EXIST);
                 });
 
         // 3. 팀원 생성
@@ -120,7 +120,7 @@ public class InvitationService {
 
         // 2.2 초대장 존재하면 팀 조회 후 return
         Team team = teamsRepository.findById(invite.getTeamId())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TASK_NOT_FOUND));
         return GetInvitationValidationDto.builder()
                 .teamName(team.getName())
                 .isValid(true)

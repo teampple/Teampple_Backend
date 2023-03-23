@@ -25,7 +25,7 @@ public class OAuth2Attribute {
             case "kakao":
                 return ofKakao("kakaoOauth", attributes);
             default:
-                throw new UnauthorizedException(ErrorCode.INVALID_PROVIDER, ErrorCode.INVALID_PROVIDER.getMessage());
+                throw new UnauthorizedException(ErrorCode.INVALID_PROVIDER);
         }
     }
 

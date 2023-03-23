@@ -14,4 +14,7 @@ public class NotFoundException extends BaseException {
     public NotFoundException(String message) {
         super(ErrorCode._BAD_REQUEST, message);
     }
+    public NotFoundException(ErrorCode errorCode) {
+        super(errorCode, errorCode.getMessage());
+    }
 }
