@@ -26,11 +26,11 @@ public class ErrorResponse {
         this.code = code;
     }
 
-    public static ErrorResponse onFailure(ErrorCode errorCode, String message) {
+    public static ErrorResponse onFailure(ErrorCode errorCode) {
         return ErrorResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.getCode())
-                .message(message)
+                .message(errorCode.getMessage())
                 .build();
     }
 }
