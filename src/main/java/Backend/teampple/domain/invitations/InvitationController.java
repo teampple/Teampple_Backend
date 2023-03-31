@@ -49,10 +49,10 @@ public class InvitationController {
     @GetMapping(value = "validation")
     @Operation(summary = "초대 코드 검증", description = "초대 코드 검증 API 입니다." +
             "토큰이 필요 없는 api 입니다. 유효하지 않은 코드일 경우 false 값을 보냅니다.")
-    public CommonResponse<GetInvitationValidationDto> getInvitationValidation(@RequestParam("code") String code) {
+    public GetInvitationValidationDto getInvitationValidation(@RequestParam("code") String code) {
         log.info("[api-get] 초대 코드 검증 ");
 
         GetInvitationValidationDto validationDto = invitationService.getInvitationValidation(code);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), validationDto);
+        return validationDto;
     }
 }
