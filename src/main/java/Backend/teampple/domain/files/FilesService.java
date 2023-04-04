@@ -58,7 +58,7 @@ public class FilesService {
 
         // 4. file 생성
         File file = File.builder()
-                .url(postFileDto.getUrl())
+                .url(postFileDto.getKey())
                 .filename(postFileDto.getFileName())
                 .size(postFileDto.getSize())
                 .task(task)

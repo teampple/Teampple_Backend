@@ -14,4 +14,8 @@ public class InternalServerException extends BaseException {
     public InternalServerException(String message) {
         super(ErrorCode._INTERNAL_SERVER_ERROR, message);
     }
+
+    public InternalServerException(ErrorCode errorCode) {
+        super(errorCode, errorCode.getMessage());
+    }
 }

@@ -1,0 +1,7 @@
+FROM redis:7.0.9
+
+EXPOSE 26381
+
+COPY ./26381.conf /var/lib/redis/26381.conf
+
+CMD ["redis-sentinel", "/var/lib/redis/26381.conf"]

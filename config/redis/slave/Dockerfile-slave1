@@ -1,0 +1,7 @@
+FROM redis:7.0.9
+
+EXPOSE 6380
+
+COPY ./6380.conf /etc/redis/6380.conf
+
+CMD ["redis-server", "/etc/redis/6380.conf"]

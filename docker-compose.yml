@@ -2,9 +2,63 @@ version: "3"
 
 services:
   redis:
-    image: 'redis:alpine'
+    build:
+      context: ./config/redis/master
+      dockerfile: Dockerfile
     ports:
-      - '6379:6379'
+      - "6379:6379"
+
+  redis-slave-1:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave1
+    depends_on:
+      - redis
+    ports:
+      - "6380:6380"
+
+  redis-slave-2:
+    build:
+      context: ./config/redis/slave
+      dockerfile: Dockerfile-slave2
+    depends_on:
+      - redis
+      - redis-slave-1
+    ports:
+      - "6381:6381"
+
+  sentinel-1:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel1
+    depends_on:
+      - redis
+      - redis-slave-1
+      - redis-slave-2
+    ports:
+      - "26379:26379"
+
+  sentinel-2:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel2
+    depends_on:
+      - redis
+      - redis-slave-1
+      - redis-slave-2
+    ports:
+      - "26380:26380"
+
+  sentinel-3:
+    build:
+      context: ./config/redis/sentinel
+      dockerfile: Dockerfile-sentinel3
+    depends_on:
+      - redis
+      - redis-slave-1
+      - redis-slave-2
+    ports:
+      - "26381:26381"
 
   backend-dev:
     image: squirmm/teampple-server-dev:dev

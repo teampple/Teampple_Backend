@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException MANVE) {
         log.error("MethodArgumentNotValidException", MANVE);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("HttpRequestMethodNotSupportedException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._METHOD_NOT_ALLOWED, ErrorCode._METHOD_NOT_ALLOWED.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._METHOD_NOT_ALLOWED),
                 null, ErrorCode._METHOD_NOT_ALLOWED.getHttpStatus());
     }
 
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.error("HttpMessageNotReadableException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.error("MethodArgumentTypeMismatchException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     protected ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("EmptyResultDataAccessException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode._BAD_REQUEST.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AmazonServiceException.class)
     protected ResponseEntity<ErrorResponse> handleAmazonServiceException(AmazonServiceException e) {
         log.error("AmazonServiceException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode.S3_SERVER_ERROR.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
     }
 
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SdkClientException.class)
     protected ResponseEntity<ErrorResponse> handleSdkClientException(SdkClientException e) {
         log.error("SdkClientException", e);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST, ErrorCode.S3_CONNECTION_ERROR.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._BAD_REQUEST),
                 null, ErrorCode._BAD_REQUEST.getHttpStatus());
 
     }
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(final BaseException baseException) {
         log.error("handleBusinessException", baseException);
-        return new ResponseEntity<>(ErrorResponse.onFailure(baseException.getErrorCode(), baseException.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(baseException.getErrorCode()),
                 null, baseException.getErrorCode().getHttpStatus());
     }
 
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
         log.error("handleException", exception);
-        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._INTERNAL_SERVER_ERROR, ErrorCode._INTERNAL_SERVER_ERROR.getMessage()),
+        return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._INTERNAL_SERVER_ERROR),
                 null, INTERNAL_SERVER_ERROR);
     }
 
