@@ -26,36 +26,33 @@ public class StagesController {
 
     @GetMapping(value = "")
     @Operation(summary = "단계 조회", description = "단계 조회 API 입니다.")
-    public CommonResponse<List<StageDto>> getStage(@AuthUser User authUser,
-                                                   @RequestParam("teamId") Long teamId) {
+    public List<StageDto> getStage(@AuthUser User authUser,
+                                   @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 단계 조회");
         log.info("{}", authUser);
 
-        List<StageDto> stageDtos = stagesService.getStage(authUser, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), stageDtos);
+        return stagesService.getStage(authUser, teamId);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "단계 추가", description = "단계 추가 API 입니다.")
-    public CommonResponse<String> postStage(@AuthUser User authUser,
-                                            @Valid @RequestBody PostStageDto postStageDto,
-                                            @RequestParam("teamId") Long teamId) {
+    public void postStage(@AuthUser User authUser,
+                          @Valid @RequestBody PostStageDto postStageDto,
+                          @RequestParam("teamId") Long teamId) {
         log.info("[api-post] 단계 추가");
         log.info("{}", authUser);
 
         stagesService.postStage(authUser, postStageDto, teamId);
-        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @PutMapping(value = "")
     @Operation(summary = "단계 수정", description = "단계 수정 API 입니다.")
-    public CommonResponse<String> putStage(@AuthUser User authUser,
-                                           @Valid @RequestBody PutStageDto putStageDto,
-                                           @RequestParam("teamId") Long teamId) {
+    public void putStage(@AuthUser User authUser,
+                         @Valid @RequestBody PutStageDto putStageDto,
+                         @RequestParam("teamId") Long teamId) {
         log.info("[api-put] 단계 수정");
         log.info("{}", authUser);
 
         stagesService.putStage(authUser, putStageDto, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 }

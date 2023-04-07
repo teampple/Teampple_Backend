@@ -27,18 +27,17 @@ public class FilesController {
 
     @GetMapping(value = "")
     @Operation(summary = "파일 목록 조회", description = "파일 목록 조회 API 입니다.")
-    public CommonResponse<List<GetFileDto>> getFile(@AuthUser User authUser,
-                                                    @RequestParam("teamId") Long teamId) {
+    public List<GetFileDto> getFile(@AuthUser User authUser,
+                                    @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 목록 조회");
         log.info("{}", authUser);
 
-        List<GetFileDto> fileDtos = filesService.getFile(authUser, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), fileDtos);
+        return filesService.getFile(authUser, teamId);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "파일 등록", description = "파일 등록 API 입니다.")
-    public CommonResponse<String> postFile(@AuthUser User authUser,
+    public void postFile(@AuthUser User authUser,
                                            @Valid @RequestBody PostFileDto postFileDto,
                                            @RequestParam("taskId") Long taskId,
                                            @RequestParam("teamId") Long teamId) {
@@ -46,28 +45,25 @@ public class FilesController {
         log.info("{}", authUser);
 
         filesService.postFile(authUser, postFileDto, taskId, teamId);
-        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @DeleteMapping(value = "")
     @Operation(summary = "파일 삭제", description = "파일 삭제 API 입니다.")
-    public CommonResponse<String> deleteFile(@AuthUser User authUser,
-                                             @RequestParam("fileId") Long fileId) {
+    public void deleteFile(@AuthUser User authUser,
+                           @RequestParam("fileId") Long fileId) {
         log.info("[api-delete] 파일 삭제");
         log.info("{}", authUser);
 
         filesService.deleteFile(authUser, fileId);
-        return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
     }
 
     @GetMapping(value = "info")
     @Operation(summary = "파일 갯수 조회", description = "파일 갯수 조회 API 입니다.")
-    public CommonResponse<GetFileBriefDto> getFileBrief(@AuthUser User authUser,
-                                                        @RequestParam("teamId") Long teamId) {
+    public GetFileBriefDto getFileBrief(@AuthUser User authUser,
+                                        @RequestParam("teamId") Long teamId) {
         log.info("[api-get] 파일 갯수 조회");
         log.info("{}", authUser);
 
-        GetFileBriefDto fileBriefDto = filesService.getFileBrief(authUser, teamId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), fileBriefDto);
+        return filesService.getFileBrief(authUser, teamId);
     }
 }

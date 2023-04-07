@@ -24,26 +24,24 @@ public class InvitationController {
     @GetMapping(value = "")
     @Operation(summary = "초대 링크 조회", description = "초대 링크 API 입니다." +
             "스웨거 테스트시 referer, host 입력 안해도 됩니다.")
-    public CommonResponse<GetInvitationDto> getInvitation(@AuthUser User authUser,
+    public GetInvitationDto getInvitation(@AuthUser User authUser,
                                                           @RequestParam("teamId") Long teamId,
                                                           @RequestHeader(value = "referer", required = false) String referer,
                                                           @RequestHeader(value = "host", required = false) String host) {
         log.info("[api-get] 초대 링크 ");
         log.info("{}", authUser);
 
-        GetInvitationDto getInvitationDto = invitationService.getInvitation(authUser, teamId, referer, host);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), getInvitationDto);
+        return invitationService.getInvitation(authUser, teamId, referer, host);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "유저 초대", description = "유저 초대 API 입니다.")
-    public CommonResponse<PostInvitationDto> postInvitation(@AuthUser User authUser,
-                                                 @RequestParam("code") String code) {
+    public PostInvitationDto postInvitation(@AuthUser User authUser,
+                                                            @RequestParam("code") String code) {
         log.info("[api-post] 유저 초대");
         log.info("{}", authUser);
 
-        PostInvitationDto postInvitationDto = invitationService.postInvitation(authUser, code);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), postInvitationDto);
+        return invitationService.postInvitation(authUser, code);
     }
 
     @GetMapping(value = "validation")
@@ -52,7 +50,6 @@ public class InvitationController {
     public GetInvitationValidationDto getInvitationValidation(@RequestParam("code") String code) {
         log.info("[api-get] 초대 코드 검증 ");
 
-        GetInvitationValidationDto validationDto = invitationService.getInvitationValidation(code);
-        return validationDto;
+        return invitationService.getInvitationValidation(code);
     }
 }

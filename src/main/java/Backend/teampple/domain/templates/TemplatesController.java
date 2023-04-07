@@ -27,22 +27,20 @@ public class TemplatesController {
 
     @GetMapping(value = "")
     @Operation(summary = "탬플릿 조회", description = "탬플릿 조회 API 입니다.")
-    public CommonResponse<List<GetTemplateDto>> getTemplate(@AuthUser User authUser) {
+    public List<GetTemplateDto> getTemplate(@AuthUser User authUser) {
         log.info("[api-get] 탬플릿 조회");
         log.info("{}", authUser);
 
-        List<GetTemplateDto> getTemplateDtos = templatesService.getTemplate(authUser);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), getTemplateDtos);
+        return templatesService.getTemplate(authUser);
     }
 
     @PostMapping(value = "bookmarks")
     @Operation(summary = "탬플릿 북마크 여부 변경", description = "탬플릿 북마크 여부 변경 API 입니다.")
-    public CommonResponse<String> postBookmark(@AuthUser User authUser,
+    public void postBookmark(@AuthUser User authUser,
                                                @Valid @RequestBody PostBookmarkDto postBookmarkDto) {
         log.info("[api-post] 탬플릿 즐겨찾기");
         log.info("{}", authUser);
 
         bookmarkService.postBookmark(authUser, postBookmarkDto);
-        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 }

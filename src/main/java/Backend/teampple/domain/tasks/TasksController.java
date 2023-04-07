@@ -25,58 +25,53 @@ public class TasksController {
 
     @GetMapping(value = "")
     @Operation(summary = "할 일 조회", description = "할 일 조회 API 입니다.")
-    public CommonResponse<GetTaskDto> getTask(@AuthUser User authUser,
+    public GetTaskDto getTask(@AuthUser User authUser,
                                               @RequestParam("taskId") Long taskId) {
         log.info("[api-get] 할 일 조회");
         log.info("{}", authUser);
 
-        GetTaskDto getTaskDto = tasksService.getTask(authUser, taskId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), getTaskDto);
+        return tasksService.getTask(authUser, taskId);
     }
 
     @PostMapping(value = "")
     @Operation(summary = "할 일 추가", description = "할 일 추가 API 입니다.")
-    public CommonResponse<String> postTask(@AuthUser User authUser,
+    public void postTask(@AuthUser User authUser,
                                            @Valid @RequestBody TaskDto taskDto,
                                            @RequestParam("stageId") Long stageId) {
         log.info("[api-post] 할 일 추가");
         log.info("{}", authUser);
 
         tasksService.postTask(authUser, taskDto, stageId);
-        return CommonResponse.onSuccess(HttpStatus.CREATED.value());
     }
 
     @PutMapping(value = "")
     @Operation(summary = "할 일 수정", description = "할 일 수정 API 입니다.")
-    public CommonResponse<String> putTask(@AuthUser User authUser,
+    public void putTask(@AuthUser User authUser,
                                           @Valid @RequestBody TaskDto taskDto,
                                           @RequestParam("taskId") Long taskId) {
         log.info("[api-put] 할 일 수정");
         log.info("{}", authUser);
 
         tasksService.putTask(authUser, taskDto, taskId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 
     @DeleteMapping(value = "")
     @Operation(summary = "할 일 삭제", description = "할 일 삭제 API 입니다.")
-    public CommonResponse<String> deleteTask(@AuthUser User authUser,
+    public void deleteTask(@AuthUser User authUser,
                                              @RequestParam("taskId") Long taskId) {
         log.info("[api-delete] 할 일 삭제");
         log.info("{}", authUser);
 
         tasksService.deleteTask(authUser, taskId);
-        return CommonResponse.onSuccess(HttpStatus.NO_CONTENT.value());
     }
 
     @PostMapping(value = "/status")
     @Operation(summary = "할 일 완료 여부 변경", description = "할 일 완료 여부 변경 API 입니다.")
-    public CommonResponse<String> getConvertStatus(@AuthUser User authUser,
+    public void getConvertStatus(@AuthUser User authUser,
                                                    @RequestParam("taskId") Long taskId) {
         log.info("[api-get] 할 일 완료 여부 변경");
         log.info("{}", authUser);
 
         tasksService.getConvertStatus(authUser, taskId);
-        return CommonResponse.onSuccess(HttpStatus.OK.value());
     }
 }
