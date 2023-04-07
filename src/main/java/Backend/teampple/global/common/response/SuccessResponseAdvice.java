@@ -19,16 +19,15 @@ import java.util.ArrayList;
 @RestControllerAdvice
 @Slf4j
 public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
-    @Override
-    public boolean supports(MethodParameter returnType, Class converterType) {
-        return true;
-    }
-
     private final String[] SwaggerPatterns = {
             "swagger",
             "/v2/api-docs"
     };
 
+    @Override
+    public boolean supports(MethodParameter returnType, Class converterType) {
+        return true;
+    }
 
     @Nullable
     public Object beforeBodyWrite(
@@ -45,22 +44,27 @@ public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
 
         // 스웨거일 경우 리스폰스 처리 안하도록
         for (String swaggerPattern : SwaggerPatterns) {
-            if (servletRequest.getRequestURI().contains(swaggerPattern)) {
+            if (servletRequest.getRequestURI().contains(swaggerPattern))
                 return body;
-            }
         }
 
-        int status = servletResponse.getStatus();
-        HttpStatus resolve = HttpStatus.resolve(status);
+        HttpStatus resolve = HttpStatus.resolve(servletResponse.getStatus());
 
-        if (resolve == null) {
+        if (resolve == null)
             return body;
-        }
 
-        if (resolve.is2xxSuccessful()) {
-            return CommonResponse.onSuccess(status, body);
-        }
+        if (resolve.is2xxSuccessful())
+            return CommonResponse.onSuccess(statusProvider(servletRequest.getMethod()), body);
+
 
         return body;
+    }
+
+    private int statusProvider(String method) {
+        if (method.equals("POST"))
+            return 201;
+        if (method.equals("DELETE"))
+            return 204;
+        return 200;
     }
 }
