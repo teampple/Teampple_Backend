@@ -1,10 +1,8 @@
 package Backend.teampple.domain.auth.jwt;
 
-import Backend.teampple.domain.auth.dto.JwtTokenDto;
+import Backend.teampple.domain.auth.jwt.entity.JwtToken;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
-import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.auth.security.UserAdapter;
-import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -52,13 +50,12 @@ public class JwtTokenProvider {
     /**
      * 토큰 생성
      */
-    public JwtTokenDto generateToken(Authentication authentication)
+    public JwtToken generateToken(Authentication authentication)
             throws HttpServerErrorException.InternalServerError {
         final Date now = new Date();
-        return JwtTokenDto.builder()
+        return JwtToken.builder()
                 .jwtAccessToken(generateAccessToken(authentication, now))
                 .jwtRefreshToken(generateRefreshToken(now))
-                .expRT(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .build();
     }
 
