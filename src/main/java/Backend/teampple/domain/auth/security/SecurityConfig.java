@@ -65,7 +65,6 @@ public class SecurityConfig {
                 .antMatchers("/auth/login", "/auth/info").permitAll()
                 .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/invitations/validation").permitAll() // 초대 코드 검증
-                .antMatchers("/**").permitAll() // 초대 코드 검증
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated();
 
