@@ -9,13 +9,13 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-public class ResponseJwtTokenDto {
+public class GetJwtTokenDto {
     private String jwtAccessToken;
-    private String jwtRefreshToken;
+//    private String jwtRefreshToken;
 
     @Builder
-    public ResponseJwtTokenDto(String jwtAccessToken, String jwtRefreshToken) {
+    public GetJwtTokenDto(String jwtAccessToken, String jwtRefreshToken) {
         this.jwtAccessToken = jwtAccessToken;
-        this.jwtRefreshToken = jwtRefreshToken;
+//        this.jwtRefreshToken = jwtRefreshToken;
     }
 }

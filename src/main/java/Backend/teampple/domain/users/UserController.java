@@ -8,13 +8,11 @@ import Backend.teampple.domain.users.dto.response.GetUserTeamsDto;
 import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.domain.users.service.UserProfileService;
 import Backend.teampple.domain.users.service.UserService;
-import Backend.teampple.global.common.response.CommonResponse;
 import Backend.teampple.global.common.auth.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -28,16 +26,14 @@ public class UserController {
 
     @GetMapping("/userprofiles")
     @Operation(summary = "프로필 요청", description = "프로필 요청 API 입니다.")
-    public CommonResponse<GetUserProfileDto> getProfiles(@AuthUser User user) {
-        GetUserProfileDto userProfile = userProfileService.getUserProfile(user);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
+    public GetUserProfileDto getProfiles(@AuthUser User user) {
+        return userProfileService.getUserProfile(user);
     }
 
     @PutMapping("/userprofiles")
     @Operation(summary = "프로필 수정 요청", description = "프로필 수정 API 입니다.")
-    public CommonResponse<GetUserProfileDto> updateProfile(@AuthUser User user, @RequestBody PutUserProfileDto putUserProfileDto) {
-        GetUserProfileDto userProfile = userProfileService.updateUserProfile(user, putUserProfileDto);
-        return CommonResponse.onSuccess(HttpStatus.OK.value(), userProfile);
+    public GetUserProfileDto updateProfile(@AuthUser User user, @RequestBody PutUserProfileDto putUserProfileDto) {
+        return userProfileService.updateUserProfile(user, putUserProfileDto);
     }
 
     @GetMapping(value = "tasks")
