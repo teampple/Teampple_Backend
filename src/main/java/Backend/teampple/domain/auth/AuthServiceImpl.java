@@ -72,13 +72,8 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        /** accessToken 생성용 Authentication 생성 */
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Authentication reissueAuthentication = new UsernamePasswordAuthenticationToken(user.getAuthKey(), user.getPassword(), authentication.getAuthorities());
-        log.info(reissueAuthentication.getName());
-
         final GetJwtTokenDto generateToken = GetJwtTokenDto.builder()
-                .jwtAccessToken(jwtTokenProvider.generateAccessToken(reissueAuthentication, new Date()))
+                .jwtAccessToken(jwtTokenProvider.generateAccessToken(user.getAuthKey(), new Date()))
                 .jwtRefreshToken(postJwtTokenDto.getJwtRefreshToken())
                 .build();
 
