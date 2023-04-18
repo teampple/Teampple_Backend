@@ -11,11 +11,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class GetJwtTokenDto {
     private String jwtAccessToken;
-//    private String jwtRefreshToken;
+    private String jwtRefreshToken;
 
     @Builder
     public GetJwtTokenDto(String jwtAccessToken, String jwtRefreshToken) {
         this.jwtAccessToken = jwtAccessToken;
-//        this.jwtRefreshToken = jwtRefreshToken;
+        this.jwtRefreshToken = jwtRefreshToken;
     }
 }

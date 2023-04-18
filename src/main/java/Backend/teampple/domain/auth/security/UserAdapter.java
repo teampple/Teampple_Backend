@@ -9,10 +9,10 @@ import java.util.Collections;
 
 @Getter
 public class UserAdapter extends CustomUserDetails {
-    private final UserProfile userProfile;
+//    private final UserProfile userProfile;
 
     public UserAdapter(User user) {
         super(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getRole())));
-        this.userProfile = user.getUserProfile();
+//        this.userProfile = user.getUserProfile();
     }
 }

@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+/**임시 객체 생성 여부 검토*/
 @AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : user")
 public @interface AuthUser {
 

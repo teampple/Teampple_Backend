@@ -1,10 +1,8 @@
 package Backend.teampple.domain.auth.jwt;
 
-import Backend.teampple.domain.auth.dto.JwtTokenDto;
+import Backend.teampple.domain.auth.jwt.entity.JwtToken;
 import Backend.teampple.domain.auth.security.CustomUserDetailServiceImpl;
-import Backend.teampple.domain.auth.security.CustomUserDetails;
 import Backend.teampple.domain.auth.security.UserAdapter;
-import Backend.teampple.domain.users.entity.User;
 import Backend.teampple.global.error.ErrorCode;
 import Backend.teampple.global.error.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -14,13 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -52,29 +48,24 @@ public class JwtTokenProvider {
     /**
      * 토큰 생성
      */
-    public JwtTokenDto generateToken(Authentication authentication)
+    public JwtToken generateToken(String authKey)
             throws HttpServerErrorException.InternalServerError {
         final Date now = new Date();
-        return JwtTokenDto.builder()
-                .jwtAccessToken(generateAccessToken(authentication, now))
+        return JwtToken.builder()
+                .jwtAccessToken(generateAccessToken(authKey, now))
                 .jwtRefreshToken(generateRefreshToken(now))
-                .expRT(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .build();
     }
 
-    public String generateAccessToken(Authentication authentication, Date now) {
-        final String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
+    public String generateAccessToken(String authKey, Date now) {
         final Date accessTokenExpire = new Date(now.getTime() + JWT_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer("Teampple")
                 .setIssuedAt(now) /**생성 일자*/
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities) /**권한 설정*/
+                .setSubject(authKey)
+                .claim(AUTHORITIES_KEY, authKey) /**권한 설정*/
                 .setExpiration(accessTokenExpire) /**만료 일자*/
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();

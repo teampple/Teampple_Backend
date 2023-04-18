@@ -1,8 +1,6 @@
 package Backend.teampple.domain.auth.security;
 
 import Backend.teampple.domain.auth.jwt.JwtAuthenticationFilter;
-//import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
-//import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
 import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +33,6 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthSuccessHandler oauthSuccessHandler;
-
-//    @Bean
-//    public WebSecurityCustomizer configure() {
-//        /**하위 요청 제외*/
-//        return (web) -> web.ignoring().mvcMatchers(
-//                "/swagger-ui/**"
-//        );
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
