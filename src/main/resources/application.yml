@@ -27,6 +27,9 @@ spring:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
+#  config:
+#    activate:
+#      on-profile: dev
 
   servlet:
     multipart:
@@ -81,3 +84,7 @@ token:
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+
+slack:
+  webhook:
+    url: ${SLACK_URL}

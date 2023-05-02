@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping(value = "/example")
 @Component
-@Api(tags = "에러 example")
+@Api(tags = "example")
 public class ExampleController {
 
     @GetMapping("/errer")
-    @Operation(summary = "에러 코드 나열")
-    @ApiIgnore
+    @Operation(summary = "에러 발생")
     public void getGlobalErrorCode() {
-        log.info("-----------시작--------------");
+        throw new RuntimeException();
     }
+
 
 }

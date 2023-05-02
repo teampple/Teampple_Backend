@@ -1,6 +1,8 @@
 package Backend.teampple.global.error;
 
+import Backend.teampple.global.common.event.Event;
 import Backend.teampple.global.error.exception.BaseException;
+import Backend.teampple.infra.slack.ErrorMessage;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.Arrays;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -91,6 +95,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
         log.error("handleException", exception);
+        Event.raise(new ErrorMessage());
         return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._INTERNAL_SERVER_ERROR),
                 null, INTERNAL_SERVER_ERROR);
     }
