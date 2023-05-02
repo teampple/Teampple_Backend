@@ -2,21 +2,26 @@ package Backend.teampple.global.error;
 
 import Backend.teampple.global.common.event.Event;
 import Backend.teampple.global.error.exception.BaseException;
-import Backend.teampple.infra.slack.ErrorMessage;
+import Backend.teampple.infra.slack.SlackErrorMessage;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -85,19 +90,25 @@ public class GlobalExceptionHandler {
 
     // 비즈니스 로직 에러 처리
     @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(final BaseException baseException) {
+    protected ResponseEntity<ErrorResponse> handleBusinessException(final BaseException baseException, HttpServletRequest httpServletRequest) {
         log.error("handleBusinessException", baseException);
+        final ContentCachingRequestWrapper contentCachingRequestWrapper
+                = new ContentCachingRequestWrapper(httpServletRequest);
+        Event.raise(SlackErrorMessage.of(baseException, contentCachingRequestWrapper));
         return new ResponseEntity<>(ErrorResponse.onFailure(baseException.getErrorCode()),
                 null, baseException.getErrorCode().getHttpStatus());
     }
 
     // 위에서 따로 처리하지 않은 에러를 모두 처리해줍니다.
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
+    protected ResponseEntity<ErrorResponse> handleException(Exception exception, HttpServletRequest httpServletRequest) {
         log.error("handleException", exception);
-        Event.raise(new ErrorMessage());
+        final ContentCachingRequestWrapper contentCachingRequestWrapper
+                = new ContentCachingRequestWrapper(httpServletRequest);
+        Event.raise(SlackErrorMessage.of(exception, contentCachingRequestWrapper));
         return new ResponseEntity<>(ErrorResponse.onFailure(ErrorCode._INTERNAL_SERVER_ERROR),
                 null, INTERNAL_SERVER_ERROR);
+
     }
 
 }
