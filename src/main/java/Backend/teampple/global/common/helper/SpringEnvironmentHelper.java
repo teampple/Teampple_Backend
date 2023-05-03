@@ -19,13 +19,13 @@ public class SpringEnvironmentHelper {
 
     public Boolean isProdProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        List<String> currentProfile = Arrays.stream(activeProfiles).toList();
+        List<String> currentProfile = Arrays.stream(activeProfiles).collect(Collectors.toList());
         return currentProfile.contains(PROD);
     }
 
     public Boolean isDevProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        List<String> currentProfile = Arrays.stream(activeProfiles).toList();
+        List<String> currentProfile = Arrays.stream(activeProfiles).collect(Collectors.toList());
         return currentProfile.contains(DEV);
     }
 }
