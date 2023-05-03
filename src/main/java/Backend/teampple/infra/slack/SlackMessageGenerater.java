@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.model.block.*;
 import com.slack.api.model.block.composition.MarkdownTextObject;
 import com.slack.api.model.block.composition.TextObject;
+import com.slack.api.webhook.Payload;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -20,7 +22,7 @@ import java.util.*;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class SlackMessageGenerater {
     private final int MaxLen = 500;
@@ -28,7 +30,7 @@ public class SlackMessageGenerater {
     private final ObjectMapper objectMapper;
 
 
-    public List<LayoutBlock> generate(Exception e, ContentCachingRequestWrapper cachedRequest) throws IOException {
+    public Payload generate(Exception e, ContentCachingRequestWrapper cachedRequest) throws IOException {
         List<LayoutBlock> layoutBlocks = new ArrayList<>();
         // 제목
         layoutBlocks.add(HeaderBlock.builder().text(plainText("에러 알림")).build());
@@ -42,7 +44,15 @@ public class SlackMessageGenerater {
         layoutBlocks.add(new DividerBlock());
         // IP + Method, Addr
         layoutBlocks.add(makeSection(getErrMessage(e), getErrStack(e)));
-        return layoutBlocks;
+
+        final Payload payload =
+                Payload.builder()
+                        .text("에러 알림")
+                        .username("폭탄 받아라")
+                        .iconEmoji(":dog:")
+                        .blocks(layoutBlocks)
+                        .build();
+        return payload;
     }
 
     private LayoutBlock makeSection(TextObject first, TextObject second ) {

@@ -22,7 +22,7 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   profiles:
-    active: prod
+    active: dev
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -87,4 +87,5 @@ logging.level:
 
 slack:
   webhook:
-    url: ${SLACK_URL}
+    dev_url: ${SLACK_DEV_URL}
+    prod_url: ${SLACK_PROD_URL}
