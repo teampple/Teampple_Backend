@@ -11,14 +11,13 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 @RestControllerAdvice
 @Slf4j
-public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
+public class ResponseAdvice implements ResponseBodyAdvice<Object> {
     private final String[] SwaggerPatterns = {
             "swagger",
             "/v2/api-docs"
@@ -39,12 +38,12 @@ public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
             ServerHttpResponse response){
         HttpServletResponse servletResponse =
                 ((ServletServerHttpResponse) response).getServletResponse();
-        HttpServletRequest servletRequest =
-                ((ServletServerHttpRequest) request).getServletRequest();
+        ContentCachingRequestWrapper cachingRequestWrapper
+                = new ContentCachingRequestWrapper(((ServletServerHttpRequest) request).getServletRequest());
 
-        // 스웨거일 경우 리스폰스 처리 안하도록
+//         스웨거일 경우 리스폰스 처리 안하도록
         for (String swaggerPattern : SwaggerPatterns) {
-            if (servletRequest.getRequestURI().contains(swaggerPattern))
+            if (cachingRequestWrapper.getRequestURI().contains(swaggerPattern))
                 return body;
         }
 
@@ -54,7 +53,7 @@ public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
 
         if (resolve.is2xxSuccessful())
-            return CommonResponse.onSuccess(statusProvider(servletRequest.getMethod()), body);
+            return CommonResponse.onSuccess(statusProvider(cachingRequestWrapper.getMethod()), body);
 
 
         return body;

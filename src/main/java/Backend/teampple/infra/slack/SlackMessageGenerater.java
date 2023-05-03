@@ -9,9 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import javax.servlet.ServletInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
@@ -60,13 +63,14 @@ public class SlackMessageGenerater {
     }
 
     private MarkdownTextObject getBody(ContentCachingRequestWrapper c) throws IOException {
-        final String body = objectMapper.readTree(c.getContentAsByteArray()).toString();
-        return MarkdownTextObject.builder().text("* Request Body :*\n" + body).build();
+        ServletInputStream inputStream = c.getInputStream();
+        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        return MarkdownTextObject.builder().text("* Request Body :*\n" + messageBody).build();
     }
 
     private MarkdownTextObject getParam(ContentCachingRequestWrapper c) {
-        final String queryString = c.getQueryString();
-        return MarkdownTextObject.builder().text("* Request Param :*\n" + queryString).build();
+        final String param = c.getQueryString();
+        return MarkdownTextObject.builder().text("* Request Param :*\n" + param).build();
     }
 
     private MarkdownTextObject getErrMessage(Exception e) {

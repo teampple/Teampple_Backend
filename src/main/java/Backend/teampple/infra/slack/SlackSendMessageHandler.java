@@ -5,6 +5,7 @@ import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.webhook.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -38,8 +39,8 @@ public class SlackSendMessageHandler {
         final List<LayoutBlock> blocks = slackMessageGenerater.generate(exception, contentCachingRequestWrapper);
         final Payload payload =
                 Payload.builder()
-                        .text("temp")
-                        .username("유저")
+                        .text("dev 에러")
+                        .username("폭탄 받아라")
                         .iconEmoji(":dog:")
                         .blocks(blocks)
                         .build();

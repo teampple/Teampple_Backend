@@ -92,9 +92,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(final BaseException baseException, HttpServletRequest httpServletRequest) {
         log.error("handleBusinessException", baseException);
-        final ContentCachingRequestWrapper contentCachingRequestWrapper
-                = new ContentCachingRequestWrapper(httpServletRequest);
-        Event.raise(SlackErrorMessage.of(baseException, contentCachingRequestWrapper));
         return new ResponseEntity<>(ErrorResponse.onFailure(baseException.getErrorCode()),
                 null, baseException.getErrorCode().getHttpStatus());
     }
