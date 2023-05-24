@@ -3,7 +3,6 @@ version: "3"
 services:
   redis:
     image: "redis:alpine"
-    network_mode: "host"
     ports:
       - "6379:6379"
 
@@ -11,7 +10,6 @@ services:
     image: squirmm/teampple-server-dev:dev
     container_name: backend-dev
     hostname: backend-dev
-    network_mode: "host"
     expose:
       - "8080"
 
@@ -22,6 +20,5 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./config/nginx
-    network_mode: "host"
     ports:
       - "80:80"
