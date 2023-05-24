@@ -31,7 +31,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig =
-                new RedisStandaloneConfiguration(host, 6479);
+                new RedisStandaloneConfiguration(host, 6379);
 
         if (password != null && !password.isBlank()) {
             redisConfig.setPassword(password);
