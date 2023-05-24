@@ -40,3 +40,4 @@ out/
 
 ### generated
 **/generated/
+*.pem
