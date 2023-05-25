@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,8 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        ContentCachingRequestWrapper cachingRequestWrapper
+                = new ContentCachingRequestWrapper(request);
         try {
-            String token = parseBearerToken(request);
+            String token = parseBearerToken(cachingRequestWrapper);
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -35,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Could not set user authentication in security context", e);
             setResponse(response, ErrorCode.USER_NOT_FOUND);
         }
-        chain.doFilter(request, response);
+        chain.doFilter(cachingRequestWrapper, response);
     }
 
     /**

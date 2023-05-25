@@ -53,6 +53,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 //	FeignClient
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.1'
+//	Slack
+	implementation("com.slack.api:slack-api-client:1.28.0")
+//	Object Mapper 사용위해 추가
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 }
 
 tasks.named('test') {

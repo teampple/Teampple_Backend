@@ -1,7 +1,7 @@
 package Backend.teampple.domain.auth;
 
-import Backend.teampple.domain.auth.dto.request.RequestJwtTokenDto;
-import Backend.teampple.domain.auth.dto.response.ResponseJwtTokenDto;
+import Backend.teampple.domain.auth.dto.request.PostJwtTokenDto;
+import Backend.teampple.domain.auth.dto.response.GetJwtTokenDto;
 import Backend.teampple.domain.auth.jwt.JwtTokenProvider;
 import Backend.teampple.domain.auth.inmemory.RefreshTokenRepository;
 import Backend.teampple.domain.users.entity.User;
@@ -29,28 +29,28 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseJwtTokenDto login() {
+    public GetJwtTokenDto login() {
 //        final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseJwtTokenDto.builder().build();
+        return GetJwtTokenDto.builder().build();
     }
 
     @Override
     @Transactional
-    public void logout(User user, RequestJwtTokenDto requestJwtTokenDto) {
+    public void logout(User user, PostJwtTokenDto postJwtTokenDto) {
         /**refreshToken 만료 여부 확인*/
-        if (!refreshTokenRepository.existsById(requestJwtTokenDto.getJwtRefreshToken())) {
+        if (!refreshTokenRepository.existsById(postJwtTokenDto.getJwtRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        refreshTokenRepository.deleteById(requestJwtTokenDto.getJwtRefreshToken());
+        refreshTokenRepository.deleteById(postJwtTokenDto.getJwtRefreshToken());
         SecurityContextHolder.clearContext();
     }
 
     @Override
     @Transactional
-    public ResponseJwtTokenDto join() {
+    public GetJwtTokenDto join() {
 //        final ResponseTokenDto generateToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseJwtTokenDto.builder().build();
+        return GetJwtTokenDto.builder().build();
     }
 
     @Override
@@ -61,25 +61,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseJwtTokenDto reIssuance(User user, RequestJwtTokenDto requestJwtTokenDto) {
+    public GetJwtTokenDto reIssuance(User user, PostJwtTokenDto postJwtTokenDto) {
         /**refreshToken 유효성 확인*/
-        if (!jwtTokenProvider.validateToken(requestJwtTokenDto.getJwtRefreshToken())) {
+        if (!jwtTokenProvider.validateToken(postJwtTokenDto.getJwtRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_TOKEN);
         }
 
         /**refreshToken 만료 여부 확인*/
-        if (!refreshTokenRepository.existsById(requestJwtTokenDto.getJwtRefreshToken())) {
+        if (!refreshTokenRepository.existsById(postJwtTokenDto.getJwtRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        /** accessToken 생성용 Authentication 생성 */
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Authentication reissueAuthentication = new UsernamePasswordAuthenticationToken(user.getAuthKey(), user.getPassword(), authentication.getAuthorities());
-        log.info(reissueAuthentication.getName());
-
-        final ResponseJwtTokenDto generateToken = ResponseJwtTokenDto.builder()
-                .jwtAccessToken(jwtTokenProvider.generateAccessToken(reissueAuthentication, new Date()))
-                .jwtRefreshToken(requestJwtTokenDto.getJwtRefreshToken())
+        final GetJwtTokenDto generateToken = GetJwtTokenDto.builder()
+                .jwtAccessToken(jwtTokenProvider.generateAccessToken(user.getAuthKey(), new Date()))
+                .jwtRefreshToken(postJwtTokenDto.getJwtRefreshToken())
                 .build();
 
         return generateToken;

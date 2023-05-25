@@ -1,8 +1,6 @@
 package Backend.teampple.domain.auth.security;
 
 import Backend.teampple.domain.auth.jwt.JwtAuthenticationFilter;
-//import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
-//import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import Backend.teampple.domain.auth.oauth.CustomOAuth2UserService;
 import Backend.teampple.domain.auth.oauth.OAuthSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +34,6 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthSuccessHandler oauthSuccessHandler;
 
-//    @Bean
-//    public WebSecurityCustomizer configure() {
-//        /**하위 요청 제외*/
-//        return (web) -> web.ignoring().mvcMatchers(
-//                "/swagger-ui/**"
-//        );
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().configurationSource(corsConfigurationSource())
@@ -65,7 +55,7 @@ public class SecurityConfig {
                 .antMatchers("/auth/login", "/auth/info").permitAll()
                 .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/invitations/validation").permitAll() // 초대 코드 검증
-                .antMatchers("/**").permitAll() // 초대 코드 검증
+                .antMatchers("/example/**").permitAll()
                 /**인증 된 사용자만 사용 가능*/
                 .anyRequest().authenticated();
 

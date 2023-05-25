@@ -1,20 +1,21 @@
-package Backend.teampple.domain.auth.dto;
+package Backend.teampple.domain.auth.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.util.Date;
 
 @Getter
-public class JwtTokenDto {
+@ToString
+@NoArgsConstructor
+public class GetJwtTokenDto {
     private String jwtAccessToken;
     private String jwtRefreshToken;
-    private Date expRT;
 
     @Builder
-    public JwtTokenDto(String jwtAccessToken, String jwtRefreshToken, Date expRT) {
+    public GetJwtTokenDto(String jwtAccessToken, String jwtRefreshToken) {
         this.jwtAccessToken = jwtAccessToken;
         this.jwtRefreshToken = jwtRefreshToken;
-        this.expRT = expRT;
     }
 }

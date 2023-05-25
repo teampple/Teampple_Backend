@@ -2,7 +2,6 @@ package Backend.teampple.domain.users.entity;
 
 import Backend.teampple.global.common.entity.UserBaseEntity;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,7 +12,6 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Table(name = "user_profile")
-//@SQLDelete(sql = "UPDATE user_profile SET is_deleted = true WHERE kakao_id = ?")
 public class UserProfile extends UserBaseEntity {
     @Id
     @Column(name = "user_profile_id")

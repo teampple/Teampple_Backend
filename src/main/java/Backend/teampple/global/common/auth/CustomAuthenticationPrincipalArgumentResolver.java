@@ -43,7 +43,7 @@ public class CustomAuthenticationPrincipalArgumentResolver implements HandlerMet
              * 기존 값 = return null;
              * Error 반환 하기 위해 커스텀
              * */
-            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN);
+            throw new UnauthorizedException(ErrorCode.INVALID_PRINCIPAL);
         }
         Object principal = authentication.getPrincipal();
         AuthUser annotation = findMethodAnnotation(AuthUser.class, parameter);

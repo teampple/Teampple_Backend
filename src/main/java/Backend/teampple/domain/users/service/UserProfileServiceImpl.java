@@ -7,7 +7,6 @@ import Backend.teampple.domain.users.entity.UserProfile;
 import Backend.teampple.domain.users.mapper.request.GetUserProfileMapper;
 import Backend.teampple.domain.users.mapper.response.PutUserProfileMapper;
 import Backend.teampple.domain.users.repository.UserProfileRepository;
-import Backend.teampple.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

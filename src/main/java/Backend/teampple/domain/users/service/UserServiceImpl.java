@@ -63,21 +63,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-//    @Override
-//    @Transactional
-//    public void updateUserRefreshToken(User user, String refreshToken, Date expRT) {
-//        user.updateRefreshToken(refreshToken, expRT);
-//        userRepository.save(user);
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void deleteUserRefreshToken(User user) {
-//        user.deleteRefreshToken();
-//        User save = userRepository.save(user);
-//        log.info(save.getRefreshToken() + save.getExpRT());
-//    }
-
     @Override
     @Transactional
     public void deleteUser(User user) {
