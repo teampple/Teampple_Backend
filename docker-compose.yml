@@ -9,7 +9,7 @@ services:
   backend-dev:
     image: squirmm/teampple-server-dev:dev
     container_name: backend-dev
-#    hostname: backend-dev
+    hostname: backend-dev
     expose:
       - "8080"
 
