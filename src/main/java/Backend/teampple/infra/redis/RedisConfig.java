@@ -34,9 +34,9 @@ public class RedisConfig {
         RedisStandaloneConfiguration redisConfig =
                 new RedisStandaloneConfiguration(host, 6379);
 
-        if (password != null && !password.isBlank()) {
-            redisConfig.setPassword(password);
-        }
+//        if (password != null && !password.isBlank()) {
+//            redisConfig.setPassword(password);
+//        }
 
         LettuceClientConfiguration clientConfig =
                 LettuceClientConfiguration.builder()
